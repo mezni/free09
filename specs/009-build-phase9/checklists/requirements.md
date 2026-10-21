@@ -18,7 +18,7 @@
 - [x] Success criteria are measurable — SC-01 through SC-05 have specific metrics (under 30 seconds, operational, immutability)
 - [x] Success criteria are technology-agnostic (no implementation details) — SC-01/SC-03/SC-05 are purely outcome-focused; SC-02/SC-04 use protocol/domain terms (build concept, compliance) per guidelines' reasonable defaults
 - [x] All acceptance scenarios are defined — 6 acceptance criteria cover all 6 FRs
-- [x] Edge cases are identified — 5 edge cases explicitly listed (missing artifacts, timeout expiration, system downtime, metadata tampering, traceability gaps)
+- [x] Edge cases are identified — 5 edge cases explicitly listed (pipeline stage skip, gate timeout expiration, external system downtime, version metadata tampering, traceability gap)
 - [x] Scope is clearly bounded — In-scope/Out-of-scope sections define boundaries
 - [x] Dependencies and assumptions identified — Both sections present
 

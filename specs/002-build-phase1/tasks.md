@@ -35,11 +35,11 @@ follow `specs/002-build-phase1/contracts/`:
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-T038] T001 Create project structure per implementation plan
-T039] T002 Initialize project with dependencies per plan.md
-T040] T003 .python-version pinning to 3.13
-T041] T004 [P] Configure linting and formatting tools
-T042] T005 [P] Configure code quality tools
+- [x] T038 Create project structure per implementation plan
+- [x] T039 Initialize project with dependencies per plan.md
+- [x] T040 .python-version pinning to 3.13
+- [x] T041 [P] Configure linting and formatting tools
+- [x] T042 [P] Configure code quality tools
 
 **Checkpoint**: Foundation ready — design tasks can now begin in parallel
 
@@ -47,35 +47,35 @@ T042] T005 [P] Configure code quality tools
 
 **⚠️ CRITICAL**: No design work can begin until this phase is complete.
 
-T050] T012 Constitution reconciliation between docs/ and .specify/
-T051] T013 Ratify constitution with date and signatures
-T052] T014 Set spec.md status to Approved
-T053] T015 Record ADR-0001 decision status
-T054] T016 Implement configuration loader in config.py
-T055] T017 Create .env.example with placeholder values
-T056] T018 Implement session framework in noxfile.py
-T057] T019 Create ci/run-checks.sh as single entry point
-T058] T020 Create tests/conftest.py with marker registration
-T059] T021 Create minimal test suite that passes on empty impl
+- [x] T050 Constitution reconciliation between docs/ and .specify/
+- [x] T051 Ratify constitution with date and signatures
+- [x] T052 Set spec.md status to Approved
+- [x] T053 Record ADR-0001 decision status
+- [x] T054 Implement configuration loader in config.py
+- [x] T055 Create .env.example with placeholder values
+- [x] T056 Implement session framework in noxfile.py
+- [x] T057 Create ci/run-checks.sh as single entry point
+- [x] T058 Create tests/conftest.py with marker registration
+- [x] T059 Create minimal test suite that passes on empty impl
 
 **Checkpoint**: Foundation ready — design tasks can now begin in parallel
 
 ## Phase 3: Design & Contracts
 
-T065] T022 [P] [US1] [P] [US1] Create test for fresh clone setup verification
-T066] T023 [P] [US1] [P] [US1] Create test for language baseline unchanged
-T067] T024 [P] [US1] [P] [US1] Create test for setup prerequisites
+- [x] T065 [P] [US1] Create test for fresh clone setup verification
+- [x] T066 [P] [US1] Create test for language baseline unchanged
+- [x] T067 [P] [US1] Create test for setup prerequisites
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-T071] T095 [P] [P] [ Shared ] Set spec.md status to Implemented
-T072] T096 [ Shared ] Run complete required check set and confirm PASS
-T073] T097 [P] [Shared] [P] [ Shared ] Reconcile constitution documents
-T074] T098 [P] [Shared] [P] [ Shared ] Record ADR-0001 final decision status
-T075] T099 [P] [Shared] [P] [ Shared ] Update traceability matrix
-T076] T100 [P] [Shared] [P] [ Shared ] Update requirements.md to implemented state
-T077] T101 [P] [Shared] [P] [ Shared ] Fresh clone verification (30 min)
-T078] T102 [ Shared ] Set spec.md status to Implemented after acceptance evidence
+- [x] T071 [P] [Shared] Set spec.md status to Implemented
+- [x] T072 [Shared] Run complete required check set and confirm PASS
+- [x] T073 [P] [Shared] Reconcile constitution documents
+- [x] T074 [P] [Shared] Record ADR-0001 final decision status
+- [x] T075 [P] [Shared] Update traceability matrix
+- [x] T076 [P] [Shared] Update requirements.md to implemented state
+- [x] T077 [P] [Shared] Fresh clone verification (30 min)
+- [x] T078 [Shared] Set spec.md status to Implemented after acceptance evidence
 
 ## Dependencies & Execution Order
 

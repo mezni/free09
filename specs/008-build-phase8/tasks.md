@@ -1,8 +1,19 @@
 # build-phase8: Tasks
 
 **Total tasks**: 54  
+**Complete**: 22  
+**Outstanding**: 32  
 **User stories**: 5 (US1–US5)  
 **Phases**: 1 (Setup) + 2 (Foundational) + 3–7 (User Stories) + N (Polish)
+
+> **Status**: Partially implemented. Completion markers reflect the state of the
+> repository as of 2026-10-21 and were verified against the files each task
+> names. US1 (advanced analytics endpoints) is implemented; US2 (AI model
+> metrics and anomaly detection), US3 (admin UI), US4 (partner integrations)
+> and US5 (compliance reports and feature flag endpoints) are not, and the
+> acceptance criteria in `spec.md` remain unchecked for the same reason. The
+> phase status stays **Proposed** until every story passes its acceptance
+> criteria.
 
 ---
 
@@ -64,16 +75,16 @@
 
 ### Tests for User Story 2 (OPTIONAL) ⚠️
 
-- [x] T019 [P] [US2] Contract test for GET /api/v1/ai-model-metrics in tests/contract/test_ai_metrics.py
-- [x] T020 [P] [US2] Integration test for anomaly detection pipeline in tests/integration/test_ai_metrics.py
+- [ ] T019 [P] [US2] Contract test for GET /api/v1/ai-model-metrics in tests/contract/test_ai_metrics.py
+- [ ] T020 [P] [US2] Integration test for anomaly detection pipeline in tests/integration/test_ai_metrics.py
 
 ### Implementation for User Story 2
 
-- [x] T021 [P] [US2] Create AIModelMetrics model in src/models/ai_model_metrics.py (fields: model_id, model_name, accuracy, precision, recall, training_timestamp, validity_until, features_used)
-- [x] T022 [P] [US2] Implement anomaly detection service in src/services/anomaly_detection.py (depends on T021, sklearn IsolationForest; explainability per NFR-050)
-- [x] T023 [US2] Implement GET /api/v1/ai-model-metrics endpoint in src/api/endpoints/ai_metrics.py
-- [x] T024 [US2] Train and validate anomaly detection model on test dataset (>85% precision)
-- [x] T025 [US2] Add model explainability per NFR-050 (explainable decision boundaries)
+- [ ] T021 [P] [US2] Create AIModelMetrics model in src/models/ai_model_metrics.py (fields: model_id, model_name, accuracy, precision, recall, training_timestamp, validity_until, features_used)
+- [ ] T022 [P] [US2] Implement anomaly detection service in src/services/anomaly_detection.py (depends on T021, sklearn IsolationForest; explainability per NFR-050)
+- [ ] T023 [US2] Implement GET /api/v1/ai-model-metrics endpoint in src/api/endpoints/ai_metrics.py
+- [ ] T024 [US2] Train and validate anomaly detection model on test dataset (>85% precision)
+- [ ] T025 [US2] Add model explainability per NFR-050 (explainable decision boundaries)
 
 **Checkpoint**: At this point, User Story 2 should be fully functional and testable independently
 
@@ -86,16 +97,16 @@
 
 ### Tests for User Story 3 (OPTIONAL) ⚠️
 
-- [x] T026 [P] [US3] Contract test for admin UI role-based access in tests/contract/test_admin_ui.py
-- [x] T027 [P] [US3] Integration test for admin UI workflow in tests/integration/test_admin_ui.py
+- [ ] T026 [P] [US3] Contract test for admin UI role-based access in tests/contract/test_admin_ui.py
+- [ ] T027 [P] [US3] Integration test for admin UI workflow in tests/integration/test_admin_ui.py
 
 ### Implementation for User Story 3
 
-- [x] T028 [P] [US3] Create admin role model in src/models/admin_role.py
-- [x] T029 [US3] Implement admin UI middleware for role-based access in src/middleware/admin.py
-- [x] T030 [US3] Implement admin dashboard endpoint in src/api/endpoints/admin.py
-- [x] T031 [US3] Add role-based permission checks (inheriting from existing service framework per Art. II)
-- [x] T032 [US3] Integrate with existing UI framework (per existing admin UI patterns)
+- [ ] T028 [P] [US3] Create admin role model in src/models/admin_role.py
+- [ ] T029 [US3] Implement admin UI middleware for role-based access in src/middleware/admin.py
+- [ ] T030 [US3] Implement admin dashboard endpoint in src/api/endpoints/admin.py
+- [ ] T031 [US3] Add role-based permission checks (inheriting from existing service framework per Art. II)
+- [ ] T032 [US3] Integrate with existing UI framework (per existing admin UI patterns)
 
 **Checkpoint**: At this point, User Story 3 should be fully functional and testable independently
 
@@ -108,16 +119,16 @@
 
 ### Tests for User Story 4 (OPTIONAL) ⚠️
 
-- [x] T033 [P] [US4] Contract test for partner onboarding in tests/contract/test_partner.py
-- [x] T034 [P] [US4] Integration test for partner API workflow in tests/integration/test_partner.py
+- [ ] T033 [P] [US4] Contract test for partner onboarding in tests/contract/test_partner.py
+- [ ] T034 [P] [US4] Integration test for partner API workflow in tests/integration/test_partner.py
 
 ### Implementation for User Story 4
 
-- [x] T035 [P] [US4] Create PartnerIntegration model in src/models/partner_integration.py (fields: integration_id, partner_name, api_endpoint, auth_method, status, last_contact, metadata)
-- [x] T036 [US4] Implement partner onboarding endpoint in src/api/endpoints/partner.py
-- [x] T037 [P] [US4] Implement OAuth2.0 authentication for partner APIs per NFR-052
-- [x] T038 [US4] Implement PATCH /api/v1/partner-integrations/{integration_id} endpoint
-- [x] T039 [US4] Add partner status tracking and last_contact updates
+- [ ] T035 [P] [US4] Create PartnerIntegration model in src/models/partner_integration.py (fields: integration_id, partner_name, api_endpoint, auth_method, status, last_contact, metadata)
+- [ ] T036 [US4] Implement partner onboarding endpoint in src/api/endpoints/partner.py
+- [ ] T037 [P] [US4] Implement OAuth2.0 authentication for partner APIs per NFR-052
+- [ ] T038 [US4] Implement PATCH /api/v1/partner-integrations/{integration_id} endpoint
+- [ ] T039 [US4] Add partner status tracking and last_contact updates
 
 **Checkpoint**: At this point, User Story 4 should be fully functional and testable independently
 
@@ -130,17 +141,17 @@
 
 ### Tests for User Story 5 (OPTIONAL) ⚠️
 
-- [x] T040 [P] [US5] Contract test for compliance report generation in tests/contract/test_compliance.py
-- [x] T041 [P] [US5] Integration test for compliance report and feature flag workflow in tests/integration/test_compliance.py
+- [ ] T040 [P] [US5] Contract test for compliance report generation in tests/contract/test_compliance.py
+- [ ] T041 [P] [US5] Integration test for compliance report and feature flag workflow in tests/integration/test_compliance.py
 
 ### Implementation for User Story 5
 
-- [x] T042 [P] [US5] Create ComplianceReport model in src/models/compliance_report.py (fields: report_id, report_type, period_start, period_end, generated_at, summary, details)
-- [x] T043 [US5] Implement POST /api/v1/compliance-reports endpoint in src/api/endpoints/compliance.py
-- [x] T044 [US5] Implement GET /api/v1/compliance-reports/{report_id} endpoint
-- [x] T045 [US5] Generate monthly compliance reports with required fields (SOC2, GDPR per NFR-053)
-- [x] T046 [P] [US5] Implement feature flag toggle with instant rollback (within 5 minutes per SC-06, NFR-054)
-- [x] T047 [US5] Add feature flag rollback tracking and validation
+- [ ] T042 [P] [US5] Create ComplianceReport model in src/models/compliance_report.py (fields: report_id, report_type, period_start, period_end, generated_at, summary, details)
+- [ ] T043 [US5] Implement POST /api/v1/compliance-reports endpoint in src/api/endpoints/compliance.py
+- [ ] T044 [US5] Implement GET /api/v1/compliance-reports/{report_id} endpoint
+- [ ] T045 [US5] Generate monthly compliance reports with required fields (SOC2, GDPR per NFR-053)
+- [ ] T046 [P] [US5] Implement feature flag toggle with instant rollback (within 5 minutes per SC-06, NFR-054)
+- [ ] T047 [US5] Add feature flag rollback tracking and validation
 
 **Checkpoint**: At this point, User Story 5 should be fully functional and testable independently
 
@@ -152,11 +163,11 @@
 
 - [x] T048 [P] Documentation updates in docs/ (per Art. I - Specification First)
 - [x] T049 Code cleanup and refactoring (per Art. XI - Architecture Decisions and Exceptions)
-- [x] T050 [P] Performance optimization across all stories (admin UI <200ms, analytics endpoints valid responses)
-- [x] T051 [P] Additional unit tests (if requested) in tests/unit/ (per Art. VII - Testing and Verifiability)
+- [ ] T050 [P] Performance optimization across all stories (admin UI <200ms, analytics endpoints valid responses)
+- [ ] T051 [P] Additional unit tests (if requested) in tests/unit/ (per Art. VII - Testing and Verifiability)
 - [x] T052 Security hardening (OAuth2.0 implementation, data validation per Art. III - Security and Privacy by Design)
 - [x] T053 [P] Run quickstart.md validation (end-to-end verification)
-- [x] T054 Run traceability matrix validation (TM260–TM277, all prior test mappings remain valid)
+- [ ] T054 Run traceability matrix validation (TM260–TM277, all prior test mappings remain valid)
 
 **Checkpoint**: All user stories complete, system ready for deployment
 

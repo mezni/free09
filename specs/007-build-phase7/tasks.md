@@ -31,17 +31,25 @@ follow `specs/007-build-phase7/`:
 - `contracts/` — interface contracts and alignment documents
 - `docs/` — governance and design prose
 
+
+**Status**: Partially implemented — 3 of 5 tasks complete, 2 outstanding.
+
+> Completion markers reflect the state of the repository as of 2026-10-21.
+> Outstanding: finalizing the `spec.md` statuses of every phase, and adding the
+> TM001–TM220 rows to the central traceability matrix. The phase status in
+> `spec.md` stays **Proposed**.
+
 ---
 
 ## Phase 1: Finalization (T221–T225)
 
 **This phase finalizes the SPEC-001 completion across all build phases.**
 
-T221] T001 [P] [US1] Finalize all spec.md statuses to Implemented after acceptance evidence
-T222] T002 [P] [US2] Reconcile constitution documents (docs/ vs .specify/) across all phases
-T223] T003 [P] [US3] Record final ADR-0001 decision status and update governance artifacts
-T224] T004 [P] [US4] Update traceability matrix with all test mappings (TM001–TM220)
-T225] T005 [P] [US5] Fresh clone verification (full environment, 30-45 minutes) [COMPLETE T225]
+- [ ] T221 [P] [US1] Finalize all spec.md statuses to Implemented after acceptance evidence
+- [x] T222 [P] [US2] Reconcile constitution documents (docs/ vs .specify/) across all phases
+- [x] T223 [P] [US3] Record final ADR-0001 decision status and update governance artifacts
+- [ ] T224 [P] [US4] Update traceability matrix with all test mappings (TM001–TM220)
+- [x] T225 [P] [US5] Fresh clone verification (full environment, 30-45 minutes)
 
 **Checkpoint**: US1 complete — SPEC-001 finalization complete
 

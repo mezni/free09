@@ -46,6 +46,13 @@
 - Compliance and statistical process control requirements are well-defined and documented
 - Trend analysis framework can build on existing infrastructure
 
+## Edge Cases
+- **Reporting stage skip**: If a reporting stage is skipped, subsequent stages must handle the absence of expected reports gracefully; the system should log and continue rather than fail hard
+- **Gate timeout expiration**: If phase gate statistical analysis exceeds the configured timeout (NFR-081), the gate should auto-fail and flag the build for manual review; no indefinite blocking
+- **External system downtime**: If an external monitoring system is unreachable, the integration framework should fall back to mock/local execution and surface a warning; no data loss
+- **Version metadata tampering**: If an attempt is made to modify metadata on a released version, the system should reject the modification and surface an integrity violation error; an audit log entry is required
+- **Traceability gap**: If test mappings (TM316–TM333) cannot be found in the prior mapping set (TM001–TM315), the system should surface a warning and default to manual review rather than silently omitting coverage
+
 ## Success Criteria
 - **SC-01**: Additional pipeline reporting stages operational with valid responses
 - **SC-02**: Phase gate statistical analysis completes in under 15 seconds
@@ -67,13 +74,9 @@
 | T272 | FR-114 | US5 | TM328–TM330 | P3 |
 | T273 | FR-115 | US5 | TM331–TM333 | P3 |
 
-## Dependencies
-- **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4, build-phase5, build-phase6, build-phase7, build-phase8, build-phase9, build-phase10 (all complete)
-- **Enables**: build-phase12 (future extension phase)
-
 ## Traceability Notes
 
-This phase extends the traceability from TM221–TM333, building upon the foundation established in prior phases. All prior test mappings (TM001–TM220) remain valid and unmodified.
+This phase introduces test mappings TM316–TM333 across tasks T268–T273, building upon the foundation established in prior phases. All test mappings introduced by earlier phases (TM001–TM315) remain valid and unmodified.
 
 ## Success Criteria Notes
 
@@ -83,6 +86,6 @@ This phase extends the traceability from TM221–TM333, building upon the founda
 
 ## Prioritization Notes
 
-- **P1 (Must have)**: FR-110, FR-111, T268–T270 — Core build pipeline reporting essential for MVP enhancement
-- **P2 (Should have)**: FR-112, FR-113, T271–T272 — Important enhancements that improve functionality
-- **P3 (Nice to have)**: FR-114, FR-115, T273–T273 — Enhancements that add value but are not essential for initial release
+- **P1 (Must have)**: FR-110, FR-111, T268–T269 — Core build pipeline reporting essential for MVP enhancement
+- **P2 (Should have)**: FR-112, FR-113, T270–T271 — Important enhancements that improve functionality
+- **P3 (Nice to have)**: FR-114, FR-115, T272–T273 — Enhancements that add value but are not essential for initial release

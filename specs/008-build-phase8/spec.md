@@ -72,8 +72,8 @@
 | T237 | FR-071 | US2 | TM263–TM265 | P1 |
 | T238 | FR-072 | US3 | TM266–TM268 | P2 |
 | T239 | FR-073 | US4 | TM269–TM271 | P2 |
-| T239 | FR-074 | US5 | TM272–TM274 | P3 |
-| T239 | FR-075 | US5 | TM275–TM277 | P3 |
+| T240 | FR-074 | US5 | TM272–TM274 | P3 |
+| T241 | FR-075 | US5 | TM275–TM277 | P3 |
 
 ## Dependencies
 - **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4, build-phase5, build-phase6, build-phase7 (all complete)

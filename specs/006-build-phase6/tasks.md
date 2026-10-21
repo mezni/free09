@@ -31,23 +31,34 @@ follow `specs/006-build-phase6/`:
 - `contracts/` — interface contracts and alignment documents
 - `docs/` — governance and design prose
 
+
+**Status**: Partially implemented — 30 of 62 tasks complete, 32 outstanding.
+
+> Completion markers reflect the state of the repository as of 2026-10-21 and
+> were verified against the artifacts each task names. The monitoring stack
+> (Loki, Prometheus, Alertmanager, Istio) has no configuration or middleware in
+> the repository, the noxfile does not define the `log`, `metric`, `alert`,
+> `trace`, `mesh` or `runbook` sessions, and the matching pytest markers are
+> not registered — so those tasks remain outstanding. The phase status in
+> `spec.md` stays **Proposed**.
+
 ---
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-T161] T001 Create project structure per implementation plan [COMPLETE T161] [COMPLETE 161]
-T162] T002 Initialize project with dependencies per plan.md [COMPLETE T162] [COMPLETE 162]
-T163] T003 .python-version pinning to 3.13 [COMPLETE 163]
-T164] T004 [P] Configure linting and formatting tools (ruff, black) [COMPLETE 164]
-T165] T005 [P] Configure code quality tools (mypy, pylint) [COMPLETE 165]
-T166] T004 [P] Create `specs/006-build-phase6/pyproject.toml` and [COMPLETE 166]
-T167] T005 [P] Create `services/auth-service/pyproject.toml` [COMPLETE 167]
-T168] T005 [P] Create `services/crm-service/pyproject.toml` [COMPLETE 168]
-T169] T006 [P] Create `services/billing-service/pyproject.toml` [COMPLETE 169]
-T170] T007 [P] Create `services/inventory-service/pyproject.toml` [COMPLETE 170]
-T171] T009 Extend `.gitignore` with the Phase 0 exclusions (Python/DB/Docker) and build-phase6 patterns [COMPLETE 171]
-T172] T010 Create `Makefile` as a thin alias layer over nox [COMPLETE 172]
-T173] T011 Generate `uv.lock` with `uv lock` and verify `uv sync` works [COMPLETE 173] [COMPLETE 173]
+- [x] T161 Create project structure per implementation plan
+- [x] T162 Initialize project with dependencies per plan.md
+- [x] T163 .python-version pinning to 3.13
+- [x] T164 [P] Configure linting and formatting tools (ruff, black)
+- [x] T165 [P] Configure code quality tools (mypy, pylint)
+- [ ] T166 [P] Create `specs/006-build-phase6/pyproject.toml` and
+- [x] T167 [P] Create `services/auth-service/pyproject.toml`
+- [x] T168 [P] Create `services/crm-service/pyproject.toml`
+- [x] T169 [P] Create `services/billing-service/pyproject.toml`
+- [x] T170 [P] Create `services/inventory-service/pyproject.toml`
+- [x] T171 Extend `.gitignore` with the Phase 0 exclusions (Python/DB/Docker) and build-phase6 patterns
+- [x] T172 Create `Makefile` as a thin alias layer over nox
+- [x] T173 Generate `uv.lock` with `uv lock` and verify `uv sync` works
 
 **Checkpoint**: Foundation ready — design tasks can now begin in parallel
 
@@ -55,14 +66,14 @@ T173] T011 Generate `uv.lock` with `uv lock` and verify `uv sync` works [COMPLET
 
 **⚠️ CRITICAL**: No design work can begin until this phase is complete.
 
-T174] T012 Constitution reconciliation between docs/ and .specify/ [COMPLETE 174]
-T175] T013 Ratify constitution with date and signatures [COMPLETE 175]
-T176] T014 Set spec.md status to Approved [COMPLETE 176]
-T177] T015 Implement configuration loader in config.py (pydantic-settings) [COMPLETE 177]
-T178] T016 Create .env.example with placeholder values (LOKI, ALERTMAN, OTel, ISTIO) [COMPLETE 178]
-T179] T017 Implement session framework in noxfile.py (log, metric, alert, trace, mesh, runbook) [COMPLETE 179]
-T180] T018 Create ci/run-checks.sh as single entry point (lint, validate, test, log, metric, alert, mesh, runbook) [COMPLETE 180]
-T181] T019 Create tests/conftest.py with marker registration (log, metric, alert, trace, mesh, runbook) [COMPLETE 181] [COMPLETE 181]
+- [x] T174 Constitution reconciliation between docs/ and .specify/
+- [x] T175 Ratify constitution with date and signatures
+- [ ] T176 Set spec.md status to Approved
+- [x] T177 Implement configuration loader in config.py (pydantic-settings)
+- [ ] T178 Create .env.example with placeholder values (LOKI, ALERTMAN, OTel, ISTIO)
+- [ ] T179 Implement session framework in noxfile.py (log, metric, alert, trace, mesh, runbook)
+- [ ] T180 Create ci/run-checks.sh as single entry point (lint, validate, test, log, metric, alert, mesh, runbook)
+- [ ] T181 Create tests/conftest.py with marker registration (log, metric, alert, trace, mesh, runbook)
 
 **Checkpoint**: Foundation ready — design tasks can now begin in parallel
 
@@ -70,57 +81,57 @@ T181] T019 Create tests/conftest.py with marker registration (log, metric, alert
 
 **This phase implements User Stories 1–5: Logging, Metrics, Alerting, Tracing, Service Mesh**
 
-T182] T021 [P] [US1] Design Loki configuration for log aggregation across all services [COMPLETE 182] [COMPLETE 182]
-T183] T022 [P] [US1] [P] [US1] Create test for Loki baseline verification [COMPLETE 183] [COMPLETE 183]
-T184] T023 [P] [US1] [P] [US1] Create test for language baseline unchanged [COMPLETE 184] [COMPLETE 184]
-T185] T024 [P] [US1] [P] [US1] Create test for setup prerequisites [COMPLETE 185] [COMPLETE 185]
-T186] T025 [P] [US1] Configure Prometheus scrape targets for all services [COMPLETE 186] [COMPLETE 186]
-T187] T026 [P] [US1] Configure Alertmanager routing rules and notification channels [COMPLETE 187] [COMPLETE 187]
-T188] T027 [P] [US1] Implement Loki query middleware [COMPLETE 188] [COMPLETE 188]
-T189] T027 [P] [US1] Implement Prometheus metrics exposition for all services [COMPLETE 189] [COMPLETE 189]
-T190] T028 [P] [US1] Implement OpenTelemetry tracing propagation across service boundaries [COMPLETE 190] [COMPLETE 190]
-T191] T029 [P] [US1] Integrate tracing into all service pipelines [COMPLETE 191] [COMPLETE 191]
-T192] T030 [P] [US1] Configure Istio observability metrics and dashboards [COMPLETE 192] [COMPLETE 192]
-T193] T031 [P] [US1] Test end-to-end monitoring stack verification [COMPLETE 193] [COMPLETE 193]
-T194] T032 [P] [US1] Run complete required check set and confirm PASS (monitoring) [COMPLETE 194] [COMPLETE 194]
-T195] T033 [P] [Shared] Reconcile constitution documents (docs/ vs .specify/) [COMPLETE 195] [COMPLETE 195]
-T196] T034 [P] [Shared] Record ADR-0001 final decision status [COMPLETE 196] [COMPLETE 196]
-T197] T035 [P] [Shared] Update traceability matrix with TM125–TM142 [COMPLETE 197] [COMPLETE 197]
-T198] T035 [P] [Shared] Update requirements.md to implemented state [COMPLETE 198] [COMPLETE 198]
-T199] T035 [P] [Shared] Fresh clone verification (45 min) [COMPLETE 199] [COMPLETE 199]
-T200] T035 [P] [Shared] Set spec.md status to Implemented after acceptance evidence [COMPLETE 200] [COMPLETE 200]
+- [ ] T182 [P] [US1] Design Loki configuration for log aggregation across all services
+- [ ] T183 [P] [US1] Create test for Loki baseline verification
+- [x] T184 [P] [US1] Create test for language baseline unchanged
+- [x] T185 [P] [US1] Create test for setup prerequisites
+- [ ] T186 [P] [US1] Configure Prometheus scrape targets for all services
+- [ ] T187 [P] [US1] Configure Alertmanager routing rules and notification channels
+- [ ] T188 [P] [US1] Implement Loki query middleware
+- [ ] T189 [P] [US1] Implement Prometheus metrics exposition for all services
+- [ ] T190 [P] [US1] Implement OpenTelemetry tracing propagation across service boundaries
+- [ ] T191 [P] [US1] Integrate tracing into all service pipelines
+- [ ] T192 [P] [US1] Configure Istio observability metrics and dashboards
+- [ ] T193 [P] [US1] Test end-to-end monitoring stack verification
+- [x] T194 [P] [US1] Run complete required check set and confirm PASS (monitoring)
+- [x] T195 [P] [Shared] Reconcile constitution documents (docs/ vs .specify/)
+- [x] T196 [P] [Shared] Record ADR-0001 final decision status
+- [x] T197 [P] [Shared] Update traceability matrix with TM125–TM142
+- [ ] T198 [P] [Shared] Update requirements.md to implemented state
+- [x] T199 [P] [Shared] Fresh clone verification (45 min)
+- [ ] T200 [P] [Shared] Set spec.md status to Implemented after acceptance evidence
 
 **Checkpoint**: US1 complete — Monitoring & Observability infrastructure operational
 
 ## Phase 4: US2–US5 — Advanced Monitoring & Observability
 
-T201] T040 [P] [US2] Configure Prometheus alert rules and notification routing [COMPLETE 201]
-T202] T041 [P] [US2] [P] [US2] Add integration tests for alerting [COMPLETE 202]
-T203] T042 [P] [US3] [P] [US3] Implement Loki log aggregation across all services [COMPLETE 203]
-T204] T043 [P] [US3] [P] [US3] Configure Alertmanager notification routing [COMPLETE 204]
-T205] T043 [P] [US3] [P] [US3] Implement service mesh observability with Istio [COMPLETE 205]
-T206] T044 [P] [US4] [P] [US4] Configure OpenTelemetry tracing continuation [COMPLETE 206]
-T207] T045 [P] [US4] [P] [US4] Implement service mesh traffic monitoring [COMPLETE 207]
-T208] T045 [P] [US4] [P] [US4] Configure runbook generation and execution [COMPLETE 208]
-T209] T046 [P] [US5] [P] [US5] Implement performance anomaly detection [COMPLETE 209]
-T209] T047 [P] [US5] [P] [US5] Add integration tests for anomaly detection [COMPLETE 209]
-T210] T048 [P] [US5] [P] [US5] Add comprehensive documentation [COMPLETE 210]
-T211] T049 [P] [US5] [P] [US5] Update traceability matrix for all stories [COMPLETE 211]
-T211] T050 [P] [Shared] Final fresh clone verification (45 min) [COMPLETE 211]
-T212] T051 [P] [Shared] Set all spec.md statuses to Implemented after acceptance evidence [COMPLETE 212] [COMPLETE 212]
+- [ ] T201 [P] [US2] Configure Prometheus alert rules and notification routing
+- [ ] T202 [P] [US2] Add integration tests for alerting
+- [ ] T203 [P] [US3] Implement Loki log aggregation across all services
+- [ ] T204 [P] [US3] Configure Alertmanager notification routing
+- [ ] T205 [P] [US3] Implement service mesh observability with Istio
+- [ ] T206 [P] [US4] Configure OpenTelemetry tracing continuation
+- [ ] T207 [P] [US4] Implement service mesh traffic monitoring
+- [ ] T208 [P] [US4] Configure runbook generation and execution
+- [ ] T209 [P] [US5] Implement performance anomaly detection
+- [ ] T210 [P] [US5] Add integration tests for anomaly detection
+- [x] T211 [P] [US5] Add comprehensive documentation
+- [x] T212 [P] [US5] Update traceability matrix for all stories
+- [x] T213 [P] [Shared] Final fresh clone verification (45 min)
+- [ ] T214 [P] [Shared] Set all spec.md statuses to Implemented after acceptance evidence
 
 **Checkpoint**: US2–US5 complete — Monitoring & Observability advanced features implemented, documentation complete
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-T213] T095 [P] [P] [ Shared ] Set spec.md status to Implemented [COMPLETE 213]
-T214] T096 [ Shared ] Run complete required check set and confirm PASS [COMPLETE 214]
-T215] T097 [P] [Shared] [P] [ Shared ] Reconcile constitution documents [COMPLETE 215]
-T216] T098 [P] [Shared] [P] [ Shared ] Record ADR-0001 final decision status [COMPLETE 216]
-T217] T099 [P] [Shared] [P] [ Shared ] Update traceability matrix [COMPLETE 217]
-T218] T100 [P] [Shared] [P] [ Shared ] Update requirements.md to implemented state [COMPLETE 218]
-T219] T101 [P] [Shared] [P] [ Shared ] Fresh clone verification (30 min) [COMPLETE 219]
-T220] T102 [ Shared ] Set spec.md status to Implemented after acceptance evidence [COMPLETE 220]
+- [ ] T215 [P] [Shared] Set spec.md status to Implemented
+- [x] T216 [Shared] Run complete required check set and confirm PASS
+- [x] T217 [P] [Shared] Reconcile constitution documents
+- [x] T218 [P] [Shared] Record ADR-0001 final decision status
+- [x] T219 [P] [Shared] Update traceability matrix
+- [ ] T220 [P] [Shared] Update requirements.md to implemented state
+- [x] T221 [P] [Shared] Fresh clone verification (30 min)
+- [ ] T222 [Shared] Set spec.md status to Implemented after acceptance evidence
 
 ## Dependencies & Execution Order
 
@@ -133,24 +144,24 @@ T220] T102 [ Shared ] Set spec.md status to Implemented after acceptance evidenc
 ## Parallel Execution Examples
 
 ### Parallel: Infrastructure Setup (P tasks)
-- T025: Configure Prometheus scrape targets (different file from T026)
-- T026: Configure Alertmanager routing rules (different file, no Prometheus dependency)
-- T027: Configure Loki log aggregation (different file)
-- T028: Implement Prometheus metrics exposition (different file)
-- T029: Implement OpenTelemetry tracing (different concern)
-- T030: Configure Istio observability (different concern)
+- T186: Configure Prometheus scrape targets (different file from T187)
+- T187: Configure Alertmanager routing rules (different file, no Prometheus dependency)
+- T188: Implement Loki query middleware (different file)
+- T189: Implement Prometheus metrics exposition (different file)
+- T190: Implement OpenTelemetry tracing propagation across service boundaries (different concern)
+- T192: Configure Istio observability metrics and dashboards (different concern)
 - All six can run in parallel, each modifying different files
 
 ### Parallel: Middleware Implementation (P tasks)
-- T028: Prometheus metrics exposition (different concern from T029)
-- T029: OpenTelemetry tracing (different concern)
-- T030: Istio observability (different concern)
+- T189: Prometheus metrics exposition (different concern from T190)
+- T190: OpenTelemetry tracing (different concern)
+- T192: Istio observability (different concern)
 - All three can run in parallel, each modifying different files
 
 ### Parallel: Checklist Updates (P tasks)
-- T035–T040: Constitution reconciliation, ADR recording, traceability, requirements update
+- T195–T198: Constitution reconciliation, ADR recording, traceability, requirements update
 - All can run once US1 acceptance evidence is collected
 
 ### Parallel: Documentation (P tasks)
-- T046–T050: Documentation, traceability matrix, requirements update, fresh clone, spec status
+- T211–T214: Documentation, traceability matrix, requirements update, fresh clone, spec status
 - All can run once US1–US5 acceptance evidence is collected

@@ -51,7 +51,7 @@
 - **Gate timeout expiration**: If phase gate validation exceeds the configured timeout (NFR-061), the gate should auto-fail and flag the build for manual review; no indefinite blocking
 - **External system downtime**: If an external build system is unreachable, the integration framework should fall back to mock/local execution and surface a warning; no data loss
 - **Version metadata tampering**: If an attempt is made to modify metadata on a released version (NFR-064), the system should reject the modification and surface an integrity violation error; audit log entry required
-- **Traceability gap**: If test mappings (TM280–TM297) cannot be found in the prior mapping set (TM001–TM220), the system should surface a warning and default to manual review rather than silently omitting coverage
+- **Traceability gap**: If test mappings (TM280–TM297) cannot be found in the prior mapping set (TM001–TM279), the system should surface a warning and default to manual review rather than silently omitting coverage
 
 ## Success Criteria
 - **SC-01**: Additional pipeline stages operational with valid responses
@@ -74,13 +74,9 @@
 | T260 | FR-094 | US5 | TM292–TM294 | P3 |
 | T261 | FR-095 | US5 | TM295–TM297 | P3 |
 
-## Dependencies
-- **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4, build-phase5, build-phase6, build-phase7, build-phase8 (all complete)
-- **Enables**: build-phase10 (future extension phase)
-
 ## Traceability Notes
 
-This phase extends the traceability from TM221–TM297, building upon the foundation established in prior phases. All prior test mappings (TM001–TM220) remain valid and unmodified.
+This phase introduces test mappings TM280–TM297 across tasks T256–T261, building upon the foundation established in prior phases. All test mappings introduced by earlier phases (TM001–TM279) remain valid and unmodified.
 
 ## Success Criteria Notes
 
@@ -90,6 +86,6 @@ This phase extends the traceability from TM221–TM297, building upon the founda
 
 ## Prioritization Notes
 
-- **P1 (Must have)**: FR-090, FR-091, T256–T258 — Core build pipeline extension essential for MVP enhancement
-- **P2 (Should have)**: FR-092, FR-093, T259–T260 — Important enhancements that improve functionality
-- **P3 (Nice to have)**: FR-094, FR-095, T261–T261 — Enhancements that add value but are not essential for initial release
+- **P1 (Must have)**: FR-090, FR-091, T256–T257 — Core build pipeline extension essential for MVP enhancement
+- **P2 (Should have)**: FR-092, FR-093, T258–T259 — Important enhancements that improve functionality
+- **P3 (Nice to have)**: FR-094, FR-095, T260–T261 — Enhancements that add value but are not essential for initial release

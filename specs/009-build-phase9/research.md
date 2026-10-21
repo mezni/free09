@@ -44,4 +44,4 @@
 
 ## Summary
 
-All 5 research decisions follow industry-standard patterns for telco platform build plan extension, building on existing infrastructure while introducing enhanced capabilities for pipeline stages, phase gates, documentation, partner integrations, compliance, and version metadata. All decisions are consistent with the project constitution (Art. I–VIII) and the traceability matrix (TM280–TM297).
+All 6 research decisions follow industry-standard patterns for telco platform build plan extension, building on existing infrastructure while introducing enhanced capabilities for pipeline stages, phase gates, documentation, partner integrations, compliance, and version metadata. All decisions are consistent with the project constitution (Art. I–VIII) and the traceability matrix (TM280–TM297).

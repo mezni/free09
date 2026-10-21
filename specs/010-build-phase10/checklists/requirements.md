@@ -17,7 +17,7 @@
 - [x] Requirements are testable and unambiguous — FRs are testable given acceptance criteria
 - [x] Success criteria are measurable — SC-01 through SC-05 have specific metrics (under 20 seconds, <5% overhead, audit trail, operational)
 - [x] Success criteria are technology-agnostic (no implementation details) — SC-01/SC-03/SC-05 are purely outcome-focused; SC-02/SC-04 use protocol/domain terms (build concept, compliance, audit) per guidelines' reasonable defaults
-- [x] All acceptance scenarios are defined — 5 acceptance criteria cover all 5 FRs
+- [x] All acceptance scenarios are defined — 6 acceptance criteria cover all 6 FRs
 - [x] Edge cases are identified — 5 edge cases explicitly listed (pipeline skip, timeout expiration, system downtime, metadata tampering, traceability gap)
 - [x] Scope is clearly bounded — In-scope/Out-of-scope sections define boundaries
 - [x] Dependencies and assumptions identified — Both sections present

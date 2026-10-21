@@ -1,6 +1,6 @@
 # Build Plan
-Version: 1.0  
-Status: Proposed — baseline plan
+Version: 1.1  
+Status: Baseline plan with the phase 10 and 11 build-plan extensions
 
 ## 1. Delivery strategy
 
@@ -130,6 +130,62 @@ Do not attempt full TM Forum or 3GPP compliance by implication. Identify any spe
 - Restore procedure has been exercised.
 - Security and operational risks have owners and accepted mitigations.
 - Release readiness is explicitly approved.
+
+### Phase 10 — Build plan extension
+**Outcomes**
+- Additional build pipeline optimization stages.
+- Enhanced phase gate compliance validation.
+- Improved phase traceability and reporting.
+- Integration with external deployment systems.
+- Compliance and audit reporting for build processes.
+- Build performance metrics and profiling.
+
+**Exit gate**
+- FR-100 through FR-105 have passing acceptance criteria.
+- Phase gate compliance validation completes within 20 seconds.
+- Performance metrics add less than 5% build-time overhead.
+
+Specification: `specs/010-build-phase10/spec.md` — status **Proposed**.
+
+### Phase 11 — Build plan extension (reporting horizon)
+**Outcomes**
+- Additional build pipeline reporting stages.
+- Enhanced phase gate statistical analysis.
+- Improved phase dashboard and visualization.
+- Integration with external monitoring systems.
+- Compliance and statistical process control reporting.
+- Build trend analysis and forecasting.
+
+**Exit gate**
+- FR-110 through FR-115 have passing acceptance criteria.
+- Phase gate statistical analysis completes within 15 seconds.
+- Trend analysis adds less than 3% build-time overhead.
+
+Specification: `specs/011-build-phase11/spec.md` — status **Proposed**.
+
+## 2.1 Phase-to-specification index
+
+The phase numbers above describe the delivery strategy. The specifications that
+carry the requirements use their own directory names, so the mapping is:
+
+| Plan phase | Specification directory | Status |
+|---|---|---|
+| Phase 0 — Project setup and governance | `specs/001-project-setup/` | Implemented |
+| Phase 1 — Domain discovery and architecture | `specs/002-build-phase1/` | Implemented |
+| Phase 2 — Data model and database foundation | `specs/003-build-phase2/` | Implemented |
+| Phase 3 — Authentication and authorization | `specs/004-build-phase3/` | Implemented |
+| Phase 4 — CRM vertical slice | *(no specification directory)* | Not specified |
+| Phase 5 — Inventory, catalog, subscriptions, provisioning | `specs/005-build-phase5/` | Implemented |
+| Phase 6 — Billing and financial ledger | `specs/006-build-phase6/` | Implemented |
+| Phase 7 — Synthetic data generation | `specs/007-build-phase7/` | Implemented |
+| Phase 8 — Cross-service integration | `specs/008-build-phase8/` | Partially implemented |
+| Phase 9 — Production readiness | `specs/009-build-phase9/` | Proposed |
+| Phase 10 — Build plan extension | `specs/010-build-phase10/` | Proposed |
+| Phase 11 — Build plan extension (reporting horizon) | `specs/011-build-phase11/` | Proposed |
+
+The phase names carried by the specification directories predate this plan and
+describe the work each extension phase actually added, so the two vocabularies
+do not align one-to-one. The table above is the authoritative mapping.
 
 ## 3. Prioritization
 
