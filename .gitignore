@@ -1,15 +1,19 @@
-
 # Python
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
 .venv/
+venv/
 
 # Environment and secrets
 .env
 .env.*
 !.env.example
+.env.local
+!.env.local.example
+.env.*.local
+.env.*.global
 
 # IDE
 .vscode/
@@ -24,4 +28,16 @@ htmlcov/
 .coverage
 dist/
 build/
+*.egg-info/
 
+# Phase 0: Project scaffolding
+# .env - environment variables (replace with .env.local for local overrides)
+# .venv/ and venv/ - Python virtual environments
+# .gitignore managed by SPEC-001 task T009
+
+# Docker / deployment
+deploy/compose/.env
+
+# Cache and temporary files
+.ruff_cache/
+.pytest_cache/

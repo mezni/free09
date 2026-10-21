@@ -1,0 +1,12 @@
+[project]
+name = "services/inventory-service"
+version = "0.1.0"
+description = "Service for telco platform"
+
+[tool.ruff]
+select = []
+
+[tool.pytest.ini_options]
+markers = ""
+testpaths = ["tests"]
+python_files = "test_*.py"

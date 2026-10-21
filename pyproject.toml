@@ -1,0 +1,16 @@
+[project]
+name = "telco-platform"
+version = "0.1.0"
+description = "Telco platform monorepo"
+
+[tool.ruff]
+select = []
+
+[tool.pytest.ini_options]
+markers = ""
+testpaths = ["tests"]
+python_files = "test_*.py"
+
+[tool.coverage.run]
+branch = true
+source = ["services", "libs"]
