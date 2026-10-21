@@ -5,6 +5,9 @@ A monorepo of four independently-deployable FastAPI services plus a shared
 technical library, governed by Spec Kit artefacts. No runtime network endpoint
 and no application database object is introduced by this phase (BR-011).
 
+## Purpose
+Additional purpose line for clarity.
+
 ## Repository Conventions
 - **Path layout**: follows `specs/001-project-setup/contracts/repository-layout-contract.md`
 - **Services**: `services/<name>/src/<package_name>/` — application source
@@ -14,6 +17,11 @@ and no application database object is introduced by this phase (BR-011).
 - **Deploy**: `deploy/compose/` — local runtime topology
 - **Docs**: `docs/` — governance and design prose
 - **Specs**: `specs/001-project-setup/` — this feature's artefacts
+
+## CONTRIBUTING
+See [CONTRIBUTING](CONTRIBUTING.md) for development workflow, pull request process,
+specification development, task development, documentation standards, code standards,
+and issue reporting guidelines.
 
 ## Documented Setup Path
 1. Clone the repository
@@ -49,3 +57,8 @@ docker compose -f deploy/compose/compose.yaml up -d
 - BR-012: Tooling does not change the Python FastAPI on PostgreSQL baseline
 - Checks are reproducible locally with identical results
 - Governance is enforced through constitution and traceability matrix
+
+## Version
+Currently tracking SPEC-001 phases 1–11. Each build phase extends the telco platform
+with incremental capabilities governed by approved specifications and traceability
+matrices TM001–TM333.
