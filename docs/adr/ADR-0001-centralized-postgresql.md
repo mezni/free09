@@ -1,6 +1,6 @@
 # ADR-0001: Centralized PostgreSQL with Schema Ownership
 
-- Status: Proposed
+- Status: Implemented
 - Date: YYYY-MM-DD
 - Decision owners: Architecture and database owners
 

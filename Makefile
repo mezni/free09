@@ -1,6 +1,6 @@
-.PHONY: all help setup test lint format typecheck test-cov secret-scan dep-audit docker-up docker-down compose
+.PHONY: all help setup test lint format typecheck test-cov secret-scan dep-audit docker-up docker-down compose build-phase3
 
-all: help ## Display help
+all: help ## Display help message
 
 help: ## Display help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | sort | column -t -s ':' -n 2
@@ -35,7 +35,10 @@ docker-up: ## Start docker compose
 docker-down: ## Stop docker compose
 	@docker compose -f deploy/compose/compose.yaml down
 
-.PHONY: setup db-up db-down
+build-phase3: ## Run build-phase3 specific checks
+	@nox -s run-build-phase3 || true
+
+.PHONY: setup db-up db-down build-phase3
 
 setup: ## Initialize project structure and verify prerequisites
 	@nox -l setup

@@ -1,0 +1,19 @@
+# build-phase3: pyproject.toml
+
+[project]
+name = "telco-platform-build-phase3"
+version = "0.1.0"
+description = " build-phase3: API Contract Layer"
+
+[tool.ruff]
+select = ["E", "F", "I", "B", "A", "PTDL", "SIM"]
+line-length = 88
+
+[tool.pytest.ini_options]
+markers = ""
+testpaths = ["tests"]
+python_files = "test_*.py"
+
+[tool.coverage.run]
+branch = true
+source = ["services", "libs"]

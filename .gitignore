@@ -41,3 +41,33 @@ deploy/compose/.env
 # Cache and temporary files
 .ruff_cache/
 .pytest_cache/
+
+# Phase 3: build-phase3 specific
+# OpenAPI specifications
+*.yaml
+*.yml
+# SDK generation artifacts
+sdk/
+# Generated configuration
+.gen/
+# Test artifacts
+.coverage
+htmlcov/
+# Environment overrides
+.env.build-phase3
+TOML
+echo "Updated .gitignore with build-phase3 exclusions"
+
+# Phase 3: build-phase3 specific
+# OpenAPI specifications
+*.yaml
+*.yml
+# SDK generation artifacts
+sdk/
+# Generated configuration
+.gen/
+# Test artifacts
+.coverage
+htmlcov/
+# Environment overrides
+.env.build-phase3

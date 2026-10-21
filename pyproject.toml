@@ -2,9 +2,14 @@
 name = "telco-platform"
 version = "0.1.0"
 description = "Telco platform monorepo"
+dependencies = [
+    "black>=26.10.1",
+    "ruff>=0.17.1",
+]
 
 [tool.ruff]
-select = []
+select = ["E", "F", "I", "B", "A", "PTDL", "SIM"]
+line-length = 88
 
 [tool.pytest.ini_options]
 markers = ""
@@ -14,3 +19,7 @@ python_files = "test_*.py"
 [tool.coverage.run]
 branch = true
 source = ["services", "libs"]
+[tool.mypy]
+strict = true
+python_version = "3.13"
+plugin = ["pydantic.mypy.plugin"]

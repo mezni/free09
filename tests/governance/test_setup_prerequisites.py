@@ -1,39 +1,34 @@
-"""Setup prerequisites test — T024 [P] [US1]."""
-
-import subprocess
-import pytest
-
-pytestmark = pytest.mark.usefixtures("prerequisite_check_fixture")
+"""Setup prerequisites test — T064 [P] [US1]."""
 
 
-@pytest.fixture(autouse=True, scope="session")
-def prerequisite_check_fixture():
-    """Fixture that runs prerequisite verification and names missing prerequisites."""
-    result = subprocess.run(
-        ["python3", "ci/check_prerequisites.py"],
-        capture_output=True,
-        text=True,
-    )
-
-    if result.returncode != 0:
-        # Name the missing prerequisites from stderr
-        missing = [
-            line.split(":")[-1].strip()
-            for line in result.stderr.splitlines()
-            if "missing" in line.lower() or "not found" in line.lower()
-        ]
-        pytest.fail(
-            f"Prerequisite check failed. Missing: {', '.join(missing) if missing else 'unknown prerequisites'}"
-        )
-    else:
-        # Success — all prerequisites are available
-        yield {"all_present": True}
-
-
-@pytest.mark.usefixtures("prerequisite_check_fixture")
+@pytest.mark.usefixtures("clone_dir_fixture")
 class TestSetupPrerequisites:
-    """Test that setup prerequisites are met and named."""
+    """Test that setup prerequisites are met."""
 
-    def test_prerequisites_named_on_failure(self, prerequisite_check_fixture):
-        """When prerequisites are missing, they are named specifically."""
-        assert prerequisite_check_fixture.get("all_present", False) or True  # placeholder
+    def test_uv_installed(self):
+        """uv package manager is installed."""
+        result = __import__('subprocess').run(
+            ['uv', '--version'],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+
+    def test_nox_installed(self):
+        """nox is installed."""
+        result = __import__('subprocess').run(
+            ['nox', '--version'],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+
+    def test_make_present(self):
+        """Makefile is present."""
+        import pathlib
+        assert pathlib.Path('Makefile').is_file()
+
+    def test_python_version(self):
+        """Python 3.13 is the required version."""
+        import sys
+        assert sys.version_info >= (3, 13)
