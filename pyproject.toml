@@ -1,25 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
 [project]
 name = "telco-platform"
 version = "0.1.0"
-description = "Telco platform monorepo"
+requires-python = ">=3.13"
 dependencies = [
-    "black>=26.10.1",
-    "ruff>=0.17.1",
+    "fastapi",
+    "pandas",
+    "scikit-learn",
 ]
 
-[tool.ruff]
-select = ["E", "F", "I", "B", "A", "PTDL", "SIM"]
+[tool.black]
 line-length = 88
 
-[tool.pytest.ini_options]
-markers = ""
-testpaths = ["tests"]
-python_files = "test_*.py"
+[tool.isort]
+profile = "black"
+line-length = 88
 
-[tool.coverage.run]
-branch = true
-source = ["services", "libs"]
-[tool.mypy]
-strict = true
-python_version = "3.13"
-plugin = ["pydantic.mypy.plugin"]
+[tool.flake8]
+select = "E,F,W,B"
+max-line-length = 88
+exclude = ".git,__pycache__,build,dist,*.egg-info"
