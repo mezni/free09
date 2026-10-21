@@ -2,8 +2,8 @@
 
 import json
 import logging
-from typing import Any, Dict, Optional
 import time
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger("telco-platform")
 
@@ -58,7 +58,9 @@ class LoggingMiddleware:
         if isinstance(data, dict):
             sensitive_keys = {"password", "token", "secret", "key_hash"}
             return {
-                k: LoggingMiddleware._sanitize(v) if k not in sensitive_keys else "[Redacted]"
+                k: LoggingMiddleware._sanitize(v)
+                if k not in sensitive_keys
+                else "[Redacted]"
                 for k, v in data.items()
             }
         if isinstance(data, list):

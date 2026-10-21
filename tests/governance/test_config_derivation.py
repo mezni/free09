@@ -1,35 +1,40 @@
 """Config derivation test — T027 [P] [US1]."""
 
 import os
-import subprocess
+
 import pytest
 
 pytestmark = pytest.mark.usefixtures("clean_env_fixture")
 
+CREDENTIAL_VARS = ["SECRET_KEY", "API_TOKEN", "SECRET_KEY_BASE"]
 
-@pytest.fixture(autouse=True, scope="session")
+
+def _example_variables(path=".env.example"):
+    """Return the variable names declared in an env file."""
+    names = []
+    with open(path, encoding="utf-8") as handle:
+        for raw_line in handle:
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            names.append(line.split("=", 1)[0].strip())
+    return names
+
+
+@pytest.fixture(autouse=True)
 def clean_env_fixture(monkeypatch):
-    """Set up a clean environment derived from .env.example only."""
-    # Read .env.example and set only those variables (no real values)
-    env_vars = {}
-    with open(".env.example", "r") as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                var_name = line.split("=")[0].strip()
-                # Set only placeholder/no-value entries
-                env_vars[var_name] = ""
+    """Derive a clean environment from .env.example alone.
 
-    # Apply to the session
-    for var, value in env_vars.items():
-        monkeypatch.setenv(var, value)
+    Every declared variable is set to an empty value so that no real
+    configuration leaks in from the surrounding environment.
+    """
+    for var_name in _example_variables():
+        monkeypatch.setenv(var_name, "")
 
-    # Verify no other env vars that would affect checks are set
-    key_vars = ["DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD"]
-    for var in key_vars:
-        assert var not in os.environ, f"Unexpected env var {var} is set"
+    for var_name in CREDENTIAL_VARS:
+        monkeypatch.delenv(var_name, raising=False)
 
-    yield {}
+    return {}
 
 
 @pytest.mark.usefixtures("clean_env_fixture")
@@ -37,25 +42,25 @@ class TestConfigDerivation:
     """Test that configuration checks derive values from .env.example alone."""
 
     def test_env_vars_from_example_only(self, clean_env_fixture):
-        """All config derives from .env.example in clean environment."""
-        # The clean environment should only have vars from .env.example
-        example_vars = set()
-        with open(".env.example", "r") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    var_name = line.split("=")[0].strip()
-                    example_vars.add(var_name)
+        """All config derives from .env.example in a clean environment."""
+        example_vars = set(_example_variables())
 
-        # Only example vars should be set (plus system ones)
-        current_vars = set(k for k in os.environ if k in example_vars)
+        current_vars = {key for key in os.environ if key in example_vars}
         assert current_vars == example_vars, (
             f"Expected only example vars {example_vars}, got {current_vars}"
         )
 
+        for var_name in example_vars:
+            assert os.environ[var_name] == "", (
+                f"Variable {var_name} should be empty in a clean environment"
+            )
+
     def test_no_real_credentials_in_environment(self, clean_env_fixture):
         """No real credentials appear in the environment."""
-        # Check that no database passwords or keys are set
-        forbidden = ["DB_PASSWORD", "SECRET_KEY", "API_TOKEN"]
-        for var in forbidden:
-            assert var not in os.environ, f"Forbidden env var {var} is set"
+        for var_name in CREDENTIAL_VARS:
+            assert var_name not in os.environ, f"Forbidden env var {var_name} is set"
+
+        # A declared credential variable must be present but empty.
+        assert os.environ.get("DB_PASSWORD", "") == "", (
+            "DB_PASSWORD must not be populated"
+        )

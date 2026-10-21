@@ -2,14 +2,18 @@
 
 import json
 import logging
-from typing import Any, Dict, Optional
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+from uuid import uuid4
+
+from pydantic import BaseModel
 
 logger = logging.getLogger("telco-platform-errors")
 
 
 class ErrorInfo(BaseModel):
     """Structured error information for centralized tracking."""
+
     error_id: str
     timestamp: str
     service: str
@@ -48,29 +52,29 @@ class ErrorTracker:
             request_id=request_id,
             details=details,
         )
-        
+
         # Add to buffer (with size limit)
         cls._error_buffer.append(error)
         if len(cls._error_buffer) > cls._max_buffer_size:
-            cls._error_buffer = cls._error_buffer[-cls._max_buffer_size:]
-        
+            cls._error_buffer = cls._error_buffer[-cls._max_buffer_size :]
+
         # Log the error
         logger.error(
-            json.dumps({
-                "error_id": error_id,
-                "service": service,
-                "endpoint": endpoint,
-                "error_type": error_type,
-                "message": message,
-            })
+            json.dumps(
+                {
+                    "error_id": error_id,
+                    "service": service,
+                    "endpoint": endpoint,
+                    "error_type": error_type,
+                    "message": message,
+                }
+            )
         )
-        
+
         return error
 
     @classmethod
-    def get_recent_errors(
-        cls, limit: int = 50
-    ) -> List[ErrorInfo]:
+    def get_recent_errors(cls, limit: int = 50) -> List[ErrorInfo]:
         """Get recent tracked errors."""
         return cls._error_buffer[-limit:]
 

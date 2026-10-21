@@ -1,7 +1,8 @@
 """Health check endpoints for auth service."""
 
-from fastapi import APIRouter, Depends, HTTPException
-from typing import Dict
+from typing import Any, Dict
+
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/health", tags=["health"])
 

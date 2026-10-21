@@ -1,6 +1,7 @@
 """Contract tests for User Story 1: Advanced API endpoints (US1)"""
 
 from fastapi.testclient import TestClient
+
 from src.main import app
 
 client = TestClient(app)
@@ -33,7 +34,7 @@ def test_create_analytics_event():
         "event_type": "page_view",
         "service": "web-frontend",
         "endpoint": "/dashboard",
-        "metadata": {"page_id": "abc123"}
+        "metadata": {"page_id": "abc123"},
     }
     response = client.post("/api/v1/analytics/events", json=event_data)
     assert response.status_code in (200, 201, 400)  # 400 if validation fails

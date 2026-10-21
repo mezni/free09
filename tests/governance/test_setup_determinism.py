@@ -1,6 +1,7 @@
 """Setup determinism test — T025 [P] [US1]."""
 
 import subprocess
+
 import pytest
 
 pytestmark = pytest.mark.usefixtures("determinism_fixture")
@@ -26,7 +27,7 @@ def determinism_fixture():
     )
 
     # Verify both runs produce compatible results
-    yield {
+    return {
         "run1_exit": result1.returncode,
         "run2_exit": result2.returncode,
         "run1_stdout": result1.stdout[-500:] if result1.stdout else "",

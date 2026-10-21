@@ -24,5 +24,5 @@ def empty_implementation_fixture():
     in the project implementation.
     """
     # Yield control without setting up anything heavy
-    yield
+    return
     # Post-test: verify nothing unexpected happened

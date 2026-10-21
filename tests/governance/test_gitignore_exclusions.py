@@ -1,6 +1,7 @@
 """Gitignore exclusions test — T028 [P] [US1]."""
 
 import subprocess
+
 import pytest
 
 pytestmark = pytest.mark.usefixtures("gitignore_fixture")
@@ -34,7 +35,7 @@ def gitignore_fixture():
                 # File is not gitignored — it would be tracked
                 tracked_artifacts.append(filepath)
 
-    yield {"untracked_would_be_tracked": tracked_artifacts}
+    return {"untracked_would_be_tracked": tracked_artifacts}
 
 
 @pytest.mark.usefixtures("gitignore_fixture")
@@ -49,6 +50,7 @@ class TestGitignoreExclusions:
         for pattern in generated_patterns:
             # At least some generated artifacts should be excluded
             matching = [f for f in excluded if pattern in f]
-            # We check that the gitignore system works — at least some files are excluded
+            # We check that the gitignore system works — at least some files
+            # are excluded
             if matching:
                 break  # Found matching exclusions — gitignore is working

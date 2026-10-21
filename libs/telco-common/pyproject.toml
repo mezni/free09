@@ -3,10 +3,7 @@ name = "telco-common"
 version = "0.1.0"
 description = "Shared technical library for telco services"
 
-[tool.ruff]
-select = ["E", "F", "I", "B", "A", "PTDL", "SIM"]
-
-[tool.mypy.pyproject.toml]
-strict = True
+[tool.mypy]
+strict = true
 python_version = "3.13"
-plugin = ["pydantic.mypy.plugin"]
+plugins = ["pydantic.mypy.plugin"]

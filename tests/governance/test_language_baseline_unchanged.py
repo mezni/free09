@@ -18,7 +18,7 @@ def language_baseline_fixture():
         "implementation_language": "Python 3.13",
         "persistence": "PostgreSQL 16.15",
     }
-    yield baseline
+    return baseline
 
 
 @pytest.mark.usefixtures("language_baseline_fixture")

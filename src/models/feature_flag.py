@@ -1,13 +1,15 @@
 """FeatureFlag model - base entity for feature flag framework (FR-075, NFR-054)"""
 
-from datetime import datetime, timezone
-from models import Base
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, JSON, func
+from sqlalchemy import JSON, Boolean, Column, DateTime, Integer, String, func
+
+from src.models import Base
+
 
 class FeatureFlag(Base):
     """FeatureFlag - feature flag framework entity"""
+
     __tablename__ = "feature_flags"
-    
+
     flag_id = Column(Integer, primary_key=True, autoincrement=False)
     flag_name = Column(String(200), nullable=False, unique=True, index=True)
     is_active = Column(Boolean, nullable=False, default=True)

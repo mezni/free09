@@ -10,8 +10,8 @@ from functools import lru_cache
 
 try:
     from dotenv import load_dotenv
-except ImportError:
-    load_dotenv = None
+except ImportError:  # pragma: no cover - optional dependency
+    load_dotenv = None  # type: ignore[assignment]
 
 
 def _validate_env_var(name: str, required: bool = True, secret: bool = False) -> str:
@@ -37,9 +37,8 @@ def _validate_env_var(name: str, required: bool = True, secret: bool = False) ->
             sys.exit(2)
         return ""
     if secret:
-        # Mask all but last 4 characters for logging
-        display = f"****{value[-4:]}" if len(value) > 4 else "****"
-        # Don't log the actual value
+        # Masked representation is for logging only; the raw value is never logged.
+        pass
     return value
 
 
@@ -57,11 +56,10 @@ def get_settings() -> dict:
         "db_name": _validate_env_var("DB_NAME", required=True),
         "db_user": _validate_env_var("DB_USER", required=True),
         "db_password": _validate_env_var("DB_PASSWORD", secret=True),
-
         # Service identification
         "service_name": _validate_env_var("SERVICE_NAME", required=True),
-        "service_role": _validate_env_var("SERVICE_ROLE", required=False, secret=False) or "default",
-
+        "service_role": _validate_env_var("SERVICE_ROLE", required=False, secret=False)
+        or "default",
         # Feature flags
         "feature_flag_a": _validate_env_var("FEATURE_FLAG_A", required=False),
         "feature_flag_b": _validate_env_var("FEATURE_FLAG_B", required=False),

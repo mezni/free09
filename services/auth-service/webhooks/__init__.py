@@ -1,6 +1,6 @@
 """Webhook validation and processing for telco platform."""
 
-from typing import Dict, Any, Callable
+from typing import Any, Callable, Dict
 
 
 class WebhookRegistry:

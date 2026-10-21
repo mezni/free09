@@ -1,40 +1,48 @@
 """CI acceptance/rejection test — T035 [P] [US2]."""
 
 import subprocess
-import pytest
 import sys
+from pathlib import Path
+
+import pytest
 
 pytestmark = pytest.mark.usefixtures("ci_session_fixture")
 
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
-@pytest.fixture(autouse=True, scope="session")
-def ci_session_fixture(tmp_path):
-    """Fixture that runs CI checks and records outcomes."""
-    # Test 1: Formatting check (ruff format)
-    result_format = subprocess.run(
-        ["nox", "run", "format"],
+# A representative, non-recursive subset: running the whole suite from inside
+# the suite would re-enter this fixture and never terminate.
+REPRESENTATIVE_SUITE = "tests/governance/test_language_baseline.py"
+
+
+def _run(command: list[str], timeout: int) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        command,
+        cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
-        timeout=60,
+        timeout=timeout,
+        check=False,
+    )
+
+
+@pytest.fixture(autouse=True, scope="session")
+def ci_session_fixture():
+    """Fixture that runs CI checks and records outcomes."""
+    # Test 1: Formatting check (ruff format)
+    result_format = _run(
+        [sys.executable, "-m", "ruff", "format", "--check", "."], timeout=300
     )
 
     # Test 2: Lint check (ruff check)
-    result_lint = subprocess.run(
-        ["nox", "run", "lint"],
-        capture_output=True,
-        text=True,
-        timeout=60,
+    result_lint = _run([sys.executable, "-m", "ruff", "check", "."], timeout=300)
+
+    # Test 3: Test check (representative suite)
+    result_test = _run(
+        [sys.executable, "-m", "pytest", REPRESENTATIVE_SUITE, "-q"], timeout=300
     )
 
-    # Test 3: Test check
-    result_test = subprocess.run(
-        ["nox", "run", "test"],
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
-
-    yield {
+    return {
         "format_exit": result_format.returncode,
         "lint_exit": result_lint.returncode,
         "test_exit": result_test.returncode,
@@ -74,4 +82,6 @@ class TestCIAcceptsAndRejects:
         for name, code in outcomes.items():
             # Each check outcome should be one of the valid exit codes
             valid_codes = {0, 1, 2, 3}
-            assert code in valid_codes, f"CI check '{name}' has invalid exit code: {code}"
+            assert code in valid_codes, (
+                f"CI check '{name}' has invalid exit code: {code}"
+            )

@@ -1,10 +1,22 @@
 # Python
 __pycache__/
 *.py[cod]
-.pytest_cache/
-.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
 .venv/
 venv/
+.nox/
+
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
 
 # Environment and secrets
 .env
@@ -23,13 +35,6 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Generated artifacts
-htmlcov/
-.coverage
-dist/
-build/
-*.egg-info/
-
 # Phase 0: Project scaffolding
 # .env - environment variables (replace with .env.local for local overrides)
 # .venv/ and venv/ - Python virtual environments
@@ -38,36 +43,13 @@ build/
 # Docker / deployment
 deploy/compose/.env
 
-# Cache and temporary files
-.ruff_cache/
-.pytest_cache/
-
-# Phase 3: build-phase3 specific
-# OpenAPI specifications
-*.yaml
-*.yml
+# Phase 3: build-phase3 generated artifacts
 # SDK generation artifacts
 sdk/
 # Generated configuration
 .gen/
-# Test artifacts
-.coverage
-htmlcov/
-# Environment overrides
-.env.build-phase3
-TOML
-echo "Updated .gitignore with build-phase3 exclusions"
-
-# Phase 3: build-phase3 specific
-# OpenAPI specifications
-*.yaml
-*.yml
-# SDK generation artifacts
-sdk/
-# Generated configuration
-.gen/
-# Test artifacts
-.coverage
-htmlcov/
-# Environment overrides
+# Generated OpenAPI specifications (source specs live under specs/)
+services/*/openapi/
+openapi/generated/
+# Phase 3 local environment overrides
 .env.build-phase3

@@ -1,7 +1,8 @@
 """OAuth2.1 authentication middleware."""
 
-from fastapi import HTTPAuthorizationCredentials, HTTPException, Depends
 from typing import Optional
+
+from fastapi import Depends, HTTPAuthorizationCredentials, HTTPException
 
 
 async def get_current_user(
@@ -13,9 +14,9 @@ async def get_current_user(
             status_code=401,
             detail="Missing authorization header",
         )
-    
+
     token = credentials.credentials
-    
+
     # OAuth2.1 validation - in production, validate against auth server
     # For now, check token format (non-empty JWT-like string)
     if not token or "." not in token:
@@ -23,12 +24,13 @@ async def get_current_user(
             status_code=401,
             detail="Invalid OAuth2.1 token format",
         )
-    
+
     return {"sub": "user", "scopes": ["openid", "profile", "email"]}
 
 
 def require_scopes(*required: str):
     """Create a dependency that checks for required OAuth2.1 scopes."""
+
     def dependency(user: dict = Depends(get_current_user)) -> dict:
         user_scopes: set[str] = set(user.get("scopes", []))
         for scope in required:
@@ -38,4 +40,5 @@ def require_scopes(*required: str):
                     detail=f"Missing required scope: {scope}",
                 )
         return user
+
     return dependency

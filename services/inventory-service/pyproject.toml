@@ -5,29 +5,26 @@ name = "services/inventory-service"
 version = "0.1.0"
 description = "Inventory and stock management service for telco platform"
 
-[project.dependencies]
-pydantic >= 2.0
-sqlalchemy >= 2.0
-
-[tool.ruff]
-select = ["E", "F", "I", "B", "A", "PTDL", "SIM"]
-line-length = 88
-
+dependencies = [
+    "pydantic>=2.0",
+    "sqlalchemy>=2.0",
+]
 [tool.pytest.ini_options]
-markers =
-    us1: API Contract Layer tests
-    us2: SDK generation tests
-    us3: Advanced feature tests
-    us4: Polish and compliance tests
-    gateway: API gateway and rate limiting tests
-    auth: OAuth2.1 authentication tests
-    sdk: SDK generation and validation tests
+markers = [
+    "us1: API Contract Layer tests",
+    "us2: SDK generation tests",
+    "us3: Advanced feature tests",
+    "us4: Polish and compliance tests",
+    "gateway: API gateway and rate limiting tests",
+    "auth: OAuth2.1 authentication tests",
+    "sdk: SDK generation and validation tests",
+]
 testpaths = ["tests"]
 python_files = "test_*.py"
-override = ["us1", "us2", "us3", "us4", "gateway", "auth", "sdk"]
+addopts = ["--strict-markers"]
 
 [tool.mypy]
-strict = True
+strict = true
 python_version = "3.13"
 plugins = ["pydantic.mypy.plugin"]
 

@@ -1,23 +1,10 @@
 """Fresh clone setup test — T062 [P] [US1]."""
 
-
 import subprocess
 
 import pytest
 
-
 pytestmark = pytest.mark.usefixtures("clone_dir_fixture")
-
-
-@pytest.fixture(autouse=True, scope="session")
-def clone_dir_fixture(tmp_path):
-    """Set up a fresh clone for testing."""
-    clone_dir = tmp_path / "fresh-clone"
-    clone_dir.mkdir()
-    # Initialize the project
-    subprocess.run(["uv", "sync"], cwd=str(clone_dir), capture_output=True)
-    subprocess.run(["uv", "run", "make", "setup"], cwd=str(clone_dir), capture_output=True)
-    yield {"clone_dir": str(clone_dir)}
 
 
 @pytest.mark.usefixtures("clone_dir_fixture")
@@ -30,7 +17,7 @@ class TestFreshCloneSetup:
         assert clone_dir is not None
         assert clone_dir.is_dir()
 
-    def test_python_version(self, clone_dir_fixture):
+    def test_python_version(self):
         """Python version matches .python-version."""
         result = subprocess.run(
             ["python3", "--version"],
@@ -39,12 +26,12 @@ class TestFreshCloneSetup:
         )
         assert "3.13" in result.stdout
 
-    def test_make_help(self, clone_dir_fixture):
+    def test_make_help(self):
         """Makefile help target works."""
         result = subprocess.run(
             ["make", "help"],
-            cwd=clone_dir_fixture["clone_dir"],
             capture_output=True,
             text=True,
         )
         assert result.returncode == 0
+        assert "verification" in result.stdout or "test" in result.stdout

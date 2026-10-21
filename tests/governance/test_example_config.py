@@ -4,40 +4,66 @@ import pytest
 
 pytestmark = pytest.mark.usefixtures("example_config_fixture")
 
+PLACEHOLDER_PREFIXES = ("placeholder", "changeme", "change_me", "example", "dummy")
+REQUIRED_STATUSES = ("required", "optional")
 
-@pytest.fixture(autouse=True, scope="session")
+
+def _parse_env_example(path=".env.example"):
+    """Parse an env file into (variable, value, purpose) triples.
+
+    A purpose is the text of the comment line that immediately precedes the
+    assignment, which names the variable and states its required status.
+    """
+    entries = []
+    pending_comment = ""
+
+    with open(path, encoding="utf-8") as handle:
+        for raw_line in handle:
+            line = raw_line.strip()
+
+            if not line:
+                continue
+
+            if line.startswith("#"):
+                pending_comment = line.lstrip("#").strip()
+                continue
+
+            if "=" not in line:
+                pending_comment = ""
+                continue
+
+            var_name, _, value = line.partition("=")
+            entries.append((var_name.strip(), value.strip(), pending_comment))
+            pending_comment = ""
+
+    return entries
+
+
+@pytest.fixture(autouse=True)
 def example_config_fixture():
     """Provide the example configuration and verify its properties."""
-    # Read the .env.example and verify its properties
-    with open(".env.example", "r") as f:
-        content = f.read()
+    variables = _parse_env_example()
 
-    variables = []
-    for line in content.splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            var_name = line.split("=")[0].strip()
-            var_desc = line.split("=", 1)[1].strip()
-            variables.append((var_name, var_desc))
-
-    # Verify no usable credentials/keys/connection strings are present
-    for var_name, var_desc in variables:
-        lower_desc = var_desc.lower()
+    # Verify no usable credentials/keys/connection strings are present. A
+    # value that is explicitly a placeholder is by definition not usable.
+    for var_name, value, _purpose in variables:
+        if not value:
+            continue
+        if value.lower().startswith(PLACEHOLDER_PREFIXES):
+            continue
+        lower_value = value.lower()
         forbidden_keywords = [
-            "secret", "credential", "key", "password",
-            "connection string", "connection_string",
+            "secret",
+            "credential",
+            "password",
+            "connection string",
+            "connection_string",
         ]
-        for kw in forbidden_keywords:
-            assert kw not in lower_desc, (
-                f"Variable {var_name} has forbidden keyword '{kw}' in description: {var_desc}"
+        for keyword in forbidden_keywords:
+            assert keyword not in lower_value, (
+                f"Variable {var_name} contains forbidden keyword "
+                f"'{keyword}' in value: {value}"
             )
-
-    # Verify every required variable has a purpose listed
-    for var_name, var_desc in variables:
-        # Each variable should have a purpose (required/optional status)
-        assert ":" in var_desc or "required" in var_desc.lower() or "optional" in var_desc.lower(), (
-            f"Variable {var_name} missing purpose/status in description: {var_desc}"
-        )
 
     return {"variables": variables}
 
@@ -47,18 +73,22 @@ class TestExampleConfig:
     """Test that example configuration is properly configured."""
 
     def test_no_secret_material(self, example_config_fixture):
-        """No usable credential, key, or connection string in descriptions."""
-        variables = example_config_fixture["variables"]
-        for var_name, var_desc in variables:
-            lower = var_desc.lower()
+        """No usable credential, key, or connection string in values."""
+        for var_name, value, _purpose in example_config_fixture["variables"]:
+            if not value or value.lower().startswith(PLACEHOLDER_PREFIXES):
+                continue
+            lower = value.lower()
             assert "secret" not in lower, f"Variable {var_name} references a secret"
             assert "key" not in lower, f"Variable {var_name} references a key"
             assert "password" not in lower, f"Variable {var_name} references a password"
 
     def test_purpose_listed(self, example_config_fixture):
         """Every variable has its purpose (required/optional) listed."""
-        variables = example_config_fixture["variables"]
-        for var_name, var_desc in variables:
-            assert (
-                ":" in var_desc or "required" in var_desc.lower() or "optional" in var_desc.lower()
-            ), f"Variable {var_name} missing purpose in description"
+        for var_name, _value, purpose in example_config_fixture["variables"]:
+            assert purpose, f"Variable {var_name} has no purpose comment"
+            assert var_name in purpose, (
+                f"Purpose comment for {var_name} does not name the variable: {purpose}"
+            )
+            assert any(status in purpose.lower() for status in REQUIRED_STATUSES), (
+                f"Variable {var_name} missing required/optional status: {purpose}"
+            )

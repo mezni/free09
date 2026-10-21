@@ -1,17 +1,20 @@
 """API key management UI (CRUD) for US2."""
 
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr
+
+from pydantic import BaseModel
 
 
 class APIKeyCreate(BaseModel):
     """Schema for creating a new API key."""
+
     person_id: str
     scopes: Optional[List[str]] = None
 
 
 class APIKeyResponse(BaseModel):
     """Schema for API key response."""
+
     id: str
     prefix: str
     scopes: List[str]
@@ -24,14 +27,17 @@ class APIKeyCRUD:
     """API key CRUD operations."""
 
     @staticmethod
-    def create_key(person_id: str, scopes: Optional[List[str]] = None) -> APIKeyResponse:
+    def create_key(
+        person_id: str, scopes: Optional[List[str]] = None
+    ) -> APIKeyResponse:
         """Create a new API key for a person."""
         # In production, this would generate a hash, prefix, etc.
         import uuid
+
         key_id = str(uuid.uuid4())
         prefix = uuid.uuid4().hex[:8]
         now = "2026-01-01T00:00:00Z"  # Would be datetime.utcnow().isoformat()
-        
+
         return APIKeyResponse(
             id=key_id,
             prefix=prefix,
@@ -47,7 +53,9 @@ class APIKeyCRUD:
         return None
 
     @staticmethod
-    def update_key(key_id: str, is_active: bool = None, scopes: List[str] = None) -> Optional[APIKeyResponse]:
+    def update_key(
+        key_id: str, is_active: bool = None, scopes: List[str] = None
+    ) -> Optional[APIKeyResponse]:
         """Update an API key (activate/deactivate or change scopes)."""
         # In production, this would update the database
         return None
