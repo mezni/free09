@@ -2,7 +2,7 @@
 
 **Feature**: Data model and database foundation for the telco platform  
 **Priority**: P0 (must-have for every later phase)  
-**Status**: Approved  
+**Status**: Implemented  
 **Approved on**: 2026-10-22  
 **Plan phase**: Phase 2 — Data model and database foundation (`docs/build-plan.md`)  
 **Data model**: [data-model.md](data-model.md) | **Decisions**: [research.md](research.md)
@@ -135,8 +135,9 @@ Per Art. XI.4, in the event of conflict between the numbered copy and the prose 
 
 ## Approval
 
-- Status: Approved
+- Status: Implemented
 - Approved on: 2026-10-22
+- Implemented on: 2026-10-22
 - Feature directory: specs/003-build-phase2
 - Short name: build-phase2
 - Approval basis: the three open questions are answered in `research.md`, the

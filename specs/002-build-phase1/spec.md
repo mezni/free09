@@ -3,6 +3,8 @@
 ## Description
 Feature: from build-plan.md phase 1
 
+**Status**: Implemented
+
 ## Actors
 - Project maintainers
 - Contributors
@@ -79,8 +81,9 @@ Clause references use the numbered form from `docs/constitution.md` (citation co
 Per Art. XI.4, in the event of conflict between the numbered copy and the prose copy, the numbered copy prevails.
 
 ## Approval
-- Status: Approved
+- Status: Implemented
 - Approved on: 2026-10-21
+- Implemented on: 2026-10-22
 - Feature directory: specs/002-build-phase1
 - Short name: build-phase1
 

@@ -10,7 +10,7 @@ Close out the build programme: finalize the specification statuses across every
 phase once the acceptance evidence exists, reconcile the two constitution
 documents, record the final ADR-0001 decision status, complete the central
 traceability matrix, run a fresh-clone verification of the complete
-environment, and produce the hand-off documentation.
+environment, and produce the hand-off documentation in `docs/HANDOFF.md`.
 
 This phase delivers no runtime behaviour. Its outputs are governance and
 documentation records, and each one is verifiable by reading the artifact it
@@ -45,8 +45,8 @@ in the central traceability matrix
   modifications or business logic implementation (Boundaries)
 - The two constitution copies stay aligned under Art. XI.4 precedence
 
-**Scale/Scope**: Requirements FR-060 to FR-064 across user stories US1 to US5,
-reserving test mappings TM221–TM235 across tasks T224–T228
+**Scale/Scope**: Requirements FR-060 to FR-065 across user stories US1 to US6,
+reserving test mappings TM221–TM238 across tasks T224–T229
 
 ## Constitution Check
 

@@ -32,12 +32,13 @@ follow `specs/007-build-phase7/`:
 - `docs/` — governance and design prose
 
 
-**Status**: Partially implemented — 3 of 5 tasks complete, 2 outstanding.
+**Status**: Implemented — all six tasks complete.
 
-> Completion markers reflect the state of the repository as of 2026-10-21.
-> Outstanding: finalizing the `spec.md` statuses of every phase, and adding the
-> TM001–TM220 rows to the central traceability matrix. The phase status in
-> `spec.md` stays **Proposed**.
+> Completion markers reflect the state of the repository as of 2026-10-22.
+> Completed phases are finalized to **Implemented**, the traceability matrix is
+> closed for the allocated TM001–TM238 range, and the hand-off report is in
+> `docs/HANDOFF.md`. Phases 8–11 remain **Proposed** because their acceptance
+> evidence does not exist yet.
 
 ---
 
@@ -45,11 +46,12 @@ follow `specs/007-build-phase7/`:
 
 **This phase finalizes the SPEC-001 completion across all build phases.**
 
-- [ ] T224 [P] [US1] Finalize all spec.md statuses to Implemented after acceptance evidence
+- [x] T224 [P] [US1] Finalize all spec.md statuses to Implemented after acceptance evidence
 - [x] T225 [P] [US2] Reconcile constitution documents (docs/ vs .specify/) across all phases
 - [x] T226 [P] [US3] Record final ADR-0001 decision status and update governance artifacts
-- [ ] T227 [P] [US4] Update traceability matrix with all test mappings (TM001–TM220)
+- [x] T227 [P] [US4] Update traceability matrix with all test mappings (TM001–TM238)
 - [x] T228 [P] [US5] Fresh clone verification (full environment, 30-45 minutes)
+- [x] T229 [P] [US6] Publish hand-off documentation and knowledge transfer record
 
 **Checkpoint**: US1 complete — SPEC-001 finalization complete
 

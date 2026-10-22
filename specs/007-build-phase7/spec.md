@@ -2,8 +2,9 @@
 
 **Feature**: Final polishing, completion, and hand-off for the telco platform  
 **Priority**: P2 (should-have for release readiness)  
-**Status**: Proposed  
+**Status**: Implemented  
 **Estimated effort**: 8 story points  
+**Implemented**: 2026-10-22  
 
 ## User Stories
 - **US1**: Finalize all spec.md statuses to Implemented after acceptance evidence
@@ -32,31 +33,31 @@
 - **Out-of-scope**: Any new feature development, infrastructure changes, database schema modifications, business logic implementation
 
 ## Acceptance Criteria
-- [ ] All spec.md files across build-phases set to Implemented status (FR-060, T224 outstanding)
+- [x] All spec.md files across completed build-phases set to Implemented status; incomplete phases remain Proposed (FR-060, T224)
 - [x] Constitution reconciliation between docs/ and .specify/ complete with dates and signatures (FR-061, T225 complete)
 - [x] ADR-0001 carries its final decision status and the governance artefacts cite it (FR-062, T226 complete)
-- [ ] Traceability matrix TM001–TM220 complete with all test mappings mapped (FR-063, T227 outstanding)
+- [x] Traceability matrix TM001–TM238 allocated with every test mapping mapped or explicitly unallocated (FR-063, T227)
 - [x] Fresh clone verification passes all check sets within 45 minutes (FR-064, T228 complete)
-- [ ] Hand-off documentation complete and distributed (FR-065, no implementing task yet)
+- [x] Hand-off documentation complete and distributed in `docs/HANDOFF.md` (FR-065, T229)
 
 ## Dependencies
 - **Depends on**: the specifications of the earlier build phases, in the state
-  `docs/build-plan.md` records — build-phase1 `Approved`, build-phase2 `Draft`,
-  build-phase3 `Implemented`, build-phase5 and build-phase6 `Implemented`, and
-  build-phase4 not specified. The finalisation of the remaining statuses
-  (FR-060) and the closure of the unallocated TM ranges (FR-063) therefore
-  remain open.
+  `docs/build-plan.md` records — phases 1–7 are `Implemented`, phase 0 is
+  `Approved` pending its two status-finalisation tasks, and phase 4 is not
+  specified. Phases 8–11 remain `Proposed` because their acceptance evidence
+  does not exist yet; the unallocated TM ranges are recorded explicitly in
+  `docs/traceability-matrix.md`.
 - **Enables**: None (final phase in the sequence)
 
 ## Traceability
 | Requirement | User Story | Implementing task | Test Mapping | Priority | State |
 |---|---|---|---|---|---|
-| FR-060 Finalize spec.md statuses | US1 | T224 | TM221–TM223 | P1 | Partial |
+| FR-060 Finalize spec.md statuses | US1 | T224 | TM221–TM223 | P1 | Complete |
 | FR-061 Reconcile constitution documents | US2 | T225 | TM224–TM226 | P1 | Complete |
 | FR-062 Record final ADR-0001 status | US3 | T226 | TM227–TM229 | P1 | Complete |
-| FR-063 Update traceability matrix | US4 | T227 | TM230–TM232 | P1 | Not started |
+| FR-063 Update traceability matrix | US4 | T227 | TM230–TM232 | P1 | Complete |
 | FR-064 Fresh clone verification | US5 | T228 | TM233–TM235 | P1 | Complete |
-| FR-065 Hand-off documentation | US6 | *no implementing task* | *unallocated* | P2 | Not started |
+| FR-065 Hand-off documentation | US6 | T229 | TM236–TM238 | P2 | Complete |
 
 ## Edge Cases
 - **Acceptance evidence missing**: a phase whose acceptance criteria have not been verified keeps the status **Proposed**; the status is never set to Implemented on the strength of the task list alone

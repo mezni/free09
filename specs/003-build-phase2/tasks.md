@@ -30,11 +30,10 @@ quickstart.md (produced by T010)
 
 ## Phase Status
 
-This phase is **approved and in implementation**. The specification, its quality
+This phase is **complete**. The specification, its quality
 checklist, this plan, this task list, the research record, the conceptual and
 logical data model, the non-specialist description of that model, and the
-completion report exist. The data model is delivered and reviewed; the database
-foundation below it has not started.
+completion report exist. The data model and database foundation are delivered and reviewed.
 
 ---
 

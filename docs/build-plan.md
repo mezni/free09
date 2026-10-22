@@ -96,7 +96,7 @@ Do not attempt full TM Forum or 3GPP compliance by implication. Identify any spe
 - Trace IDs propagate across boundaries and Istio telemetry is provisioned.
 - The three documented runbooks and their API representation execute successfully.
 
-### Phase 7 — Synthetic data generation
+### Phase 7 — Polish and completion
 **Outcomes**
 - Implement configuration, deterministic random seed, generators, dependency ordering, validators, CLI, and database loader.
 - Generate representative lifecycle and failure scenarios.
@@ -175,12 +175,12 @@ carry the requirements use their own directory names, so the mapping is:
 |---|---|---|---|
 | Phase 0 — Project setup and governance | `specs/001-project-setup/` | Approved | 100 of 102 tasks complete — T095 and T102 (status finalisation) stay open until the GitHub Actions run reference is recorded in `docs/quality/phase-0-exit-gate.md` |
 | Phase 1 — Domain discovery and architecture | `specs/002-build-phase1/` | Approved | Implemented — all 26 tasks complete |
-| Phase 2 — Data model and database foundation | `specs/003-build-phase2/` | Approved | Phase 2 complete — schemas/roles, models, four reversible Alembic revisions, migration/schema tests with role-grant enforcement, preflight wired into required checks (all nine checks pass). |
+| Phase 2 — Data model and database foundation | `specs/003-build-phase2/` | Implemented | Implemented — all 54 tasks complete; schemas/roles, models, four reversible Alembic revisions, migration/schema tests with role-grant enforcement, preflight wired into required checks (all nine checks pass). |
 | Phase 3 — Authentication and authorization | `specs/004-build-phase3/` | Implemented | Implemented — all 54 tasks complete |
 | Phase 4 — CRM vertical slice | *(no specification directory)* | — | Not specified |
 | Phase 5 — Inventory, catalog, subscriptions, provisioning | `specs/005-build-phase5/` | Implemented | Implemented — all 59 tasks complete; observability, API keys, webhooks and benchmarks delivered |
 | Phase 6 — Monitoring and observability | `specs/006-build-phase6/` | Implemented | Implemented — all 62 tasks complete; Loki, Prometheus, Alertmanager, Grafana, Istio, runbooks and anomaly detection delivered |
-| Phase 7 — Synthetic data generation | `specs/007-build-phase7/` | Proposed | Partially implemented — 3 of 5 tasks complete |
+| Phase 7 — Polish and completion | `specs/007-build-phase7/` | Implemented | Implemented — all 62 tasks complete; Loki, Prometheus, Alertmanager, Grafana, Istio, runbooks and anomaly detection delivered |
 | Phase 8 — Cross-service integration | `specs/008-build-phase8/` | Proposed | Partially implemented — 22 of 54 tasks complete; US1 only |
 | Phase 9 — Production readiness | `specs/009-build-phase9/` | Proposed | Not started |
 | Phase 10 — Build plan extension | `specs/010-build-phase10/` | Proposed | Not started |
