@@ -46,6 +46,12 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "performance: Performance benchmark tests (FR-046)"
     )
+    config.addinivalue_line("markers", "log: Structured logging tests (FR-050)")
+    config.addinivalue_line("markers", "metric: Metrics tests (FR-051)")
+    config.addinivalue_line("markers", "alert: Alerting tests (FR-053)")
+    config.addinivalue_line("markers", "mesh: Service mesh tests (FR-056)")
+    config.addinivalue_line("markers", "runbook: Incident runbook tests (FR-054)")
+    config.addinivalue_line("markers", "anomaly: Anomaly detection tests (FR-052)")
 
 
 def pytest_collection_modifyitems(config, items):

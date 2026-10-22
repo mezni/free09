@@ -311,16 +311,41 @@ return `404` until their tasks are complete:
 `GET /api/v1/` returns the service name, version and the documentation path.
 Both are unauthenticated.
 
+## Observability endpoints
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /metrics` | Prometheus/OpenMetrics scrape endpoint |
+| `POST /api/v1/search-logs` | Search buffered structured logs by service, level, text and time range |
+| `POST /api/v1/logs/flush` | Ship buffered logs to Loki; returns `shipped`, `buffered` and an error when Loki is unavailable |
+| `GET /api/v1/alerts` | List active or resolved alerts (`?status_filter=active`) |
+| `POST /api/v1/alerts/{alert_id}/resolve` | Resolve an alert |
+| `GET /api/v1/anomalies` | List recent rolling-window anomalies |
+| `POST /api/v1/anomalies/observe` | Submit a metric observation; an anomalous value emits an alert |
+| `GET /api/v1/runbooks` | List incident runbooks |
+| `POST /api/v1/runbooks` | Create a runbook |
+| `GET /api/v1/runbooks/{runbook_id}` | Get a runbook |
+| `PATCH /api/v1/runbooks/{runbook_id}` | Update a runbook |
+| `POST /api/v1/runbooks/{runbook_id}/execute` | Execute a runbook, returning `409` for an unknown target service |
+
+`POST /api/v1/search-logs` accepts
+`{"query": "{service=\"auth-service\"} |= \"error\"", "time_range": "<ISO start> - <ISO end>", "limit": 100}`.
+`POST /api/v1/anomalies/observe` accepts `{"metric": "latency_ms", "value": 1000}`.
+
 ## Observability Configuration
 
 | Variable | Purpose | Default |
 |---|---|---|
 | `TELECO_OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP/HTTP collector endpoint | unset (tracing exports are disabled) |
+| `TELECO_LOG_LOKI_URL` | Loki base URL for log shipping | unset (logs stay buffered) |
+| `TELECO_OTEL_ALERTMANAGER_URL` | Alertmanager API base URL | unset |
+| `TELECO_OTEL_ISTIO_ENABLED` | Enable Istio telemetry defaults | `false` |
 | `TELECO_WEBHOOK_SECRET` | HMAC secret for webhook ingestion | unset (ingestion returns `503`) |
 
 When the OTLP endpoint is unset, spans are still created and propagated but
-not exported. The optional `deploy/compose/observability.yaml` overlay runs
-Jaeger with OTLP/HTTP ingestion on port `4318` and its UI on port `16686`:
+not exported. The optional `deploy/compose/observability.yaml` overlay runs Jaeger with
+OTLP/HTTP ingestion on port `4318`, Loki on `3100`, Prometheus on `9090`,
+Alertmanager on `9093` and Grafana on `3000`:
 
 ```bash
 docker compose -f deploy/compose/compose.yaml \
@@ -328,7 +353,10 @@ docker compose -f deploy/compose/compose.yaml \
 ```
 
 ## Version History
-- **v1.2.0** (current): Documented the phase-5 health probes, webhook API,
+- **v1.3.0** (current): Added observability endpoints, log search and shipping,
+  alert routing, anomaly detection, runbooks and the monitoring configuration
+  variables
+- **v1.2.0**: Documented the phase-5 health probes, webhook API,
   API key prefix behaviour, canonical error envelope and observability
   configuration; the contract layer is now served by the application
 - **v1.1.0**: Added the build-phase8 analytics endpoints and the platform

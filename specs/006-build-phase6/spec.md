@@ -2,7 +2,7 @@
 
 **Feature**: Advanced monitoring, observability, and incident management for the telco platform  
 **Priority**: P2 (should-have for growth)  
-**Status**: Proposed  
+**Status**: Implemented
 **Estimated effort**: 10 story points  
 
 ## User Stories
@@ -74,13 +74,13 @@
 ## Traceability
 | Requirement | User Story | Implementing tasks | Test Mapping | Priority | State |
 |---|---|---|---|---|---|
-| FR-050 Centralized log aggregation | US1 | T183, T184, T189, T204 | TM125–TM127 | P1 | Not started |
-| FR-051 Prometheus metrics exposition | US2 | T187, T190, T202 | TM128–TM130 | P1 | Not started |
-| FR-052 Alert rules and notification routing | US3 | T188, T203, T205 | TM131–TM133 | P1 | Not started |
-| FR-053 OpenTelemetry tracing propagation | US4 | T191, T192, T207 | TM134–TM136 | P2 | Not started |
-| FR-054 Service mesh traffic monitoring | US4 | T193, T206, T208 | TM137–TM139 | P2 | Not started |
-| FR-055 Incident runbook generation | US6 | T209 | TM140–TM142 | P3 | Not started |
-| FR-056 Performance anomaly detection | US5 | T210, T211 | TM143–TM145 | P3 | Not started |
+| FR-050 Centralized log aggregation | US1 | T183, T184, T189, T204 | TM125–TM127 | P1 | Complete |
+| FR-051 Prometheus metrics exposition | US2 | T187, T190, T202 | TM128–TM130 | P1 | Complete |
+| FR-052 Alert rules and notification routing | US3 | T188, T203, T205 | TM131–TM133 | P1 | Complete |
+| FR-053 OpenTelemetry tracing propagation | US4 | T191, T192, T207 | TM134–TM136 | P2 | Complete |
+| FR-054 Service mesh traffic monitoring | US4 | T193, T206, T208 | TM137–TM139 | P2 | Complete |
+| FR-055 Incident runbook generation | US6 | T209 | TM140–TM142 | P3 | Complete |
+| FR-056 Performance anomaly detection | US5 | T210, T211 | TM143–TM145 | P3 | Complete |
 
 The task identifiers above are the ones that appear in `tasks.md`. FR-056
 introduces TM143–TM145, so the unallocated test-mapping range in this

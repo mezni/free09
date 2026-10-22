@@ -42,9 +42,10 @@
 ## Dependencies
 - **Depends on**: the specifications of the earlier build phases, in the state
   `docs/build-plan.md` records — build-phase1 `Approved`, build-phase2 `Draft`,
-  build-phase3 `Implemented`, build-phase5 and build-phase6 `Proposed`, and
-  build-phase4 not specified. The finalisation of their statuses (FR-060) and
-  the closure of the unallocated TM ranges (FR-063) therefore remain open.
+  build-phase3 `Implemented`, build-phase5 and build-phase6 `Implemented`, and
+  build-phase4 not specified. The finalisation of the remaining statuses
+  (FR-060) and the closure of the unallocated TM ranges (FR-063) therefore
+  remain open.
 - **Enables**: None (final phase in the sequence)
 
 ## Traceability

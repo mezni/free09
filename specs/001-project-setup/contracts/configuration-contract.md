@@ -130,6 +130,9 @@ records the variable names and the topology, and creates no roles or schemas.
 | `TELECO_JWT_TTL_SECONDS` | Reserved | No | int | `900` | Access-token lifetime. |
 | `TELECO_OTEL_EXPORTER_OTLP_ENDPOINT` | Optional | No | string | *(none)* | OTLP/HTTP collector endpoint used by the phase-5 tracing middleware; when unset, spans are propagated but not exported. |
 | `TELECO_WEBHOOK_SECRET` | Reserved | **Yes** | string | *(none)* | Shared secret used to validate inbound webhook HMAC signatures (FR-044). |
+| `TELECO_LOG_LOKI_URL` | Optional | No | string | *(none)* | Loki base URL used by the log shipper. When unset, logs remain buffered and `/api/v1/logs/flush` reports the missing configuration. |
+| `TELECO_OTEL_ALERTMANAGER_URL` | Optional | No | string | *(none)* | Alertmanager API base URL used by the phase-6 alert routing integration. |
+| `TELECO_OTEL_ISTIO_ENABLED` | Optional | No | boolean | `false` | Enables Istio service-mesh telemetry defaults in local deployments. |
 
 ### Explicitly not declared
 

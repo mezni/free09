@@ -4,175 +4,97 @@
 - Docker and Docker Compose installed
 - Python 3.13+ (via `.python-version`)
 - `uv` package manager
-- Prometheus and Grafana already running (from prior phases)
-- OpenTelemetry Collector and Jaeger already running (from prior phases)
-- Istio service mesh installed (from prior phases)
+
+The monitoring stack is part of this repository. No prior Prometheus, Loki,
+Alertmanager, Grafana or Istio installation is required for local verification.
 
 ## Setup
 
-### 1. Verify Prior Phases
-```bash
-# Ensure all prior phases are operational
-make verify
+### 1. Verify the repository
 
-# Verify Prometheus is running
-curl -s http://localhost:9090/-/healthy
-
-# Verify Grafana is running
-curl -s http://localhost:3000/api/health
-
-# Verify Jaeger is running
-curl -s http://localhost:14268/api/traces/ns/default
-
-# Verify Istio is running
-istioctl version --output=short
-```
-
-### 2. Install Dependencies
 ```bash
 uv sync
+make verify
 ```
 
-### 3. Configure Log Aggregation (Loki)
+`make verify` runs the required fast and slow checks. The phase-6 contract
+tests run as part of the slow lane; they can also be run directly:
+
 ```bash
-# Configure Loki via Helm or manifest
-# Ensure Loki is scraping from all service containers
-# Configure Prometheus to scrape Loki metrics
-
-# Add Loki data source to Grafana
-# http://localhost:3100 (default Loki port)
-
-# Add Prometheus data source to Grafana
-# http://localhost:9090 (default Prometheus port)
+uv run pytest tests/contract/test_monitoring_logs.py \
+  tests/contract/test_monitoring_metrics.py \
+  tests/contract/test_monitoring_alerts.py \
+  tests/contract/test_monitoring_tracing_mesh.py \
+  tests/contract/test_monitoring_runbooks.py \
+  tests/contract/test_monitoring_stack.py -q
 ```
 
-### 3. Configure Alerting (Alertmanager)
+### 2. Start the monitoring overlay
+
 ```bash
-# Configure Alertmanager routing rules
-# Add email, Slack, and PagerDuty notification channels
-# Test alert firing with `alertmanager test`
-
-# Configure Alertmanager webhook
-# http://internal.company.com/api/alerts
+docker compose -f deploy/compose/compose.yaml \
+  -f deploy/compose/observability.yaml up -d
 ```
 
-### 4. Configure Tracing (OpenTelemetry)
+| Service | URL |
+| --- | --- |
+| Jaeger UI | http://localhost:16686 |
+| Loki | http://localhost:3100 |
+| Prometheus | http://localhost:9090 |
+| Alertmanager | http://localhost:9093 |
+| Grafana | http://localhost:3000 |
+
+Grafana is provisioned with Prometheus and Loki data sources and the
+`Telco Services` dashboard. Alertmanager uses placeholder notification
+destinations; replace them before using the stack for real paging.
+
+### 3. Configure log shipping
+
+Set `TELECO_LOG_LOKI_URL=http://localhost:3100` for the service process, then
+call the flush endpoint after exercising the service:
+
 ```bash
-# Ensure OpenTelemetry Collector is configured
-# with Jaeger exporter pointing to prior phase setup
-# Verify trace propagation across all services
-
-# Verify trace propagation
-# Use Jaeger UI at http://localhost:14268
-# Trace a request through all services
+curl -s -X POST http://localhost:8000/api/v1/logs/flush
+curl -s -X POST http://localhost:8000/api/v1/search-logs \
+  -H 'content-type: application/json' \
+  -d '{"query":"{service=\"auth-service\"} |= \"error\""}'
 ```
 
-### 5. Configure Service Mesh (Istio)
+If Loki is unreachable the flush reports the failure and keeps entries
+buffered; request handling is never blocked.
+
+### 4. Inspect metrics and alerts
+
 ```bash
-# Verify Istio is installed and operational
-istioctl experimental mesh-status
-
-# Verify sidecar proxies are injecting
-# Check envoy metrics at http://localhost:15020/metrics
-
-# Configure observability budgets
-# istioctl experimental mesh observe budgets
+curl -s http://localhost:8000/metrics | head -30
+curl -s http://localhost:9090/api/v1/rules | head
+curl -s http://localhost:8000/api/v1/alerts
 ```
 
-### 5. Configure Runbooks
+Prometheus scrapes every service on `/metrics` every 15 seconds and evaluates
+`deploy/prometheus/alerts.yml`. Alertmanager groups by `alertname`, `instance`
+and `job`, repeats after four hours, and routes critical alerts to PagerDuty.
+
+### 5. Exercise anomaly detection and runbooks
+
 ```bash
-# Add runbooks to the internal runbook repository
-# Reference runbooks from alert notifications
-# Test runbook execution for common scenarios
+for value in 100 101 99 100 100 1000; do
+  curl -s -X POST http://localhost:8000/api/v1/anomalies/observe \
+    -H 'content-type: application/json' \
+    -d "{\"metric\":\"latency_ms\",\"value\":$value}"
+done
 
-# Add runbook links to Grafana dashboards
-# Add runbook links to alert notifications
+curl -s http://localhost:8000/api/v1/runbooks
+curl -s -X POST http://localhost:8000/api/v1/runbooks/<runbook-id>/execute \
+  -H 'content-type: application/json' \
+  -d '{"target_service":"auth-service"}'
 ```
 
-### 6. Verification
-```bash
-# Log aggregation search test
-curl -s "http://localhost:3100/api/loki/api/v1/search?query={service%22%22} | json | .message | contains%22error%22" | head -5
+### 6. Verify mesh tracing
 
-# Metrics exposition test
-curl -s http://localhost:9090/metrics | head -20
+Trace IDs propagate through `traceparent` headers on outbound calls. Jaeger
+shows the same trace ID across service boundaries. Istio telemetry is
+declared in `deploy/istio/telemetry.yaml` and sidecar metrics are scraped from
+port `15020` when the mesh is installed.
 
-# Alert test
-istioctl experimental alert test --name service_error_rate_high
-
-# Tracing test
-# Use Jaeger UI to trace a request through all services
-
-# Runbook test
-# Reference runbooks from alert notifications
-```
-
-## SDK Usage (OpenTelemetry)
-
-### Python - Log Aggregation
-```python
-from openteleiler import trace
-from openteleiler.sdk import TracerProvider
-from openteleiler.sdk.export import BatchSpanProcessor
-from openteleiler.exporter.jaeger.thrift import JaegerExporter
-
-# Configure tracer provider
-resource = Resource.create({"service.name": "telco-platform"})
-provider = TracerProvider(resource=resource)
-provider.add_span_processor(BatchSpanProcessor(JaegerExporter()))
-trace.set_tracer_provider(provider)
-
-tracer = trace.get_tracer(__name__)
-
-# Create a span
-with tracer.start_as_current_span("operation_name") as span:
-    span.set_attribute("service.name", "telco-platform")
-    span.set_attribute("operation.name", "operation_name")
-    # ... business logic
-```
-
-### Python - Metrics
-```python
-from prometheus_client import Counter, Histogram, start_http_server
-
-# Define metrics
-REQUESTS_TOTAL = Counter('service_requests_total', 'Total requests per service')
-REQUEST_DURATION = Histogram('service_request_duration_seconds', 'Request latency per service')
-ERRORS_TOTAL = Counter('service_errors_total', 'Total errors per service')
-
-# Start HTTP server
-start_http_server(8000)
-
-# Increment metrics in request handler
-REQUESTS_TOTAL.inc()
-REQUEST_DURATION.observe(latency)
-if error:
-    ERRORS_TOTAL.inc()
-```
-
-### Python - Alert Rules
-```python
-# Define alert rule in Prometheus format
-alert_rule = """
-  - alert: service_error_rate_high
-    expr: sum(rate(service_errors_total[5m])) > 0.5
-    for: 5m
-    labels:
-      severity: critical
-      team: backend
-    annotations:
-      summary: "Error rate above threshold"
-      description: "Error rate has been above threshold"
-      runbook_url: "http://internal/runbooks/service-error-rate"
-"""
-```
-
-## Verification Checklist
-- [ ] Log aggregation search returns results in under 2 seconds
-- [ ] Prometheus metrics exposition working at `/metrics`
-- [ ] Alert notifications delivered to correct channels within 1 minute
-- [ ] Tracing propagation visible across all service call chains
-- [ ] Service mesh metrics collected and visible in Istio dashboards
-- [ ] Runbooks created for 3 common incident scenarios
-- [ ] Performance anomaly detection alerts operational
-- [ ] All dashboards operational and displaying correct data
+The documented incident procedures live in `docs/runbooks/`.

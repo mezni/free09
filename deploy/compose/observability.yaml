@@ -1,4 +1,4 @@
-# Optional observability overlay for local tracing.
+# Optional observability overlay for local tracing, logs, metrics and alerts.
 #
 # The base compose stack remains the database-only stack required by the
 # project-setup phase. Start the overlay with the base file:
@@ -16,3 +16,68 @@ services:
     networks:
       telco-net:
         ipv4_address: 172.20.0.7
+
+  loki:
+    image: grafana/loki:3.2.1
+    container_name: loki
+    command: ["-config.file=/etc/loki/loki-config.yaml"]
+    volumes:
+      - ../loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - loki_data:/loki
+    ports:
+      - "127.0.0.1:3100:3100"
+    networks:
+      telco-net:
+        ipv4_address: 172.20.0.8
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+    volumes:
+      - ../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    networks:
+      telco-net:
+        ipv4_address: 172.20.0.9
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager
+    command: ["--config.file=/etc/alertmanager/alertmanager.yml"]
+    volumes:
+      - ../alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "127.0.0.1:9093:9093"
+    networks:
+      telco-net:
+        ipv4_address: 172.20.0.10
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    container_name: grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: PLACEHOLDER_NO_REAL_CREDENTIAL
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ../grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      telco-net:
+        ipv4_address: 172.20.0.11
+
+volumes:
+  loki_data:
+  prometheus_data:
+  grafana_data:

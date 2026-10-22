@@ -81,17 +81,20 @@ Do not attempt full TM Forum or 3GPP compliance by implication. Identify any spe
 - Device/SIM identifiers and assignment constraints are validated.
 - Failed provisioning cannot be mistaken for successful activation.
 
-### Phase 6 — Billing and financial ledger
+### Phase 6 — Monitoring and observability
 **Outcomes**
-- Implement billing accounts, invoices, invoice lines, payments, allocations, ledger entries, credit memos, and adjustment requests.
-- Define calculation, rounding, currency, tax, allocation, and balance rules.
-- Implement idempotency, approval workflow, reversal/compensation, and reconciliation.
+- Implement structured log aggregation, search and Loki shipping.
+- Expose Prometheus metrics for every service and provision dashboards.
+- Route alert rules through Alertmanager with team and severity labels.
+- Continue OpenTelemetry traces across service boundaries and expose mesh telemetry.
+- Provide executable incident runbooks and rolling-window anomaly detection.
 
 **Exit gate**
-- Financial invariants and duplicate-request tests pass.
-- Posted entries cannot be silently edited.
-- Credit-memo permissions and approval rules pass negative tests.
-- Reconciliation reports identify deliberately injected inconsistencies.
+- Log search returns filtered results without blocking request handling.
+- `/metrics` is scrapeable for all four services.
+- Alert rules and routes include severity, team and runbook references.
+- Trace IDs propagate across boundaries and Istio telemetry is provisioned.
+- The three documented runbooks and their API representation execute successfully.
 
 ### Phase 7 — Synthetic data generation
 **Outcomes**
@@ -176,7 +179,7 @@ carry the requirements use their own directory names, so the mapping is:
 | Phase 3 — Authentication and authorization | `specs/004-build-phase3/` | Implemented | Implemented — all 54 tasks complete |
 | Phase 4 — CRM vertical slice | *(no specification directory)* | — | Not specified |
 | Phase 5 — Inventory, catalog, subscriptions, provisioning | `specs/005-build-phase5/` | Implemented | Implemented — all 59 tasks complete; observability, API keys, webhooks and benchmarks delivered |
-| Phase 6 — Billing and financial ledger | `specs/006-build-phase6/` | Proposed | Partially implemented — 30 of 62 tasks complete |
+| Phase 6 — Monitoring and observability | `specs/006-build-phase6/` | Implemented | Implemented — all 62 tasks complete; Loki, Prometheus, Alertmanager, Grafana, Istio, runbooks and anomaly detection delivered |
 | Phase 7 — Synthetic data generation | `specs/007-build-phase7/` | Proposed | Partially implemented — 3 of 5 tasks complete |
 | Phase 8 — Cross-service integration | `specs/008-build-phase8/` | Proposed | Partially implemented — 22 of 54 tasks complete; US1 only |
 | Phase 9 — Production readiness | `specs/009-build-phase9/` | Proposed | Not started |

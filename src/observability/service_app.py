@@ -10,6 +10,8 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import RequestResponseEndpoint
 from starlette.responses import Response
 
+from src.middleware.logging import install_logging, log_buffer
+from src.middleware.metrics import install_metrics
 from src.observability.errors import ErrorTrackingMiddleware, build_error_response
 from src.observability.tracing import TracingConfig, configure_tracing, instrument_app
 
@@ -36,12 +38,15 @@ def create_service_app(
     """Create a FastAPI application with tracing, errors and health probes."""
     app = FastAPI(title=service_name, version="0.1.0")
 
+    app.state.log_buffer = log_buffer
+    install_logging(app, service_name, buffer=log_buffer)
     app.add_middleware(ErrorTrackingMiddleware, service_name=service_name)
     _request_id_middleware(app)
 
     handle = configure_tracing(TracingConfig.from_env(service_name), set_global=False)
     app.state.tracing = handle
     instrument_app(app, handle)
+    install_metrics(app, service_name)
 
     @app.get("/healthz", tags=["health"])
     async def liveness() -> dict[str, str]:

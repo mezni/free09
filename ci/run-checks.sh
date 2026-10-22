@@ -3,7 +3,8 @@ set -euo pipefail
 
 # run-checks.sh — Single entry point for all required checks.
 #
-# Sessions: fast_checks, slow_checks, trace, key, webhook, benchmark, and any
+# Sessions: fast_checks, slow_checks, trace, key, webhook, benchmark, log,
+# metric, alert, mesh, runbook, and any
 # other nox session defined in noxfile.py.
 # Forwards the nox session exit code unchanged, so CI pipelines can rely on
 # exit code 0/1/2/3 semantics without wrapping.

@@ -10,7 +10,7 @@ build phases. Detailed per-phase rows live in each phase's `spec.md` under its
 |---|---|---|---|
 | TM001–TM103 | build-phase1, build-phase2, build-phase3 and the project-setup phase | Held in the introducing phase specifications; no central row detail exists | Per the introducing phase specification |
 | TM104–TM124 | build-phase5 | [below](#build-phase5--tm104tm124) | Implemented |
-| TM125–TM145 | build-phase6 | [below](#build-phase6--tm125tm145) | Not started |
+| TM125–TM145 | build-phase6 | [below](#build-phase6--tm125tm145) | Complete |
 | TM146–TM155 | build-phase2 | [below](#build-phase2--tm146tm155) | Partial — the data model is delivered; the tests are written with the migration set |
 | TM221–TM235 | build-phase7 | [below](#build-phase7--tm221tm235) | Partially implemented |
 | TM260–TM277 | build-phase8 | [below](#build-phase8--tm260tm277) | Partially implemented — US1 only |
@@ -108,16 +108,17 @@ stories US1–US6, tasks T162–T223.
 
 | Test Mapping | Requirement | User Story | Implementing tasks | Priority | Status |
 |---|---|---|---|---|---|
-| **TM125–TM127** | FR-050 | US1 | T183, T184, T189, T204 | P1 | Not started |
-| **TM128–TM130** | FR-051 | US2 | T187, T190, T202 | P1 | Not started |
-| **TM131–TM133** | FR-052 | US3 | T188, T203, T205 | P1 | Not started |
-| **TM134–TM136** | FR-053 | US4 | T191, T192, T207 | P2 | Not started |
-| **TM137–TM139** | FR-054 | US4 | T193, T206, T208 | P2 | Not started |
-| **TM140–TM142** | FR-055 | US6 | T209 | P3 | Not started |
-| **TM143–TM145** | FR-056 | US5 | T210, T211 | P3 | Not started |
+| **TM125–TM127** | FR-050 | US1 | T183, T184, T189, T204 | P1 | Complete |
+| **TM128–TM130** | FR-051 | US2 | T187, T190, T202 | P1 | Complete |
+| **TM131–TM133** | FR-052 | US3 | T188, T203, T205 | P1 | Complete |
+| **TM134–TM136** | FR-053 | US4 | T191, T192, T207 | P2 | Complete |
+| **TM137–TM139** | FR-054 | US4 | T193, T206, T208 | P2 | Complete |
+| **TM140–TM142** | FR-055 | US6 | T209 | P3 | Complete |
+| **TM143–TM145** | FR-056 | US5 | T210, T211 | P3 | Complete |
 
-The monitoring stack this phase specifies — Loki, Prometheus, Alertmanager and
-Istio — has no configuration, middleware or test in the repository.
+The monitoring stack is configured in `deploy/` and verified by
+`tests/contract/test_monitoring_*.py`; the nox sessions `log`, `metric`,
+`alert`, `trace`, `mesh` and `runbook` cover the same surface.
 
 ## build-phase2 — TM146–TM155
 

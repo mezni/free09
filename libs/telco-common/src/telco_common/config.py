@@ -88,6 +88,7 @@ def get_settings() -> dict[str, str]:
             "TELECO_LOG_CORRELATION_HEADER", required=False
         )
         or "X-Correlation-ID",
+        "loki_url": _validate_env_var("TELECO_LOG_LOKI_URL", required=False),
         # Service identification
         "service_name": _validate_env_var("TELECO_SERVICE_NAME", required=True),
         "service_role": _validate_env_var("TELECO_SERVICE_ROLE", required=False)
@@ -104,6 +105,12 @@ def get_settings() -> dict[str, str]:
         ),
         "db_sslmode": _validate_env_var("TELECO_DB_SSLMODE", required=False)
         or "prefer",
+        # Observability
+        "alertmanager_url": _validate_env_var(
+            "TELECO_OTEL_ALERTMANAGER_URL", required=False
+        ),
+        "istio_enabled": _validate_env_var("TELECO_OTEL_ISTIO_ENABLED", required=False)
+        or "false",
     }
 
 

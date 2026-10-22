@@ -31,8 +31,6 @@
 
 ## Notes
 
-- All checklist items pass. The specification is complete enough to plan
-  against; the phase status remains **Proposed** because the acceptance
-  criteria in `spec.md` are not yet met, which is a delivery state and not a
-  specification defect.
+- All checklist items pass. The phase acceptance criteria in `spec.md` are met
+  by the phase-6 contract tests and the phase status is **Implemented**.
 - Items marked incomplete require spec updates before `/speckit.clarify` or `/speckit.plan`

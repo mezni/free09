@@ -1,6 +1,6 @@
 {
   "advisories": {},
-  "generated_at": "2026-10-22T20:24:38Z",
+  "generated_at": "2026-10-22T20:53:17Z",
   "not_audited": [
     "colorama",
     "packaging",
@@ -206,6 +206,9 @@
     },
     "pre-commit": {
       "version": "4.7.0"
+    },
+    "prometheus-client": {
+      "version": "0.26.0"
     },
     "protobuf": {
       "version": "7.36.2"

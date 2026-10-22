@@ -14,6 +14,8 @@ from starlette.middleware.base import RequestResponseEndpoint
 from starlette.responses import Response
 
 from src.database import create_all, engine
+from src.middleware.logging import install_logging, log_buffer
+from src.middleware.metrics import install_metrics
 from src.observability.errors import (
     ErrorTrackingMiddleware,
     build_error_response,
@@ -21,6 +23,7 @@ from src.observability.errors import (
 from src.observability.tracing import TracingConfig, configure_tracing, instrument_app
 from src.router.analytics import router as analytics_router
 from src.router.api_keys import router as api_keys_router
+from src.router.observability import router as observability_router
 from src.router.webhooks import router as webhooks_router
 
 logger = logging.getLogger(__name__)
@@ -57,6 +60,10 @@ app = FastAPI(
         {"name": "health", "description": "Liveness and readiness probes"},
         {"name": "api-keys", "description": "API key lifecycle management"},
         {"name": "webhooks", "description": "Webhook validation and delivery"},
+        {
+            "name": "observability",
+            "description": "Logs, metrics, alerts and incident runbooks",
+        },
     ],
 )
 
@@ -71,6 +78,11 @@ app.add_middleware(
 
 # Trusted host middleware
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
+
+# Structured request logs are written to a local buffer and never block the
+# request path on Loki availability (FR-050).
+app.state.log_buffer = log_buffer
+install_logging(app, SERVICE_NAME, buffer=log_buffer)
 
 # Distributed tracing (FR-040). Tracing is fail-open: an unreachable collector
 # never fails a request.
@@ -87,6 +99,7 @@ api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(analytics_router, tags=["analytics"])
 api_router.include_router(api_keys_router)
 api_router.include_router(webhooks_router)
+api_router.include_router(observability_router)
 
 
 def database_ready() -> bool:
@@ -179,3 +192,6 @@ async def unhandled_exception_handler(
 
 # Include the API router in the app
 app.include_router(api_router)
+
+# Prometheus metrics endpoint and request instrumentation (FR-051).
+install_metrics(app, SERVICE_NAME)

@@ -15,7 +15,7 @@ from dataclasses import dataclass
 
 from opentelemetry import context as otel_context
 from opentelemetry import trace
-from opentelemetry.propagate import extract
+from opentelemetry.propagate import extract, inject
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import (
@@ -25,6 +25,8 @@ from opentelemetry.sdk.trace.export import (
 )
 from opentelemetry.trace import SpanKind, Status, StatusCode
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
+
+from src.middleware.metrics import record_span_created, record_span_exported
 
 logger = logging.getLogger("telco-platform-tracing")
 
@@ -202,6 +204,7 @@ class TracingMiddleware:
             await self.app(scope, receive, send)
             return
 
+        record_span_created(self.service_name)
         token = otel_context.attach(trace.set_span_in_context(span))
 
         async def send_with_status(message: Message) -> None:
@@ -222,6 +225,7 @@ class TracingMiddleware:
             otel_context.detach(token)
             try:
                 span.end()
+                record_span_exported(self.service_name)
             except Exception:  # pragma: no cover - exporter failure is non-fatal
                 logger.exception("Could not export a trace span")
 
@@ -247,3 +251,12 @@ def instrument_app(app: object, handle: TracingHandle | None) -> None:
 def trace_context_from_headers(headers: Mapping[str, str]) -> object:
     """Extract the upstream trace context from a mapping of headers."""
     return extract(dict(headers))
+
+
+def outgoing_trace_headers(
+    headers: Mapping[str, str] | None = None,
+) -> dict[str, str]:
+    """Return headers for an outbound call, injecting the active trace context."""
+    carrier = dict(headers or {})
+    inject(carrier)
+    return carrier

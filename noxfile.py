@@ -273,6 +273,7 @@ def trace(session: nox.Session) -> None:
         "tests/contract/test_tracing.py",
         "tests/contract/test_error_tracking.py",
         "tests/contract/test_health_checks.py",
+        "tests/contract/test_monitoring_tracing_mesh.py",
         "-q",
     )
 
@@ -296,6 +297,51 @@ def benchmark(session: nox.Session) -> None:
     """Run the phase-5 performance benchmark against the phase-3 baseline."""
     install_deps(session)
     session.run("python", "scripts/benchmark_health.py")
+
+
+@nox.session(reuse_venv=True)
+def log(session: nox.Session) -> None:
+    """Run structured logging and log-search tests (FR-050)."""
+    install_deps(session)
+    session.run(
+        "pytest",
+        "tests/contract/test_monitoring_logs.py",
+        "tests/contract/test_monitoring_stack.py",
+        "-q",
+    )
+
+
+@nox.session(reuse_venv=True)
+def metric(session: nox.Session) -> None:
+    """Run Prometheus metrics tests (FR-051)."""
+    install_deps(session)
+    session.run(
+        "pytest",
+        "tests/contract/test_monitoring_metrics.py",
+        "tests/contract/test_monitoring_stack.py",
+        "-q",
+    )
+
+
+@nox.session(reuse_venv=True)
+def alert(session: nox.Session) -> None:
+    """Run alert routing and anomaly detection tests (FR-052–FR-053)."""
+    install_deps(session)
+    session.run("pytest", "tests/contract/test_monitoring_alerts.py", "-q")
+
+
+@nox.session(reuse_venv=True)
+def mesh(session: nox.Session) -> None:
+    """Run service-mesh observability tests (FR-056)."""
+    install_deps(session)
+    session.run("pytest", "tests/contract/test_monitoring_tracing_mesh.py", "-q")
+
+
+@nox.session(reuse_venv=True)
+def runbook(session: nox.Session) -> None:
+    """Run incident runbook API tests (FR-054)."""
+    install_deps(session)
+    session.run("pytest", "tests/contract/test_monitoring_runbooks.py", "-q")
 
 
 @nox.session(reuse_venv=True)
