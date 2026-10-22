@@ -20,7 +20,7 @@ introducing runtime endpoints or database objects (BR-011).
 2. Run `make setup` to initialize the project
 3. Run `make test` to verify the fast-checks suite passes
 4. Run `docker compose -f deploy/compose/compose.yaml up -d` to start PostgreSQL
-5. Verify with `make local-verification-command-runs-all-required-checks`
+5. Verify with `make test` (the `fast_checks` nox session)
 
 **Rationale**: These scenarios provide a complete onboarding flow from zero to verified state,
 ensuring the phase 1 deliverables are independently testable.

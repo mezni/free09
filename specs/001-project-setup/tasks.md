@@ -137,7 +137,7 @@ command reports the per-check outcome with the expected exit code.
 - [X]  T041 [P] [US2] Create `tests/governance/test_secret_scan_history.py` asserting the full version-controlled history contains no secret material (test ID: `test_no_secret_material_in_full_history`)
 - [X]  T042 [P] [US2] Create `tests/governance/test_no_runtime_surface.py` asserting this phase introduced no runtime network endpoint and no application database object (test ID: `test_no_network_endpoint_or_database_object_introduced`)
 - [X]  T043 [P] [US2] Create `tests/governance/test_local_ci_parity.py` asserting the local outcome matches the automated outcome for the same change (test ID: `test_local_result_matches_automated_result`)
-- [X]  T044 [P] [US2] Create `tests/governance/test_config_agreement.py` verifying templates hold unfilled placeholders only, exactly one constitution exists in the tracked tree, feature directories and numbering are valid, and the configuration contract and `.env.example` agree in both directions (test ID: `test_checks_derive_config_from_example`)
+- [X]  T044 [P] [US2] Create `tests/governance/test_config_agreement.py` asserting the configuration contract, the example configuration, and the code that reads the settings agree in both directions, and that the reserved per-service database variables are declared (test IDs: `test_configuration_contract_and_code_agree`, `test_the_contract_declares_the_reserved_database_variables`, `test_the_example_declares_every_implemented_variable`, `test_the_example_is_the_single_source_of_the_variable_list`, `test_the_environment_settings_are_documented_where_they_are_read`)
 - [X]  T045 [US2] Add the explicit `[tool.ruff]` rule selection, `[tool.pytest.ini_options]`, and `[tool.coverage]` sections to `pyproject.toml` and create `mypy.ini` with strict mode and the pydantic plugin
 - [X]  T046 [US2] Implement the `format`, `lint`, `lockfile`, and `typecheck` sessions in `noxfile.py`
 - [X]  T047 [US2] Implement the `test` session in `noxfile.py` with marker-based selection and coverage reporting
@@ -240,14 +240,14 @@ setup task and verifies the outcome without external assistance.
 **Purpose**: Improvements that affect multiple user stories and close out the
 Phase 0 exit gate with recorded evidence.
 
-- [X]  T095 [P] [Shared] Set the Status of `specs/001-project-setup/spec.md` to `Implemented` only after acceptance evidence exists
+- [ ]  T095 [P] [Shared] Set the Status of `specs/001-project-setup/spec.md` to `Implemented` only after acceptance evidence exists — still open: the status stays `Approved` until the required checks have run on the GitHub Actions workflow and the run reference is recorded in `docs/quality/phase-0-exit-gate.md`
 - [X]  T096 Run the complete required check set defined in `noxfile.py` and confirm every required check reports PASS
 - [X]  T097 [P] [Shared] Reconcile `docs/constitution.md` with the ratified `.specify/memory/constitution.md` — ensure clause numbers from `docs/constitution.md` are reflected in the governance record and all SYNC Impact Report TODOs are resolved
 - [X]  T098 [P] [Shared] Record the decision status of `docs/adr/ADR-0001-centralized-postgresql.md` as finally accepted or documented deferral with owner and due phase
 - [X]  T099 [P] [Shared] Update `docs/quality/traceability-matrix.md` to replace any remaining placeholder rows with implemented test names and their evidence
 - [X]  T100 [P] [Shared] Update `specs/001-project-setup/checklists/requirements.md` to reflect the implemented state of the specification
 - [X]  T101 [P] [Shared] Run a fresh clone from scratch and verify it reaches the verified state described in the setup documentation (within 30 minutes)
-- [X]  T102 Set the Status of `specs/001-project-setup/spec.md` to `Implemented` only after acceptance evidence exists
+- [ ]  T102 Set the Status of `specs/001-project-setup/spec.md` to `Implemented` only after acceptance evidence exists — still open for the same reason as T095
 
 **Checkpoint**: All four user stories are independently functional and documented, and the Phase 0 exit gate is closed with recorded evidence.
 

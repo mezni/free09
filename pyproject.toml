@@ -29,19 +29,9 @@ dev = [
     "black",
     "pip-audit>=2.10.1",
     "mypy>=2.4.0",
+    "pyyaml",
+    "pre-commit>=4.3.0",
 ]
-
-[tool.black]
-line-length = 88
-
-[tool.isort]
-profile = "black"
-line-length = 88
-
-[tool.flake8]
-select = "E,F,W,B"
-max-line-length = 88
-exclude = ".git,__pycache__,build,dist,*.egg-info"
 
 [tool.ruff]
 line-length = 88
@@ -85,6 +75,23 @@ extend-immutable-calls = [
 [tool.ruff.lint.per-file-ignores]
 "noxfile.py" = ["A001"]
 
+[tool.coverage.run]
+branch = true
+source = ["src", "libs/telco-common/src"]
+omit = [
+    "*/__init__.py",
+    "*/migrations/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
 [tool.setuptools]
 packages = [
     "src",
@@ -92,6 +99,7 @@ packages = [
     "src.api.endpoints",
     "src.middleware",
     "src.models",
+    "src.models.telco",
     "src.router",
     "src.services",
 ]
@@ -103,6 +111,7 @@ markers = [
     "integration: Integration tests (slower, cross-component)",
     "contract: Contract tests (API surface validation)",
     "governance: Governance-related tests (constitution, ADRs, templates)",
+    "database: Tests that require a live PostgreSQL instance",
     "slow: Marks that require significant time or resources",
     "minimal_test_suite_passes_on_empty_implementation: Marker for the always-passing minimal suite",
 ]

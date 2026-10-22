@@ -16,9 +16,10 @@
 ## Functional Requirements
 - **FR-060**: Finalize all spec.md statuses to Implemented after acceptance evidence
 - **FR-061**: Reconcile constitution documents (docs/ vs .specify/) across all phases
-- **FR-062**: Update traceability matrix with all test mappings (TM001–TM220)
-- **FR-063**: Fresh clone verification (full environment, 30-45 minutes)
-- **FR-064**: Hand-off documentation and knowledge transfer
+- **FR-062**: Record final ADR-0001 decision status and update governance artifacts
+- **FR-063**: Update traceability matrix with all test mappings (TM001–TM220)
+- **FR-064**: Fresh clone verification (full environment, 30-45 minutes)
+- **FR-065**: Hand-off documentation and knowledge transfer
 
 ## Non-Functional Requirements
 - **NFR-040**: All acceptance criteria [x] marked in respective requirements.md files
@@ -31,35 +32,46 @@
 - **Out-of-scope**: Any new feature development, infrastructure changes, database schema modifications, business logic implementation
 
 ## Acceptance Criteria
-- [ ] All spec.md files across build-phases set to Implemented status
-- [ ] Constitution reconciliation between docs/ and .specify/ complete with dates and signatures
-- [ ] Traceability matrix TM001–TM220 complete with all test mappings mapped
-- [ ] Fresh clone verification passes all check sets within 45 minutes
-- [ ] Hand-off documentation complete and distributed
+- [ ] All spec.md files across build-phases set to Implemented status (FR-060, T224 outstanding)
+- [x] Constitution reconciliation between docs/ and .specify/ complete with dates and signatures (FR-061, T225 complete)
+- [x] ADR-0001 carries its final decision status and the governance artefacts cite it (FR-062, T226 complete)
+- [ ] Traceability matrix TM001–TM220 complete with all test mappings mapped (FR-063, T227 outstanding)
+- [x] Fresh clone verification passes all check sets within 45 minutes (FR-064, T228 complete)
+- [ ] Hand-off documentation complete and distributed (FR-065, no implementing task yet)
 
 ## Dependencies
-- **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4, build-phase5, build-phase6 (all complete with all tasks [COMPLETE])
+- **Depends on**: the specifications of the earlier build phases, in the state
+  `docs/build-plan.md` records — build-phase1 `Approved`, build-phase2 `Draft`,
+  build-phase3 `Implemented`, build-phase5 and build-phase6 `Proposed`, and
+  build-phase4 not specified. The finalisation of their statuses (FR-060) and
+  the closure of the unallocated TM ranges (FR-063) therefore remain open.
 - **Enables**: None (final phase in the sequence)
 
 ## Traceability
-| Task | FR | User Story | Test Mapping | Priority |
-|------|----|------------|--------------|----------|
-| T221 | FR-060 | US1 | TM221–TM223 | P1 |
-| T222 | FR-061 | US2 | TM224–TM226 | P1 |
-| T223 | FR-062 | US3 | TM227–TM229 | P1 |
-| T224 | FR-063 | US4 | TM230–TM232 | P1 |
-| T225 | FR-064 | US5 | TM233–TM235 | P2 |
+| Requirement | User Story | Implementing task | Test Mapping | Priority | State |
+|---|---|---|---|---|---|
+| FR-060 Finalize spec.md statuses | US1 | T224 | TM221–TM223 | P1 | Partial |
+| FR-061 Reconcile constitution documents | US2 | T225 | TM224–TM226 | P1 | Complete |
+| FR-062 Record final ADR-0001 status | US3 | T226 | TM227–TM229 | P1 | Complete |
+| FR-063 Update traceability matrix | US4 | T227 | TM230–TM232 | P1 | Not started |
+| FR-064 Fresh clone verification | US5 | T228 | TM233–TM235 | P1 | Complete |
+| FR-065 Hand-off documentation | US6 | *no implementing task* | *unallocated* | P2 | Not started |
 
-## Dependencies
-- **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4, build-phase5, build-phase6 (all complete with all tasks [COMPLETE])
-- **Enables**: None (final phase in the sequence)
+## Edge Cases
+- **Acceptance evidence missing**: a phase whose acceptance criteria have not been verified keeps the status **Proposed**; the status is never set to Implemented on the strength of the task list alone
+- **The two constitution copies disagree**: the numbered copy prevails under Art. XI.4 and the discrepancy is recorded rather than resolved silently
+- **A test mapping in the earlier range cannot be found**: the gap is reported as unallocated rather than omitted from the matrix
+- **Fresh clone verification fails**: the programme is not handed over, and the failing check is recorded with its exit code
+- **Hand-off requested while a phase is still Proposed**: the hand-off document names the open phase and its outstanding tasks explicitly
 
-## Acceptance Criteria
-- [ ] All spec.md files across build-phases set to Implemented status
-- [ ] Constitution reconciliation between docs/ and .specify/ complete with dates and signatures
-- [ ] Traceability matrix TM001–TM220 complete with all test mappings mapped
-- [ ] Fresh clone verification passes all check sets within 45 minutes
-- [ ] Hand-off documentation complete and distributed
+## Assumptions
+- The prior phases' specifications reach `Approved` with their acceptance
+  criteria passed before their statuses are finalized; the phases that are
+  still `Proposed` or `Draft` keep their status until that evidence exists
+- The constitution ratification record in `docs/constitution.md` is the
+  authoritative reconciliation result for US2
+- A fresh clone verification can be run in a clean environment with the
+  documented prerequisites only
 
 ## Success Criteria
 - **SC-01**: All spec.md files across build-phases status set to Implemented

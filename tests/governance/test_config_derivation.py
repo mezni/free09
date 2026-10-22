@@ -41,7 +41,7 @@ def clean_env_fixture(monkeypatch):
 class TestConfigDerivation:
     """Test that configuration checks derive values from .env.example alone."""
 
-    def test_env_vars_from_example_only(self, clean_env_fixture):
+    def test_checks_derive_config_from_example(self, clean_env_fixture):
         """All config derives from .env.example in a clean environment."""
         example_vars = set(_example_variables())
 
@@ -61,6 +61,6 @@ class TestConfigDerivation:
             assert var_name not in os.environ, f"Forbidden env var {var_name} is set"
 
         # A declared credential variable must be present but empty.
-        assert os.environ.get("DB_PASSWORD", "") == "", (
-            "DB_PASSWORD must not be populated"
+        assert os.environ.get("TELECO_DB_PASSWORD", "") == "", (
+            "TELECO_DB_PASSWORD must not be populated"
         )

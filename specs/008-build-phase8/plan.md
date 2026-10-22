@@ -1,14 +1,20 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: build-phase8
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Branch**: `main` | **Date**: 2026-10-21 | **Spec**: [spec.md](spec.md)
 
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command; its definition describes the execution workflow.
+**Input**: Feature specification from `specs/008-build-phase8/spec.md`
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+Extend the telco platform with six capabilities on top of the existing
+service set: advanced analytics endpoints, AI model metrics with anomaly
+detection, an admin surface with role-based access, an external partner
+integration framework, monthly compliance reporting, and a feature flag
+framework with instant rollback.
+
+The technical approach is recorded in [research.md](research.md) and the data
+model in [data-model.md](data-model.md); the API surface is fixed by
+[contracts/advanced_api_contract.md](contracts/advanced_api_contract.md).
 
 ## Technical Context
 
@@ -65,60 +71,50 @@
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+specs/008-build-phase8/
+├── plan.md              # This file
+├── spec.md              # Feature specification
+├── research.md          # Phase 0 output
+├── data-model.md        # Phase 1 output
+├── quickstart.md        # Phase 1 output
+├── contracts/
+│   └── advanced_api_contract.md
+└── tasks.md             # Phase 2 output
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
+├── main.py                       # FastAPI application and router wiring
+├── database.py                   # Engine, session factory and schema creation
+├── security.py                   # Bearer authentication dependency
+├── api/
+│   └── endpoints/
+│       └── analytics.py          # Advanced analytics endpoints (US1)
+├── router/
+│   └── analytics.py              # Analytics router (US1)
 ├── models/
-├── services/
-├── cli/
-└── lib/
+│   ├── analytics_event.py        # AnalyticsEvent entity (US1)
+│   └── feature_flag.py           # FeatureFlag entity (US5)
+├── middleware/                   # Request middleware (US3)
+└── services/                     # Domain services (US2)
 
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+├── contract/                     # API surface contracts
+├── integration/                  # Cross-component flows
+└── unit/                         # Isolated units
 ```
 
-**Structure Decision**: Selected Option 1: Single project (DEFAULT) — consistent with existing telco platform architecture. Real directories captured: `specs/008-build-phase8/`, `specs/007-build-phase7/`, and existing service directories (`services/`, `libs/`). No frontend/mobile separation needed for this extension phase.
+The remaining user stories are not yet implemented; their intended locations
+follow the same layout:
+
+| Story | Intended location |
+|---|---|
+| US2 — AI model metrics and anomaly detection | `src/models/ai_model_metrics.py`, `src/services/anomaly_detection.py`, `src/api/endpoints/ai_metrics.py` |
+| US3 — Admin surface with role-based access | `src/models/admin_role.py`, `src/middleware/admin.py`, `src/api/endpoints/admin.py` |
+| US4 — Partner integrations | `src/models/partner_integration.py`, `src/api/endpoints/partner.py` |
+| US5 — Compliance reporting | `src/models/compliance_report.py`, `src/api/endpoints/compliance.py`, `src/api/endpoints/feature_flags.py` |
 
 ## Complexity Tracking
 
@@ -126,5 +122,4 @@ ios/ or android/
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| None | — | The phase introduces no new service, no new runtime network endpoint and no new database object, so every constitution gate passes without a justified exception |

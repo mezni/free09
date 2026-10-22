@@ -12,7 +12,7 @@
 ### 1. Verify Prior Phases Complete
 ```bash
 # Ensure all prior phases are operational
-make check
+make test
 
 # Verify existing infrastructure
 make docker-up
@@ -20,7 +20,7 @@ make docker-up
 
 ### 2. Install Dependencies
 ```bash
-uv sync
+uv sync --frozen
 ```
 
 ### 3. Configure Advanced Analytics
@@ -37,27 +37,25 @@ uv sync
 # Ensure feature flag framework is configured
 ```
 
-### 3. Install Dependencies
-```bash
-uv sync --frozen
-```
-
 ### 4. Run Analytics Endpoints
 ```bash
 # Test analytics endpoints
 curl -s http://localhost:8000/api/v1/analytics/events
 
-# Test AI model metrics
-curl -s http://localhost:8000/api/v1/ai-model-metrics
+# Test a single analytics event
+curl -s http://localhost:8000/api/v1/analytics/events/<event_id>
 
-# Test partner integrations
-curl -s http://localhost:8000/api/v1/partner-integrations
+# Record an analytics event
+curl -s -X POST http://localhost:8000/api/v1/analytics/events \
+  -H 'Content-Type: application/json' \
+  -d '{"event_type":"page_view","service":"web-frontend","endpoint":"/dashboard","metadata":{"page_id":"abc123"}}'
 
-# Test compliance reports
-curl -s http://localhost:8000/api/v1/compliance-reports
-
-# Test feature flags
-curl -s http://localhost:8000/api/v1/feature-flags
+# The following endpoints belong to stories that are not implemented yet.
+# They return 404 until the corresponding task is complete:
+#   /api/v1/ai-model-metrics      (US2)
+#   /api/v1/partner-integrations  (US4)
+#   /api/v1/compliance-reports    (US5)
+#   /api/v1/feature-flags         (US5)
 ```
 
 ### 5. AI Anomaly Detection
@@ -108,13 +106,17 @@ curl -s http://localhost:8000/api/v1/feature-flags
 ### 10. Verification
 ```bash
 # Final verification
-# Run all verification checks
-# Ensure all advanced features are operational
+make test
+
+# The check lane covers format, lint, lockfile, type check, the test suite,
+# the secret scan and the dependency audit. It exits 0 only when every check
+# passes.
 ```
 
 ## SDK Usage (Phase 8 Features)
 
-### Python - Analytics Events
+### Python - Analytics Events (implemented)
+
 ```python
 import requests
 
@@ -137,46 +139,14 @@ response = requests.get(
     params={"service": "web-frontend"}
 )
 
-# Get AI model metrics
+# Get a single analytics event
 response = requests.get(
-    "http://localhost:8000/api/v1/ai-model-metrics",
-    params={"model_id": "anomaly_detection_v1"}
-)
-
-# Get partner integrations
-response = requests.get(
-    "http://localhost:8000/api/v1/partner-integrations",
-    params={"status": "active"}
-)
-
-# Get compliance reports
-response = requests.get(
-    "http://localhost:8000/api/v1/compliance-reports",
-    params={"report_type": "SOC2",
-             "period_start": "2024-01-01",
-             "period_end": "2024-12-31"}
-)
-
-# Get feature flags
-response = requests.get(
-    "http://localhost:8000/api/v1/feature-flags",
-    params={"is_active": True}
-)
-
-# Create a feature flag
-response = requests.post(
-    "http://localhost:8000/api/v1/feature-flags",
-    json={"flag_name": "new_checkout_flow", "is_active": True, "rollout_percentage": 20}
-)
-
-# Toggle a feature flag
-response = requests.patch(
-    "http://localhost:8000/api/v1/feature-flags/flag_id",
-    json={"is_active": False, "rollout_percentage": 0}
+    "http://localhost:8000/api/v1/analytics/events/<event_id>"
 )
 ```
 
-### Python - AI Model Metrics
+### Python - AI Model Metrics (not implemented)
+
 ```python
 from sklearn.ensemble import IsolationForest
 import numpy as np
@@ -198,7 +168,8 @@ metrics = {
 }
 ```
 
-### Python - Partner Integration
+### Python - Partner Integration (not implemented)
+
 ```python
 # Onboard a partner
 partner = {
@@ -220,7 +191,8 @@ response = requests.patch(
 )
 ```
 
-### Python - Compliance Report
+### Python - Compliance Report (not implemented)
+
 ```python
 # Generate a compliance report
 report = {
@@ -238,15 +210,10 @@ response = requests.post(
 response = requests.get(
     "http://localhost:8000/api/v1/compliance-reports/report_id"
 )
-
-# Toggle a feature flag
-response = requests.patch(
-    "http://localhost:8000/api/v1/feature-flags/flag_id",
-    json={"is_active": False, "rollout_percentage": 0}
-)
 ```
 
-### Python - Feature Flag
+### Python - Feature Flag (not implemented)
+
 ```python
 # Create a feature flag
 flag = {
@@ -269,9 +236,10 @@ response = requests.patch(
 
 ## Verification Checklist
 - [ ] Advanced API endpoints operational
-- [ ] AI anomaly detection trained and validated
-- [ ] Admin UI enhanced with role-based access
-- [ ] External partner integration framework operational
-- [ ] Compliance reports generated and verified
-- [ ] Feature flags operational with instant rollback
-- [ ] All SDK usage examples operational
+- [ ] AI anomaly detection trained and validated *(US2, not implemented)*
+- [ ] Admin UI enhanced with role-based access *(US3, not implemented)*
+- [ ] External partner integration framework operational *(US4, not implemented)*
+- [ ] Compliance reports generated and verified *(US5, not implemented)*
+- [ ] Feature flags operational with instant rollback *(US5, not implemented)*
+- [ ] All SDK usage examples operational *(only the analytics examples apply
+      today; the others return 404 until their stories are implemented)*

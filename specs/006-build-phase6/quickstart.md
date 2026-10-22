@@ -13,7 +13,7 @@
 ### 1. Verify Prior Phases
 ```bash
 # Ensure all prior phases are operational
-make check
+make verify
 
 # Verify Prometheus is running
 curl -s http://localhost:9090/-/healthy

@@ -36,7 +36,7 @@ make test
 ```
 
 **Expected Outcome**:
-- nox fast-checks suite runs
+- nox -s fast_checks suite runs
 - Format, lint, lockfile, governance, file-coverage, typecheck, test, secret-scan,
   dependency-audit checks execute
 - Exit code 0 if all PASS, 1 if any FAIL, 2 if COULD NOT RUN, 3 if INTERNAL ERROR
@@ -59,12 +59,12 @@ docker compose -f deploy/compose/compose.yaml up -d
 ### Scenario 4: Full Verification
 **Command**: 
 ```bash
-make local-verification-command-runs-all-required-checks
+make test
 ```
 
 **Expected Outcome**:
-- All required checks run (format, lint, lockfile, governance, file-coverage,
-  typecheck, test, secret-scan, dependency-audit)
+- All required checks run (format, lint, lockfile, typecheck, test,
+  secret-scan, dependency-audit)
 - All checks report PASS (exit code 0)
 
 **Success Criteria**: All SC met (SC-001 through SC-005)
@@ -84,5 +84,5 @@ cd telco-platform
 make setup
 make test
 docker compose -f deploy/compose/compose.yaml up -d
-make local-verification-command-runs-all-required-checks
+make test
 ```

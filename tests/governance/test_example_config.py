@@ -1,4 +1,9 @@
-"""Example config test — T026 [P] [US1]."""
+"""Example config test — T026 [P] [US1].
+
+Test ID: `test_example_config_lists_all_variables_without_secrets`
+"""
+
+from pathlib import Path
 
 import pytest
 
@@ -91,4 +96,62 @@ class TestExampleConfig:
             )
             assert any(status in purpose.lower() for status in REQUIRED_STATUSES), (
                 f"Variable {var_name} missing required/optional status: {purpose}"
+            )
+
+    def test_example_config_lists_all_variables_without_secrets(
+        self, example_config_fixture
+    ):
+        """The example lists every declared variable and no secret.
+
+        The example configuration is the only tracked configuration
+        artefact, so it must list every variable the configuration contract
+        declares, and every value it carries must be a placeholder or a
+        value that cannot work against a real system.
+        """
+        import re
+
+        contract = Path(
+            "specs/001-project-setup/contracts/configuration-contract.md"
+        ).read_text(encoding="utf-8")
+
+        declared = set()
+        for line in contract.splitlines():
+            match = re.match(r"^\|\s*`([A-Z][A-Z0-9_]+)`\s*\|", line)
+            if match:
+                declared.add(match.group(1))
+        assert declared, "The configuration contract declares no variable."
+
+        listed = {
+            var_name
+            for var_name, _value, _purpose in example_config_fixture["variables"]
+        }
+
+        missing = sorted(declared - listed)
+        assert not missing, (
+            "These variables are declared in the configuration contract but "
+            f"absent from .env.example: {missing}"
+        )
+
+        extra = sorted(listed - declared)
+        assert not extra, (
+            f"These variables are in .env.example but not declared in the "
+            f"configuration contract: {extra}"
+        )
+
+        for var_name, value, _purpose in example_config_fixture["variables"]:
+            if not value:
+                continue
+            lowered = value.lower()
+            assert not re.search(
+                r"(?i)(password|secret|token|api[_-]?key)\s*=\s*\S+", value
+            ), (
+                f"Variable {var_name} carries something that looks like a "
+                f"credential: {value}"
+            )
+            assert "://" not in value or "@" not in value.split("://", 1)[1], (
+                f"Variable {var_name} carries credentials in its connection "
+                f"string: {value}"
+            )
+            assert not lowered.startswith(("$", "{{")), (
+                f"Variable {var_name} carries an unexpanded reference: {value}"
             )

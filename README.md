@@ -8,14 +8,20 @@ and no application database object is introduced by the project-setup phase (BR-
 ## Repository Conventions
 - **Path layout**: follows `specs/001-project-setup/contracts/repository-layout-contract.md`
 - **Services**: `services/<name>/src/<package_name>/` — application source
+- **Shared service package**: `services/common/` — code shared across the services
 - **Library**: `libs/telco-common/src/telco_common/` — shared utilities only
-- **Tests**: `tests/contract/`, `tests/governance/` — cross-service and governance tests
+- **Application package**: `src/` — the phase 8 cross-service application, added
+  by build-phase8 alongside the service packages
+- **Tests**: `tests/contract/`, `tests/governance/`, `tests/integration/`,
+  `tests/unit/` — contract, governance, cross-component and isolated tests
 - **CI**: `ci/` — machine-consumed verification configuration
 - **Deploy**: `deploy/compose/` — local runtime topology
 - **Docs**: `docs/` — governance and design prose
-- **Specs**: `specs/<nnn>-<feature>/` — one directory per feature, each holding
-  `spec.md`, `research.md`, `data-model.md`, `contracts/`, `quickstart.md`,
-  `checklists/requirements.md`, and (where planned) `plan.md` and `tasks.md`
+- **Specs**: `specs/<nnn>-<feature>/` — one directory per build phase, each
+  holding `spec.md`, `research.md`, `data-model.md`, `contracts/`,
+  `quickstart.md`, `checklists/requirements.md`, and (where planned) `plan.md`
+  and `tasks.md`. See [specs/README.md](specs/README.md) for the layout and the
+  identifier conventions.
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow, pull request process,
@@ -45,31 +51,43 @@ and issue reporting guidelines.
 2. Ensure Python 3.13+ is installed (`pyenv global 3.13` or `.python-version`)
 3. Run `make setup` to verify prerequisites and create `.env` from `.env.example`
    (an existing `.env` is preserved; `FORCE_ENV_RECREATE=1` overwrites it)
-4. Run `make test` to execute the local verification lane
+4. Run `make verify` to execute every required check
 5. Run `docker compose -f deploy/compose/compose.yaml up -d` to start PostgreSQL
 
 ## Verification Command
 ```
-make test
+make verify
 ```
-This runs the nox `fast_checks` lane, which includes format, lint, lockfile,
-typecheck, test, secret-scan, and dependency-audit checks. Exit codes:
+This runs every required check through nox. The nine checks are:
+
+| Check | Lane | Verifies |
+|---|---|---|
+| `format` | fast | Every tracked source file matches the formatter's output |
+| `lint` | fast | No lint rule is violated |
+| `lockfile` | fast | `uv.lock` is consistent with every `pyproject.toml` |
+| `governance` | fast | Templates, constitution, feature directories, and contracts are consistent |
+| `file-coverage` | fast | Every tracked file is covered by a required check |
+| `typecheck` | slow | The code passes mypy in strict mode |
+| `test` | slow | The test suite passes |
+| `secret-scan` | slow | No secret material in the tree or the history |
+| `dependency-audit` | slow | No locked dependency matches a known advisory |
+
+Exit codes:
 - **0** — PASS (all checks passed)
 - **1** — FAIL (one or more checks failed)
 - **2** — COULD NOT RUN (check could not execute)
 - **3** — INTERNAL ERROR (unexpected failure)
 
-The same lane can be invoked directly for CI callers:
-```
-ci/run-checks.sh fast_checks
-```
+The two lanes can be run separately — `make test` for the fast lane, and
+`ci/run-checks.sh slow_checks` for the slow lane. Every lane forwards the nox
+exit code unchanged.
 
 ## Quick Start
 ```bash
 git clone <repository>
 cd telco-si
 make setup
-make test
+make verify
 docker compose -f deploy/compose/compose.yaml up -d
 ```
 
@@ -87,5 +105,5 @@ incremental capabilities governed by approved specifications.
 Per-phase traceability mappings are recorded in each phase's `spec.md`. The ranges
 in use across the phase set are TM001–TM333; the central matrix at
 `docs/traceability-matrix.md` indexes the build-phase5 through build-phase11
-rows (TM104–TM124, TM125–TM142, TM221–TM235, TM260–TM277, TM280–TM297,
+rows (TM104–TM124, TM125–TM145, TM221–TM235, TM260–TM277, TM280–TM297,
 TM298–TM315, TM316–TM333) and states which are implemented.

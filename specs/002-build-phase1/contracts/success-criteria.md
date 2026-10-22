@@ -11,7 +11,7 @@
 
 **Verification Methods**:
 - timed fresh clone from repository
-- run nox fast-checks and measure duration
+- run nox -s fast_checks and measure duration
 - measure local check run duration
 - check constitution gate status in .specify/memory/constitution.md
 - check approval status in specification

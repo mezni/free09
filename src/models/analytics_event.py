@@ -1,6 +1,7 @@
 """AnalyticsEvent model - base entity shared across all user stories (data-model.md)"""
 
 from datetime import datetime
+from typing import Any
 from uuid import uuid4
 
 from sqlalchemy import JSON, DateTime, Index, String, func
@@ -24,7 +25,7 @@ class AnalyticsEvent(Base):
     timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=func.now()
     )
-    metadata_json: Mapped[dict | None] = mapped_column(
+    metadata_json: Mapped[dict[str, Any] | None] = mapped_column(
         "metadata", JSON, nullable=True, default=dict
     )
 

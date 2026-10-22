@@ -1,5 +1,6 @@
-.PHONY: all help setup test verification lint format typecheck test-cov secret-scan dep-audit \
-        lockfile health-check docker-up docker-down db-up db-down compose build-phase3
+.PHONY: all help setup test verify verification test test-cov lint format typecheck \
+        secret-scan dependency-audit governance file-coverage lockfile health-check \
+        docker-up docker-down db-up db-down
 
 all: help ## Display help message
 
@@ -9,10 +10,13 @@ help: ## Display help message
 setup: ## Initialize project structure and verify prerequisites
 	@uv run --no-sync nox -s setup
 
-test: ## Run all required checks (the local verification lane)
+verify: ## Run every required check (the merge gate's local equivalent)
+	@uv run --no-sync nox
+
+test: ## Run the fast lane: exactly the checks the CI fast-checks job runs
 	@uv run --no-sync nox -s fast_checks
 
-verification: test ## Alias for the local verification lane
+verification: verify ## Alias for the full required-check run
 
 lint: ## Run linting only
 	@uv run --no-sync nox -s lint
@@ -26,11 +30,17 @@ typecheck: ## Run type checking only
 test-cov: ## Run tests with coverage
 	@uv run --no-sync nox -s test_cov
 
-secret-scan: ## Run secret scanning
-	@uv run --no-sync nox -s secret_scan
+secret-scan: ## Scan the tree and the history for secrets
+	@uv run --no-sync nox -s secret-scan
 
-dep-audit: ## Run dependency audit
-	@uv run --no-sync nox -s dep_audit
+dependency-audit: ## Audit the locked dependency set against the advisory snapshot
+	@uv run --no-sync nox -s dependency-audit
+
+governance: ## Verify the governance artefacts
+	@uv run --no-sync nox -s governance
+
+file-coverage: ## Verify that every tracked file is covered by a required check
+	@uv run --no-sync nox -s file-coverage
 
 lockfile: ## Verify the lockfile is current
 	@uv run --no-sync nox -s lockfile
@@ -49,6 +59,3 @@ db-up: ## Start PostgreSQL via docker compose
 
 db-down: ## Stop PostgreSQL via docker compose
 	@docker compose -f deploy/compose/compose.yaml down
-
-build-phase3: ## Run build-phase3 specific checks
-	@uv run --no-sync nox -s run_build_phase3 || true

@@ -20,7 +20,7 @@
 - **FR-053**: OpenTelemetry tracing propagation across service boundaries
 - **FR-054**: Service mesh traffic monitoring and metrics
 - **FR-055**: Incident runbook generation and execution
-- **FR-055**: Performance anomaly detection
+- **FR-056**: Performance anomaly detection
 
 ## Non-Functional Requirements
 - **NFR-030**: Log retention for 90 days with search capability
@@ -41,7 +41,15 @@
 - [ ] Tracing propagation across all service boundaries (FR-053, NFR-033)
 - [ ] Service mesh metrics collected and visible (FR-054)
 - [ ] Incident runbooks created for 3 common scenarios (FR-055)
-- [ ] Performance anomaly detection alerts operational (FR-055)
+- [ ] Performance anomaly detection alerts operational (FR-056)
+
+## Edge Cases
+- **Log shipper unreachable**: if Loki cannot be reached, the log line is buffered locally and the request is served; the loss is reported rather than swallowed
+- **Scrape target down**: a Prometheus target that stops responding is marked down and the alerting rule fires once the configured threshold is crossed
+- **Alert matches with no notification channel**: the alert is recorded and a warning is raised that the routing configuration has no destination
+- **Missing inbound trace context**: a request that arrives without a trace context starts a new trace rather than being dropped
+- **Service mesh sidecar unavailable**: traffic falls back to the direct path and a mesh metric records the fallback
+- **Runbook executed against a service that no longer exists**: the runbook reports the mismatch instead of failing silently
 
 ## Assumptions
 - Existing Prometheus infrastructure can be extended
@@ -52,21 +60,28 @@
 ## Success Criteria
 - **SC-01**: 100% of services have Prometheus metrics endpoint at `/metrics`
 - **SC-02**: Log aggregation search returns results in under 2 seconds
-- **SC-02**: Alert notifications delivered to correct channels within 1 minute
-- **SC-03**: Tracing propagation visible across all service call chains
+- **SC-03**: Alert notifications delivered to correct channels within 1 minute
+- **SC-04**: Tracing propagation visible across all service call chains
 - **SC-05**: Incident runbooks contain step-by-step resolution procedures
 - **SC-06**: Service mesh observability dashboards operational
+- **SC-07**: Performance anomaly detection alerts fire on the baseline anomaly
+  fixture within one monitoring interval
 
 ## Dependencies
 - **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4, build-phase5 (all complete)
-- **Enables**: None (final phase in the sequence)
+- **Enables**: build-phase7 (finalization and hand-off)
 
 ## Traceability
-| Task | FR | User Story | Test Mapping | Priority |
-|------|----|------------|--------------|----------|
-| T161 | FR-050 | US1 | TM125–TM127 | P1 |
-| T162 | FR-051 | US2 | TM128–TM130 | P1 |
-| T163 | FR-052 | US3 | TM131–TM133 | P1 |
-| T164 | FR-053 | US4 | TM134–TM136 | P2 |
-| T165 | FR-054 | US4 | TM137–TM139 | P2 |
-| T166 | FR-055 | US5 | TM140–TM142 | P3 |
+| Requirement | User Story | Implementing tasks | Test Mapping | Priority | State |
+|---|---|---|---|---|---|
+| FR-050 Centralized log aggregation | US1 | T183, T184, T189, T204 | TM125–TM127 | P1 | Not started |
+| FR-051 Prometheus metrics exposition | US2 | T187, T190, T202 | TM128–TM130 | P1 | Not started |
+| FR-052 Alert rules and notification routing | US3 | T188, T203, T205 | TM131–TM133 | P1 | Not started |
+| FR-053 OpenTelemetry tracing propagation | US4 | T191, T192, T207 | TM134–TM136 | P2 | Not started |
+| FR-054 Service mesh traffic monitoring | US4 | T193, T206, T208 | TM137–TM139 | P2 | Not started |
+| FR-055 Incident runbook generation | US6 | T209 | TM140–TM142 | P3 | Not started |
+| FR-056 Performance anomaly detection | US5 | T210, T211 | TM143–TM145 | P3 | Not started |
+
+The task identifiers above are the ones that appear in `tasks.md`. FR-056
+introduces TM143–TM145, so the unallocated test-mapping range in this
+repository starts at TM146.

@@ -8,8 +8,9 @@ services:
       POSTGRES_PASSWORD: PLACEHOLDER_NO_REAL_CREDENTIAL
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d:ro
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U telco_user -d telco_db"]
       interval: 10s
@@ -23,7 +24,7 @@ services:
     build: services/auth-service
     container_name: auth-service
     environment:
-      DATABASE_URL: postgres://telco_user:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      AUTH_DATABASE_URL: postgres://telco_auth:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
       SERVICE_NAME: auth-service
       SERVICE_ROLE: least-privilege
     networks:
@@ -37,7 +38,7 @@ services:
     build: services/crm-service
     container_name: crm-service
     environment:
-      DATABASE_URL: postgres://telco_user:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      CRM_DATABASE_URL: postgres://telco_crm:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
       SERVICE_NAME: crm-service
       SERVICE_ROLE: least-privilege
     networks:
@@ -51,7 +52,7 @@ services:
     build: services/billing-service
     container_name: billing-service
     environment:
-      DATABASE_URL: postgres://telco_user:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      BILLING_DATABASE_URL: postgres://telco_billing:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
       SERVICE_NAME: billing-service
       SERVICE_ROLE: least-privilege
     networks:
@@ -65,7 +66,7 @@ services:
     build: services/inventory-service
     container_name: inventory-service
     environment:
-      DATABASE_URL: postgres://telco_user:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      INVENTORY_DATABASE_URL: postgres://telco_inventory:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
       SERVICE_NAME: inventory-service
       SERVICE_ROLE: least-privilege
     networks:

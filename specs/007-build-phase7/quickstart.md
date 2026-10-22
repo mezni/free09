@@ -34,7 +34,7 @@ grep -c "TM" docs/traceability-matrix.md
 ### 4. Fresh Clone Verification
 ```bash
 # Full environment verification (approximately 45 minutes)
-make check
+make verify
 # Or individual checks:
 make docker-up
 make migrate-all

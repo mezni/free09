@@ -13,5 +13,16 @@ fi
 SESSION="${1}"
 shift
 
+# Resolve the nox command. Prefer an explicit `nox` on PATH; fall back to the
+# project's uv environment so the script works from a plain checkout.
+if command -v nox >/dev/null 2>&1; then
+    NOX=(nox)
+elif command -v uv >/dev/null 2>&1; then
+    NOX=(uv run --no-sync nox)
+else
+    echo "run-checks.sh: neither 'nox' nor 'uv' is available on PATH" >&2
+    exit 2
+fi
+
 # Run the requested nox session and pass its exit code through.
-exec nox run "${SESSION}" "$@"
+exec "${NOX[@]}" -s "${SESSION}" "$@"

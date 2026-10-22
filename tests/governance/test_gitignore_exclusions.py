@@ -42,7 +42,7 @@ def gitignore_fixture():
 class TestGitignoreExclusions:
     """Test that gitignore properly excludes local overrides and artifacts."""
 
-    def test_gitignore_excludes_generated_artifacts(self, gitignore_fixture):
+    def test_local_overrides_and_artifacts_are_untracked(self, gitignore_fixture):
         """Gitignore excludes generated artifacts from tracking."""
         excluded = gitignore_fixture["untracked_would_be_tracked"]
         # Common generated artifacts should be gitignored

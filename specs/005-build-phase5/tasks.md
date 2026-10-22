@@ -133,8 +133,8 @@ follow `specs/005-build-phase5/`:
 - Phase 1 (T103–T115): Foundation — can run immediately
 - Phase 2 (T116–T123): Blocking prerequisites — must complete before Phase 3
 - Phase 3 (T124–T141): US1 — Distributed Tracing — depends on Phase 2 complete
-- Phase 4 (T142–T152): US2–US5 — Advanced Features — depends on US1 complete
-- Phase 7 (T153–T160): Polish — depends on all prior phases complete
+- Phase 4 (T142–T153): US2–US5 — Advanced Features — depends on US1 complete
+- Phase 7 (T154–T161): Polish — depends on all prior phases complete
 
 ## Parallel Execution Examples
 

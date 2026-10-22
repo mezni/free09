@@ -1,17 +1,20 @@
 """Main FastAPI application entry point"""
 
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.base import RequestResponseEndpoint
+from starlette.responses import Response
 
 from src.database import create_all
 from src.router.analytics import router as analytics_router
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Prepare the database schema before the application starts serving."""
     create_all()
     yield
@@ -56,14 +59,14 @@ api_router.include_router(analytics_router, tags=["analytics"])
 
 # Health check endpoint
 @api_router.get("/health", tags=["health"])
-async def health_check():
+async def health_check() -> dict[str, str]:
     """Health check endpoint"""
     return {"status": "healthy", "service": "telco-platform"}
 
 
 # Root endpoint
 @api_router.get("/", tags=["root"])
-async def root():
+async def root() -> dict[str, str]:
     """Root endpoint"""
     return {
         "message": "Telco Platform API",
@@ -74,7 +77,9 @@ async def root():
 
 # Add middleware for request logging
 @app.middleware("http")
-async def add_middleware_logging(request: Request, call_next):
+async def add_middleware_logging(
+    request: Request, call_next: RequestResponseEndpoint
+) -> Response:
     """Log incoming requests for observability (Art. VIII)"""
     response = await call_next(request)
     return response
@@ -82,7 +87,9 @@ async def add_middleware_logging(request: Request, call_next):
 
 # Add middleware for request ID tracking
 @app.middleware("http")
-async def add_request_id(request: Request, call_next):
+async def add_request_id(
+    request: Request, call_next: RequestResponseEndpoint
+) -> Response:
     """Add request ID for tracing (Art. VIII - Observability)"""
     import uuid
 

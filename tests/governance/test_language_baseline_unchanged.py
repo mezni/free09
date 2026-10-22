@@ -25,7 +25,9 @@ def language_baseline_fixture():
 class TestLanguageBaselineUnchanged:
     """Test that language and persistence baselines are unchanged."""
 
-    def test_implementation_language_unchanged(self, language_baseline_fixture):
+    def test_implementation_language_baseline_unchanged(
+        self, language_baseline_fixture
+    ):
         """Implementation language remains Python 3.13."""
         lang = language_baseline_fixture["implementation_language"]
         assert "Python 3.13" in lang

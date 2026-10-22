@@ -1,0 +1,131 @@
+# File-coverage declaration — read by `ci/check_file_coverage.py`.
+#
+# `covers` lists the path globs a required check is responsible for. Coverage
+# means: *if a file matching the glob regressed in the property that check is
+# responsible for, the check would report it.* It does not mean the check
+# reads every byte of every listed file.
+#
+# Every tracked file must match at least one glob below, or be listed in
+# `exclusions` with a reason, an owner, and a review date. Exclusions expire
+# on their review date.
+#
+# Adding a check, or moving a file to a different glob, is a change to this
+# file and to `specs/001-project-setup/contracts/verification-contract.md` in
+# the same change set.
+
+schema: 1
+
+checks:
+  format:
+    session: format
+    lane: fast-checks
+    covers:
+      - "**/*.py"
+
+  lint:
+    session: lint
+    lane: fast-checks
+    covers:
+      - "**/*.py"
+
+  lockfile:
+    session: lockfile
+    lane: fast-checks
+    covers:
+      - "pyproject.toml"
+      - "libs/*/pyproject.toml"
+      - "services/*/pyproject.toml"
+      - "uv.lock"
+
+  governance:
+    session: governance
+    lane: fast-checks
+    covers:
+      - "**/*.md"
+      - ".env.example"
+
+  file-coverage:
+    session: file-coverage
+    lane: fast-checks
+    covers:
+      - "ci/file-coverage.yml"
+      - "ci/check_file_coverage.py"
+      - ".github/**"
+
+  typecheck:
+    session: typecheck
+    lane: slow-checks
+    covers:
+      - "src/**/*.py"
+      - "libs/*/src/**/*.py"
+      - "mypy.ini"
+
+  test:
+    session: test
+    lane: slow-checks
+    covers:
+      - "tests/**/*.py"
+      - "src/**/*.py"
+      - "services/**/*.py"
+      - "libs/*/src/**/*.py"
+      - "ci/setup.sh"
+      - "Makefile"
+
+  secret-scan:
+    session: secret-scan
+    lane: slow-checks
+    covers:
+      - "**/*"
+
+  dependency-audit:
+    session: dependency-audit
+    lane: slow-checks
+    covers:
+      - "uv.lock"
+      - "pyproject.toml"
+      - "libs/*/pyproject.toml"
+      - "services/*/pyproject.toml"
+      - "ci/advisories/**"
+
+exclusions:
+  - paths:
+      - ".specify/**"
+    reason: >-
+      Framework tooling vendored from Spec Kit. It is not repository code, it
+      is not reviewable here, and the required checks do not claim to own it.
+    owner: "maintainers"
+    review_by: "2027-04-21"
+
+  - paths:
+      - ".opencode/**"
+    reason: >-
+      Agent tooling vendored from opencode. It is not repository code, it is
+      not reviewable here, and the required checks do not claim to own it.
+    owner: "maintainers"
+    review_by: "2027-04-21"
+
+  - paths:
+      - "scripts/**"
+    reason: >-
+      Manual end-to-end verification that clones the upstream repository and
+      needs network access. It is not one of the required checks and cannot
+      run inside the offline verification lane.
+    owner: "maintainers"
+    review_by: "2027-04-21"
+
+  - paths:
+      - "alembic.ini"
+      - "migrations/**"
+    reason: >-
+      Database migration tooling. The migrations themselves are owned and
+      verified by the build phase that introduces them, not by Phase 0.
+    owner: "maintainers"
+    review_by: "2027-04-21"
+
+  - paths:
+      - "deploy/**"
+    reason: >-
+      Runtime topology for local development. It is exercised by the health
+      check and by the deployment phase, neither of which is a required check.
+    owner: "maintainers"
+    review_by: "2027-04-21"

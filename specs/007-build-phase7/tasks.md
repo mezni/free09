@@ -14,7 +14,7 @@
 
 **Organization**: Tasks are grouped by phase to enable independent implementation and testing of each phase.
 
-⚠️ Blocking gate: Constitution Article I.1 permits implementation only against an **approved** specification. T012, T013, and T014 complete that precondition and MUST complete before any other task in this list begins.
+⚠️ Blocking gate: Constitution Article I.1 permits implementation only against an **approved** specification. T15, T16, and T17 complete that precondition and MUST complete before any other task in this list begins.
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -41,30 +41,30 @@ follow `specs/007-build-phase7/`:
 
 ---
 
-## Phase 1: Finalization (T221–T225)
+## Phase 1: Finalization (T224–T228)
 
 **This phase finalizes the SPEC-001 completion across all build phases.**
 
-- [ ] T221 [P] [US1] Finalize all spec.md statuses to Implemented after acceptance evidence
-- [x] T222 [P] [US2] Reconcile constitution documents (docs/ vs .specify/) across all phases
-- [x] T223 [P] [US3] Record final ADR-0001 decision status and update governance artifacts
-- [ ] T224 [P] [US4] Update traceability matrix with all test mappings (TM001–TM220)
-- [x] T225 [P] [US5] Fresh clone verification (full environment, 30-45 minutes)
+- [ ] T224 [P] [US1] Finalize all spec.md statuses to Implemented after acceptance evidence
+- [x] T225 [P] [US2] Reconcile constitution documents (docs/ vs .specify/) across all phases
+- [x] T226 [P] [US3] Record final ADR-0001 decision status and update governance artifacts
+- [ ] T227 [P] [US4] Update traceability matrix with all test mappings (TM001–TM220)
+- [x] T228 [P] [US5] Fresh clone verification (full environment, 30-45 minutes)
 
 **Checkpoint**: US1 complete — SPEC-001 finalization complete
 
 ## Dependencies & Execution Order
 
-- Phase 1 (T221–T225): Finalization — depends on all prior phases (build-phase1 through build-phase6) being complete with all tasks [COMPLETE]
+- Phase 1 (T224–T228): Finalization — depends on all prior phases (build-phase1 through build-phase6) being complete with all tasks [COMPLETE]
 - No subsequent phases (this is the final phase)
 
 ## Parallel Execution Examples
 
 ### Parallel: Finalization Tasks (P tasks)
-- T221: Finalize spec.md statuses (different files across build-phases)
-- T222: Reconcile constitution documents (different files)
-- T223: Record ADR-0001 final decision (different files)
-- T224: Update traceability matrix (different files)
+- T224: Finalize spec.md statuses (different files across build-phases)
+- T225: Reconcile constitution documents (different files)
+- T226: Record ADR-0001 final decision (different files)
+- T227: Update traceability matrix (different files)
 - All five can run in parallel, each modifying different files
 
 ### Parallel: Hand-off Documentation (P tasks)

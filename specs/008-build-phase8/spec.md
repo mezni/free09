@@ -66,14 +66,18 @@
 - **Enables**: None (future extension phase)
 
 ## Traceability
-| Task | FR | User Story | Test Mapping | Priority |
-|------|----|------------|--------------|----------|
-| T236 | FR-070 | US1 | TM260–TM262 | P1 |
-| T237 | FR-071 | US2 | TM263–TM265 | P1 |
-| T238 | FR-072 | US3 | TM266–TM268 | P2 |
-| T239 | FR-073 | US4 | TM269–TM271 | P2 |
-| T240 | FR-074 | US5 | TM272–TM274 | P3 |
-| T241 | FR-075 | US5 | TM275–TM277 | P3 |
+| Requirement | User Story | Implementing tasks | Test Mapping | Priority | State |
+|---|---|---|---|---|---|
+| FR-070 Advanced analytics endpoints | US1 | T010–T018 | TM260–TM262 | P1 | Implemented |
+| FR-071 AI model metrics and anomaly detection | US2 | T019–T025 | TM263–TM265 | P1 | Not started |
+| FR-072 Admin UI with role-based access | US3 | T026–T032 | TM266–TM268 | P2 | Not started |
+| FR-073 Partner integrations | US4 | T033–T039 | TM269–TM271 | P2 | Not started |
+| FR-074 Compliance reporting | US5 | T040–T045 | TM272–TM274 | P3 | Not started |
+| FR-075 Feature flags with instant rollback | US5 | T046–T054 | TM275–TM277 | P3 | Not started |
+
+The task identifiers above are the ones that appear in `tasks.md`. The
+identifier space in this phase is phase-local; the test-mapping range
+TM260–TM277 is global.
 
 ## Dependencies
 - **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4, build-phase5, build-phase6, build-phase7 (all complete)
@@ -81,7 +85,7 @@
 
 ## Traceability Notes
 
-This phase extends the traceability from TM221–TM277, building upon the foundation established in prior phases. All prior test mappings (TM001–TM220) remain valid and unmodified.
+This phase introduces the test mappings TM260–TM277, building upon the foundation established in the prior phases. The prior mappings remain valid and unmodified: TM001–TM235 are held by the phases that introduced them, and TM236–TM259 are unallocated.
 
 ## Success Criteria Notes
 

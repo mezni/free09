@@ -43,6 +43,14 @@
 - [ ] API reference documentation complete and versioned (FR-045)
 - [ ] Performance benchmarks exceed phase 3 baseline by 20% (FR-046)
 
+## Edge Cases
+- **Collector unreachable**: if the OpenTelemetry collector cannot be reached, the tracing middleware must not fail the request; it drops the span, records the failure and continues serving
+- **Database down during a probe**: the liveness probe stays healthy, the readiness probe reports not-ready, and neither returns a 5xx that would restart a healthy process
+- **Unknown API key scope**: a request carrying a scope the platform does not define is rejected and the attempt is audited rather than granted by default
+- **Webhook with an invalid signature**: the delivery is rejected before it reaches a handler, and the rejection does not trigger a retry
+- **Webhook delivered twice after a timeout**: the idempotency key suppresses the second processing of the same event
+- **Endpoint added without documentation**: the documentation check fails the build instead of publishing an incomplete reference
+
 ## Assumptions
 - OpenTelemetry collector infrastructure is available or will be provisioned
 - Existing API key infrastructure from phase 3 can be extended
@@ -60,15 +68,19 @@
 - **SC-07**: Performance benchmarks show at least 20% improvement over phase 3 baseline across key metrics
 
 ## Traceability
-| Task | FR | User Story | Test Mapping | Priority |
-|------|----|------------|--------------|----------|
-| T103 | FR-040 | US1 | TM104–TM106 | P1 |
-| T104 | FR-041 | US2 | TM107–TM109 | P1 |
-| T105 | FR-042 | US3 | TM110–TM112 | P2 |
-| T106 | FR-043 | US4 | TM113–TM115 | P2 |
-| T107 | FR-044 | US5 | TM116–TM118 | P2 |
-| T108 | FR-045 | US6 | TM119–TM121 | P3 |
-| T109 | FR-046 | US1 | TM122–TM124 | P2 |
+| Requirement | User Story | Implementing tasks | Test Mapping | Priority | State |
+|---|---|---|---|---|---|
+| FR-040 OpenTelemetry distributed tracing | US1 | T124, T125, T128–T135, T147 | TM104–TM106 | P1 | Partial |
+| FR-041 Centralized error tracking | US2 | T142, T143, T146, T148 | TM107–TM109 | P1 | Complete |
+| FR-042 Health check endpoints | US3 | T149 | TM110–TM112 | P2 | Complete |
+| FR-043 API key management | US4 | T145 | TM113–TM115 | P2 | Stub |
+| FR-044 Webhook validation | US5 | T144 | TM116–TM118 | P2 | Stub |
+| FR-045 API reference documentation | US6 | T150 | TM119–TM121 | P3 | Complete |
+| FR-046 Performance benchmarking | US1 | *no implementing task* | TM122–TM124 | P2 | Not started |
+
+The task identifiers above are the ones that appear in `tasks.md`. FR-046 has
+no implementing task, so TM122–TM124 remain unstarted; adding the benchmark
+task is the outstanding work for that requirement.
 
 ## Dependencies
 - **Depends on**: build-phase1, build-phase2, build-phase3, build-phase4 (all complete)

@@ -12,7 +12,7 @@
 ### 1. Ensure Prior Phases Are Complete
 ```bash
 # Verify all prior phases are implemented
-make check
+make verify
 
 # Or verify individually
 make docker-up  # Start all services

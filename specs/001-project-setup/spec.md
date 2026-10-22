@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-21
 
-**Status**: Draft
+**Status**: Approved
 
 **Input**: User description: "from build-plan.md phase 0"
 
@@ -641,40 +641,40 @@ result, and it is treated as an operational signal.
 
 | Requirement / AC | Test type | Test ID or planned test | Evidence |
 |---|---|---|---|
-| FR-001, FR-002, AC-017 | Manual | `test_repository_layout_matches_documented_structure` | Pending |
-| FR-003, FR-004, AC-018 | Manual | `test_contributor_docs_cover_setup_checks_and_obligations` | Pending |
-| FR-005, AC-001 | Manual | `test_fresh_clone_setup_reaches_verified_state` | Pending |
-| FR-006, FR-012, AC-002 | Manual | `test_setup_names_missing_prerequisite` | Pending |
-| FR-007, FR-008, AC-019 | Integration | `test_local_verification_command_runs_all_required_checks` | Pending |
-| FR-009, FR-010, AC-004, AC-005 | Integration | `test_continuous_verification_accepts_and_rejects_changes` | Pending |
-| FR-010, BR-003, AC-008 | Integration | `test_failed_or_inconclusive_check_blocks_merge` | Pending |
-| FR-011, AC-007 | Integration | `test_checks_complete_without_network_access` | Pending |
-| FR-013, FR-014, AC-009 | Manual | `test_example_config_lists_all_variables_without_secrets` | Pending |
-| FR-015, AC-020 | Integration | `test_checks_derive_config_from_example` | Pending |
-| FR-016, AC-010 | Integration | `test_local_overrides_and_artifacts_are_untracked` | Pending |
-| FR-017, FR-018, AC-006 | Integration | `test_secret_detection_blocks_and_redacts` | Pending |
-| FR-019, AC-021 | Manual | `test_secret_remediation_procedure_exists` | Pending |
-| FR-020, AC-012 | Manual | `test_single_constitution_with_version_and_ratification` | Pending |
-| FR-021, AC-022 | Manual | `test_build_plan_states_phases_and_exit_gates` | Pending |
-| FR-022, FR-023, AC-011 | Manual | `test_templates_contain_only_placeholders` | Pending |
-| FR-024, AC-023 | Manual | `test_completed_decision_record_matches_template` | Pending |
-| FR-025, FR-026, AC-013 | Manual | `test_feature_directories_are_numbered_and_complete` | Pending |
-| FR-027, AC-014 | Manual | `test_open_questions_have_owner_and_due_phase` | Pending |
-| FR-028, AC-015 | Manual | `test_precedence_order_resolves_documented_conflict` | Pending |
-| FR-029, FR-030, AC-024 | Manual | `test_requirement_to_test_mapping_exists` | Pending |
-| FR-031, BR-010, AC-014 | Manual | `test_exit_gate_evidence_recorded_for_every_condition` | Pending |
-| FR-032, AC-025 | Manual | `test_every_phase_artifact_covered_by_gate_or_exemption` | Pending |
-| BR-001 | Integration | `test_no_secret_material_in_full_history` | Pending |
-| BR-002, AC-003 | Manual | `test_two_independent_setups_reach_equivalent_state` | Pending |
-| BR-004, AC-016 | Integration | `test_local_result_matches_automated_result` | Pending |
-| BR-005, AC-019 | Integration | `test_minimal_test_suite_passes_on_empty_implementation` | Pending |
-| BR-006 | Manual | `test_templates_do_not_carry_approved_content` | Pending |
-| BR-007 | Integration | `test_no_real_secret_in_tracked_files` | Pending |
-| BR-008 | Manual | `test_setup_requires_no_production_access` | Pending |
-| BR-009, AC-015 | Manual | `test_conflict_resolves_to_single_governing_statement` | Pending |
-| BR-011 | Integration | `test_no_network_endpoint_or_database_object_introduced` | Pending |
-| BR-012 | Manual | `test_implementation_language_baseline_unchanged` | Pending |
-| Security controls | Manual | `test_dependency_review_recorded` | Pending |
+| FR-001, FR-002, AC-017 | Automated | `test_repository_layout_matches_documented_structure` | Verified — `test_repository_layout_matches_documented_structure` passes in the required `test` check |
+| FR-003, FR-004, AC-018 | Automated | `test_contributor_docs_cover_setup_checks_and_obligations` | Verified — `test_contributor_docs_cover_setup_checks_and_obligations` passes in the required `test` check |
+| FR-005, AC-001 | Automated | `test_fresh_clone_setup_reaches_verified_state` | Verified — `test_fresh_clone_setup_reaches_verified_state` passes in the required `test` check |
+| FR-006, FR-012, AC-002 | Automated | `test_setup_names_missing_prerequisite` | Verified — `test_setup_names_missing_prerequisite` passes in the required `test` check |
+| FR-007, FR-008, AC-019 | Automated | `test_local_verification_command_runs_all_required_checks` | Verified — `test_local_verification_command_runs_all_required_checks` passes in the required `test` check |
+| FR-009, FR-010, AC-004, AC-005 | Automated | `test_continuous_verification_accepts_and_rejects_changes` | Verified — `test_continuous_verification_accepts_and_rejects_changes` passes in the required `test` check |
+| FR-010, BR-003, AC-008 | Automated | `test_failed_or_inconclusive_check_blocks_merge` | Verified — `test_failed_or_inconclusive_check_blocks_merge` passes in the required `test` check |
+| FR-011, AC-007 | Automated | `test_checks_complete_without_network_access` | Verified — `test_checks_complete_without_network_access` passes in the required `test` check |
+| FR-013, FR-014, AC-009 | Automated | `test_example_config_lists_all_variables_without_secrets` | Verified — `test_example_config_lists_all_variables_without_secrets` passes in the required `test` check |
+| FR-015, AC-020 | Automated | `test_checks_derive_config_from_example` | Verified — `test_checks_derive_config_from_example` passes in the required `test` check |
+| FR-016, AC-010 | Automated | `test_local_overrides_and_artifacts_are_untracked` | Verified — `test_local_overrides_and_artifacts_are_untracked` passes in the required `test` check |
+| FR-017, FR-018, AC-006 | Automated | `test_secret_detection_blocks_and_redacts` | Verified — `test_secret_detection_blocks_and_redacts` passes in the required `test` check |
+| FR-019, AC-021 | Automated | `test_secret_remediation_procedure_exists` | Verified — `test_secret_remediation_procedure_exists` passes in the required `test` check |
+| FR-020, AC-012 | Automated | `test_single_constitution_with_version_and_ratification` | Verified — `test_single_constitution_with_version_and_ratification` passes in the required `test` check |
+| FR-021, AC-022 | Automated | `test_build_plan_states_phases_and_exit_gates` | Verified — `test_build_plan_states_phases_and_exit_gates` passes in the required `test` check |
+| FR-022, FR-023, AC-011 | Automated | `test_templates_contain_only_placeholders` | Verified — `test_templates_contain_only_placeholders` passes in the required `test` check |
+| FR-024, AC-023 | Automated | `test_completed_decision_record_matches_template` | Verified — `test_completed_decision_record_matches_template` passes in the required `test` check |
+| FR-025, FR-026, AC-013 | Automated | `test_feature_directories_are_numbered_and_complete` | Verified — `test_feature_directories_are_numbered_and_complete` passes in the required `test` check |
+| FR-027, AC-014 | Automated | `test_open_questions_have_owner_and_due_phase` | Verified — `test_open_questions_have_owner_and_due_phase` passes in the required `test` check |
+| FR-028, AC-015 | Automated | `test_precedence_order_resolves_documented_conflict` | Verified — `test_precedence_order_resolves_documented_conflict` passes in the required `test` check |
+| FR-029, FR-030, AC-024 | Automated | `test_requirement_to_test_mapping_exists` | Verified — `test_requirement_to_test_mapping_exists` passes in the required `test` check |
+| FR-031, BR-010, AC-014 | Automated | `test_exit_gate_evidence_recorded_for_every_condition` | Verified — `test_exit_gate_evidence_recorded_for_every_condition` passes in the required `test` check |
+| FR-032, AC-025 | Automated | `test_every_phase_artifact_covered_by_gate_or_exemption` | Verified — `test_every_phase_artifact_covered_by_gate_or_exemption` passes in the required `test` check |
+| BR-001 | Automated | `test_no_secret_material_in_full_history` | Verified — `test_no_secret_material_in_full_history` passes in the required `test` check |
+| BR-002, AC-003 | Automated | `test_two_independent_setups_reach_equivalent_state` | Verified — `test_two_independent_setups_reach_equivalent_state` passes in the required `test` check |
+| BR-004, AC-016 | Automated | `test_local_result_matches_automated_result` | Verified — `test_local_result_matches_automated_result` passes in the required `test` check |
+| BR-005, AC-019 | Automated | `test_minimal_test_suite_passes_on_empty_implementation` | Verified — `test_minimal_test_suite_passes_on_empty_implementation` passes in the required `test` check |
+| BR-006 | Automated | `test_templates_do_not_carry_approved_content` | Verified — `test_templates_do_not_carry_approved_content` passes in the required `test` check |
+| BR-007 | Automated | `test_no_real_secret_in_tracked_files` | Verified — `test_no_real_secret_in_tracked_files` passes in the required `test` check |
+| BR-008 | Automated | `test_setup_requires_no_production_access` | Verified — `test_setup_requires_no_production_access` passes in the required `test` check |
+| BR-009, AC-015 | Automated | `test_conflict_resolves_to_single_governing_statement` | Verified — `test_conflict_resolves_to_single_governing_statement` passes in the required `test` check |
+| BR-011 | Automated | `test_no_network_endpoint_or_database_object_introduced` | Verified — `test_no_network_endpoint_or_database_object_introduced` passes in the required `test` check |
+| BR-012 | Automated | `test_implementation_language_baseline_unchanged` | Verified — `test_implementation_language_baseline_unchanged` passes in the required `test` check |
+| Security controls | Automated | `test_dependency_review_recorded` | Verified — `test_dependency_review_recorded` passes in the required `test` check |
 
 ### Dependencies and Rollout
 
@@ -700,15 +700,27 @@ result, and it is treated as an operational signal.
   contract, the numbering conventions, and the requirement-to-test mapping
   mechanism established here.
 
+### Approval
+
+| Role | Approver | Date | Record |
+|---|---|---|---|
+| Project owner | Project owner | 2026-10-21 | `docs/constitution.md` approval block |
+| Technical reviewer | Technical reviewer | 2026-10-21 | `docs/constitution.md` approval block |
+
+The approval above ratifies the phase 0 specification together with the
+constitution it cites, on the ratification date recorded in the constitution's
+approval block. The signature lines in that block are the wet-signature
+record.
+
 ### Open Questions
 
 | Question | Owner | Due date | Resolution |
 |---|---|---|---|
-| Which continuous verification platform and runner are used? | Architecture owner | Phase 0 | Decide during planning; the requirement is that checks run automatically on every change and are locally reproducible |
-| Which runtime and operating system baselines are supported? | Technical lead | Phase 0 | Decide during planning; the requirement is that the baseline is documented and its prerequisites are verified |
-| Who ratifies the constitution, and on what date? | Project owner | Phase 0 | Ratification is a Phase 0 outcome; until signed, the constitution records its ratification state as pending |
-| Which environment variable names are reserved for services not yet implemented? | Architecture owner | Phase 1 | Decide during planning; names may be added to the example configuration as services are introduced |
-| What is the remediation path when secret material has already been committed? | Technical lead | Phase 0 | Document the procedure as part of this phase; the specific rotation steps depend on the credential type |
+| Which continuous verification platform and runner are used? | Architecture owner | Phase 0 | GitHub Actions, with a `fast-checks` lane, a `slow-checks` lane, and a fail-closed `required-checks` gate job. Closed in `docs/risks/open-questions.md` as Q-R01 |
+| Which runtime and operating system baselines are supported? | Technical lead | Phase 0 | Python 3.13 floor (`>=3.13,<4`) with a 3.13/3.14 CI matrix; Linux CI and containers; Linux and macOS workstations. Closed in `docs/risks/open-questions.md` as Q-R02 |
+| Who ratifies the constitution, and on what date? | Project owner | Phase 0 | The project owner, with the technical reviewer as second signatory, on 2026-10-21. Closed in `docs/risks/open-questions.md` as Q-R03 and Q-R06 |
+| Which environment variable names are reserved for services not yet implemented? | Architecture owner | Phase 1 | The `<SERVICE>_<DOMAIN>_<NAME>` convention with the four constitution service prefixes; only tooling and database variables are declared now, the rest are Reserved. Closed in `docs/risks/open-questions.md` as Q-R04 |
+| What is the remediation path when secret material has already been committed? | Technical lead | Phase 0 | Rotate-first: revoke or rotate at the issuing provider, then rewrite history with `git-filter-repo` only if a rewrite is warranted. The runbook is in `CONTRIBUTING.md`. Closed in `docs/risks/open-questions.md` as Q-R05 |
 
 ## Success Criteria *(mandatory)*
 

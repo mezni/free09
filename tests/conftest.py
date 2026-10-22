@@ -10,7 +10,7 @@ import pytest
 
 # The test suite runs against an in-memory database. This must be set before
 # `src.database` is imported, because the engine is created at import time.
-os.environ.setdefault("SQLALCHEMY_DATABASE_URL", "sqlite://")
+os.environ.setdefault("TELECO_DB_URL", "sqlite://")
 
 
 def pytest_configure(config):

@@ -17,7 +17,7 @@
   - 6 Functional Requirements (FR-090 through FR-095)
   - 5 Non-Functional Requirements (NFR-060 through NFR-064)
   - Boundaries (In-scope/Out-of-scope)
-  - 6 Success Criteria (SC-01 through SC-05)
+  - 5 Success Criteria (SC-01 through SC-05)
   - Dependencies on build-phase1 through build-phase8
   - Traceability TM280–TM297 (extends from prior TM001–TM220)
   - 5 Assumptions

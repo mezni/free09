@@ -42,16 +42,14 @@ if [ ! -f .env ] || [ "$FORCE_ENV_RECREATE" = "1" ]; then
     else
         # No .env.example — create a minimal .env
         cat > .env <<EOF
-# DB_HOST: required — database hostname
-DB_HOST=localhost
-# DB_PORT: required — database port
-DB_PORT=5432
-# DB_NAME: required — database name
-DB_NAME=telco_db
-# DB_USER: required — database user
-DB_USER=telco_user
-# DB_PASSWORD: required — database password placeholder
-DB_PASSWORD=PLACEHOLDER_NO_REAL_CREDENTIAL
+# TELECO_ENV: required — environment selector (dev, test, ci, prod)
+TELECO_ENV=dev
+# TELECO_SERVICE_NAME: required — name of the running service
+TELECO_SERVICE_NAME=telco-platform
+# TELECO_DB_URL: optional — service connection URL
+TELECO_DB_URL=sqlite:///./telco_platform.db
+# TELECO_DB_PASSWORD: optional — PostgreSQL application role credential placeholder
+TELECO_DB_PASSWORD=PLACEHOLDER_NO_REAL_CREDENTIAL
 EOF
     fi
     echo ".env created from .env.example."

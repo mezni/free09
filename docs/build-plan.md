@@ -168,20 +168,28 @@ Specification: `specs/011-build-phase11/spec.md` — status **Proposed**.
 The phase numbers above describe the delivery strategy. The specifications that
 carry the requirements use their own directory names, so the mapping is:
 
-| Plan phase | Specification directory | Status |
-|---|---|---|
-| Phase 0 — Project setup and governance | `specs/001-project-setup/` | Implemented |
-| Phase 1 — Domain discovery and architecture | `specs/002-build-phase1/` | Implemented |
-| Phase 2 — Data model and database foundation | `specs/003-build-phase2/` | Implemented |
-| Phase 3 — Authentication and authorization | `specs/004-build-phase3/` | Implemented |
-| Phase 4 — CRM vertical slice | *(no specification directory)* | Not specified |
-| Phase 5 — Inventory, catalog, subscriptions, provisioning | `specs/005-build-phase5/` | Implemented |
-| Phase 6 — Billing and financial ledger | `specs/006-build-phase6/` | Implemented |
-| Phase 7 — Synthetic data generation | `specs/007-build-phase7/` | Implemented |
-| Phase 8 — Cross-service integration | `specs/008-build-phase8/` | Partially implemented |
-| Phase 9 — Production readiness | `specs/009-build-phase9/` | Proposed |
-| Phase 10 — Build plan extension | `specs/010-build-phase10/` | Proposed |
-| Phase 11 — Build plan extension (reporting horizon) | `specs/011-build-phase11/` | Proposed |
+| Plan phase | Specification directory | Specification status | Implementation state |
+|---|---|---|---|
+| Phase 0 — Project setup and governance | `specs/001-project-setup/` | Approved | 100 of 102 tasks complete — T095 and T102 (status finalisation) stay open until the GitHub Actions run reference is recorded in `docs/quality/phase-0-exit-gate.md` |
+| Phase 1 — Domain discovery and architecture | `specs/002-build-phase1/` | Approved | Implemented — all 26 tasks complete |
+| Phase 2 — Data model and database foundation | `specs/003-build-phase2/` | Approved | Phase 2 complete — schemas/roles, models, four reversible Alembic revisions, migration/schema tests with role-grant enforcement, preflight wired into required checks (all nine checks pass). |
+| Phase 3 — Authentication and authorization | `specs/004-build-phase3/` | Implemented | Implemented — all 54 tasks complete |
+| Phase 4 — CRM vertical slice | *(no specification directory)* | — | Not specified |
+| Phase 5 — Inventory, catalog, subscriptions, provisioning | `specs/005-build-phase5/` | Proposed | Partially implemented — 41 of 59 tasks complete |
+| Phase 6 — Billing and financial ledger | `specs/006-build-phase6/` | Proposed | Partially implemented — 30 of 62 tasks complete |
+| Phase 7 — Synthetic data generation | `specs/007-build-phase7/` | Proposed | Partially implemented — 3 of 5 tasks complete |
+| Phase 8 — Cross-service integration | `specs/008-build-phase8/` | Proposed | Partially implemented — 22 of 54 tasks complete; US1 only |
+| Phase 9 — Production readiness | `specs/009-build-phase9/` | Proposed | Not started |
+| Phase 10 — Build plan extension | `specs/010-build-phase10/` | Proposed | Not started |
+| Phase 11 — Build plan extension (reporting horizon) | `specs/011-build-phase11/` | Proposed | Not started |
+
+The specification status is the lifecycle field the specification itself
+carries; the implementation state is the completion count from that phase's
+`tasks.md`, verified against the repository. A phase keeps the status
+**Proposed** until every acceptance criterion in its `spec.md` passes, so a
+phase with a partially implemented task list is **Proposed** even when most of
+its tasks are complete. The task counts are recorded in each phase's task list
+header.
 
 The phase names carried by the specification directories predate this plan and
 describe the work each extension phase actually added, so the two vocabularies

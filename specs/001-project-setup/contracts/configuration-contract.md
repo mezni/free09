@@ -41,7 +41,7 @@ Rules:
 
 | Marker | Meaning | Behaviour when absent |
 |---|---|---|
-| **Required** | The check suite cannot proceed without it. | Fail fast with a message naming the variable, its purpose, and where to obtain a value. |
+| **Required** | Neither the check suite nor a service process can proceed without it. | Fail fast with a message naming the variable, its purpose, and where to obtain a value. |
 | **Optional** | A documented default exists. | The default applies; no message. |
 | **Reserved** | The name is fixed now; the consumer arrives in a later phase. | Absent is normal and produces no message. |
 
@@ -61,6 +61,13 @@ MUST appear in `.env.example` as a placeholder only.
 | `TELECO_LOG_FORMAT` | Optional | No | `json` \| `text` | `json` | Log serialisation. `json` in CI so results are parseable. |
 | `TELECO_LOG_CORRELATION_HEADER` | Optional | No | string | `X-Correlation-ID` | Header carrying the correlation identifier, satisfying the constitution's correlation-identifier requirement. |
 
+### Service identity
+
+| Name | Marker | Secret | Type | Default | Purpose |
+|---|---|---|---|---|---|
+| `TELECO_SERVICE_NAME` | Required | No | string | — | Name of the running service. A process that cannot name itself cannot be traced, so the value is mandatory. |
+| `TELECO_SERVICE_ROLE` | Optional | No | string | `default` | Role assumed by the service in the topology. |
+
 ### Database connection
 
 Shared by all four services. Each service reads the same host, port, and
@@ -68,6 +75,7 @@ credentials but binds to its own schema.
 
 | Name | Marker | Secret | Type | Default | Purpose |
 |---|---|---|---|---|---|
+| `TELECO_DB_URL` | Optional | **Yes** | string | `sqlite:///./telco_platform.db` | Full connection URL used by the running service. Takes precedence over the `TELECO_DB_*` components. The default is a local SQLite file so that a checkout runs without a database server; a deployed service MUST set it to the PostgreSQL URL. |
 | `TELECO_DB_HOST` | Optional | No | string | `127.0.0.1` | PostgreSQL host. Provided by `deploy/compose/compose.yaml` locally. |
 | `TELECO_DB_PORT` | Optional | No | int | `5432` | PostgreSQL port. |
 | `TELECO_DB_NAME` | Optional | No | string | `telco_si` | Database name. One database, four schemas. |
@@ -78,6 +86,18 @@ credentials but binds to its own schema.
 | `TELECO_DB_POOL_MAX_OVERFLOW` | Optional | No | int | `10` | Additional connections permitted under load. |
 | `TELECO_DB_CONNECT_TIMEOUT_SECONDS` | Optional | No | int | `10` | Connection establishment timeout. |
 | `TELECO_DB_STATEMENT_TIMEOUT_MS` | Optional | No | int | `30000` | Server-side statement timeout, bounding a stuck query. |
+
+**Connection-URL resolution.** The URL a service connects to is resolved in
+exactly one order, with no second interpretation:
+
+1. If `TELECO_DB_URL` is set, it is used verbatim.
+2. Otherwise, if `TELECO_ENV` is `dev` or `test`, the local SQLite URL
+   `sqlite:///./telco_platform.db` is used.
+3. Otherwise the URL is composed from the `TELECO_DB_*` components as
+   `postgresql://<TELECO_DB_USER>:<TELECO_DB_PASSWORD>@<TELECO_DB_HOST>:<TELECO_DB_PORT>/<TELECO_DB_NAME>`.
+
+A service MUST NOT connect to a database other than the one this rule
+produces, and MUST NOT read an undeclared variable to build a connection.
 
 ### Per-service database URLs — Reserved
 

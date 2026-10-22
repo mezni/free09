@@ -28,6 +28,30 @@ documented layout and the actual layout cannot drift apart (FR-001, AC-017).
 | `services/` | The four independently-deployable services | Shared utilities |
 | `tests/` | Cross-service contract tests and repository-governance tests only | A service's own unit tests (Art. II.2) |
 | `.github/` | Continuous verification configuration | Application source |
+| `.specify/` | The Spec Kit framework's own templates and the constitution's binding copy | Repository artefacts |
+| `.opencode/` | Agent tooling vendored from opencode | Repository artefacts |
+
+## Root Files
+
+The repository root holds configuration and entry-point files only. Every
+other tracked file belongs to one of the directories above.
+
+| Path | Owns |
+|---|---|
+| `README.md` | The entry point: what this repository is, what state it is in, how to reach a verified state |
+| `CONTRIBUTING.md` | The contributor guide: prerequisites, setup path, required checks, review expectations, remediation runbook |
+| `Makefile` | The documented convenience targets over the nox sessions. It contains no check logic |
+| `noxfile.py` | The single definition site of every required check (FR-007) |
+| `pyproject.toml` | The root package declaration, the pinned rule selections, and the pytest configuration |
+| `uv.lock` | The resolved dependency set for the whole workspace |
+| `mypy.ini` | The strict type-check configuration and the pydantic plugin |
+| `alembic.ini` | The Alembic configuration; `script_location` points at `migrations/` |
+| `.env.example` | The realised configuration contract (FR-013) |
+| `.gitignore` | The excluded local overrides and generated artefacts (FR-016) |
+| `.dockerignore` | The Docker build context exclusions |
+| `.python-version` | The pinned interpreter version (FR-012) |
+| `.gitleaks.toml` | The secret-scanner configuration and the repository's placeholder allowlist |
+| `.pre-commit-config.yaml` | The advisory pre-commit hook set |
 
 ## Governance Artefact Placement
 
@@ -36,11 +60,13 @@ documented layout and the actual layout cannot drift apart (FR-001, AC-017).
 | The binding constitution | `.specify/memory/constitution.md` | — |
 | The published constitution copy | `docs/constitution.md` | FR-020 — exactly one constitution document exists in the tracked tree; the two copies MUST NOT diverge |
 | The build plan | `docs/build-plan.md` | FR-021 |
+| Precedence order and numbering conventions | `docs/governance/precedence-and-conventions.md` | FR-028, BR-009 |
 | Architecture decisions | `docs/adr/ADR-NNNN-<slug>.md` | FR-024 — at least one completed ADR; numbering unique and sequential |
 | Architecture overview | `docs/architecture/architecture-overview.md` | FR-024 |
 | Quality gates | `docs/quality/definition-of-done.md` | Art. X.3 |
 | Test strategy | `docs/quality/test-strategy.md` | Art. VII |
-| Traceability matrix | `docs/quality/traceability-matrix.md` | Art. VII.1, FR-029 |
+| The Phase 0 traceability matrix | `docs/quality/traceability-matrix.md` | Art. VII.1, FR-029 |
+| The central build-phase traceability matrix | `docs/traceability-matrix.md` | FR-029 — the index of the build-phase rows |
 | Exit-gate evidence | `docs/quality/` | FR-031, BR-010 |
 | Open questions and risks | `docs/risks/open-questions.md` | FR-027 |
 | Domain model | `docs/domain-model/` | Art. V |

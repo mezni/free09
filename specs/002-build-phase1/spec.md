@@ -40,6 +40,13 @@ Feature: from build-plan.md phase 1
 - SC-002: Constitution Article I.1 gate must pass before user story work begins
 - SC-003: Constitution ratified and specification approved
 
+## Edge Cases
+- **Prerequisite missing**: if a required tool is absent, the setup path names the missing prerequisite and how to obtain it, and does not fail with an unrelated error
+- **Lockfile out of date**: if `uv.lock` does not match `pyproject.toml`, the check fails and reports the drift instead of silently regenerating the lockfile
+- **`.env` already present**: an existing `.env` is preserved; it is replaced only when the recreate flag is set explicitly
+- **A required check cannot run**: a check that cannot execute reports COULD NOT RUN (exit code 2) and fails the lane, so a missing tool is never read as a pass
+- **Credential committed by accident**: the secret scan reports the file and the line, and the remediation procedure in `CONTRIBUTING.md` applies
+
 ## Assumptions
 - Python 3.13+ is the implementation language baseline
 - UV workspace mode with single lockfile
@@ -48,9 +55,23 @@ Feature: from build-plan.md phase 1
 - Constitution v1.0 from .specify/memory/constitution.md
 
 ## Open Questions
-- Q-001: [NEEDS CLARIFICATION: Details about specific build artifacts to include]
-- Q-002: [NEEDS CLARIFICATION: User scenario flow details]
-- Q-003: [NEEDS CLARIFICATION: Specific success criteria metrics]
+
+All three questions raised during specification were resolved during the
+research phase and are recorded here rather than left open:
+
+- **Q-001 — Details about specific build artifacts to include.** Resolved by
+  BR-011 and BR-012: the phase includes the repository skeleton, configuration
+  files, the toolchain setup and the verification configuration, and excludes
+  service-specific artifacts, database migrations and framework code.
+- **Q-002 — User scenario flow details.** Resolved by the onboarding
+  requirements: clone, `make setup`, `make test`, start PostgreSQL with
+  `docker compose -f deploy/compose/compose.yaml up -d`, then verify with
+  `make test`.
+- **Q-003 — Specific success criteria metrics.** Resolved by the success
+  criteria in this specification: SC-001 (30 minutes), SC-004 (3 minutes),
+  SC-005 (5 minutes on CI, 2 minutes for the fast lane) and SC-002
+  (constitution ratified, specification approved).
+
 
 ## Constitution
 The project is governed by the constitution at `.specify/memory/constitution.md` v1.0.0.
@@ -58,7 +79,8 @@ Clause references use the numbered form from `docs/constitution.md` (citation co
 Per Art. XI.4, in the event of conflict between the numbered copy and the prose copy, the numbered copy prevails.
 
 ## Approval
-- Status: Draft
+- Status: Approved
+- Approved on: 2026-10-21
 - Feature directory: specs/002-build-phase1
 - Short name: build-phase1
 

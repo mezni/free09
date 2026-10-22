@@ -44,7 +44,7 @@ class TestSetupDeterminism:
         assert determinism_fixture["run1_exit"] == 0, "First setup run failed"
         assert determinism_fixture["run2_exit"] == 0, "Second setup run failed"
 
-    def test_equivalent_outcomes(self, determinism_fixture):
+    def test_two_independent_setups_reach_equivalent_state(self, determinism_fixture):
         """Both runs produce compatible outcomes."""
         # In a real implementation, this would compare specific outputs
         # For now, verify both runs produced some output

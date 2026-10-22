@@ -8,7 +8,10 @@ Exit-code contract (mirrored in `ci/run-checks.sh` and the README):
 * 3 — INTERNAL ERROR (unexpected failure)
 """
 
+import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import nox
@@ -17,6 +20,24 @@ REPO_ROOT = Path(__file__).parent
 COMPOSE_FILE = "deploy/compose/compose.yaml"
 
 nox.options.default_venv_backend = "uv"
+
+# The nine required checks, in lane order. `uv run nox` runs exactly these;
+# the lane sessions below are convenience wrappers over the same sessions.
+#
+# See `specs/001-project-setup/contracts/verification-contract.md`.
+REQUIRED_CHECKS = [
+    "format",
+    "lint",
+    "lockfile",
+    "governance",
+    "file-coverage",
+    "typecheck",
+    "test",
+    "secret-scan",
+    "dependency-audit",
+]
+
+nox.options.sessions = REQUIRED_CHECKS
 
 
 class CommandResult:
@@ -48,6 +69,20 @@ class CommandResult:
         return f"[{self.status}] exit={self.exit_code}"
 
 
+def nox_command() -> list[str]:
+    """Return the command that invokes nox.
+
+    Prefers an explicit `nox` on PATH; falls back to `uv run --no-sync nox`
+    so the helper works from a checkout where nox is only available through
+    the project's uv environment.
+    """
+    if shutil.which("nox"):
+        return ["nox"]
+    if shutil.which("uv"):
+        return ["uv", "run", "--no-sync", "nox"]
+    raise RuntimeError("neither 'nox' nor 'uv' is available on PATH")
+
+
 def run_session(session_name: str, *args: str, **kwargs) -> CommandResult:
     """Run a nox session and return a structured result.
 
@@ -64,7 +99,7 @@ def run_session(session_name: str, *args: str, **kwargs) -> CommandResult:
     kwargs.pop("auto_return", None)
     hide_output = kwargs.pop("hide_output", False)
 
-    cmd = ["nox", "run", session_name, *args]
+    cmd = [*nox_command(), "-s", session_name, *args]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
     output = result.stdout if not hide_output else result.stdout + result.stderr
@@ -72,18 +107,18 @@ def run_session(session_name: str, *args: str, **kwargs) -> CommandResult:
 
 
 def run_fast_checks() -> CommandResult:
-    """Run the fast-checks nox session."""
-    return run_session("fast-checks")
+    """Run the fast_checks nox session."""
+    return run_session("fast_checks")
 
 
 def run_slow_checks() -> CommandResult:
-    """Run the slow-checks nox session."""
-    return run_session("slow-checks")
+    """Run the slow_checks nox session."""
+    return run_session("slow_checks")
 
 
 def check_health() -> CommandResult:
-    """Run the health check session."""
-    return run_session("health-check")
+    """Run the health_check nox session."""
+    return run_session("health_check")
 
 
 def install_deps(session: nox.Session, *extra: str) -> None:
@@ -91,6 +126,34 @@ def install_deps(session: nox.Session, *extra: str) -> None:
     session.install("-e", ".", "--group", "dev")
     if extra:
         session.install(*extra)
+
+
+def require_database(session: nox.Session) -> None:
+    """Establish the precondition the schema checks need: a live database.
+
+    The preflight reports the two failure modes the outcome vocabulary
+    distinguishes: exit `2` when the database is not there (the check could
+    not run) and exit `1` when it is there but refused the connection. The
+    session keeps the distinction, so a contributor can tell "your
+    environment is not ready" from "your code is wrong".
+    """
+    result = subprocess.run(
+        [sys.executable, "ci/check_database.py"],
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+        env={**os.environ, "PYTHONPATH": str(REPO_ROOT)},
+    )
+    if result.returncode == 0:
+        return
+
+    sys.stdout.write(result.stdout)
+    sys.stderr.write(result.stderr)
+    if result.returncode == 2:
+        print("COULD NOT RUN — the database the schema checks need is not ready.")
+        raise SystemExit(2)
+    print("FAIL — the database the schema checks need refused the connection.")
+    raise SystemExit(1)
 
 
 # --- Quality sessions ---
@@ -127,6 +190,7 @@ def typecheck(session: nox.Session) -> None:
 def test(session: nox.Session) -> None:
     """Run the fast test suite."""
     install_deps(session)
+    require_database(session)
     session.run("pytest", "tests", "-q", "-m", "not slow and not integration")
 
 
@@ -145,26 +209,48 @@ def lockfile(session: nox.Session) -> None:
 
 
 @nox.session(reuse_venv=True)
+def governance(session: nox.Session) -> None:
+    """Verify the governance artefacts: templates, constitution, contracts, links."""
+    install_deps(session)
+    session.run("python", "ci/check_spec_artifacts.py")
+
+
+@nox.session(reuse_venv=True, name="file-coverage")
+def file_coverage(session: nox.Session) -> None:
+    """Verify that every tracked file is covered by a required check."""
+    install_deps(session)
+    session.run("python", "ci/check_file_coverage.py")
+
+
+@nox.session(reuse_venv=True, name="secret-scan")
 def secret_scan(session: nox.Session) -> None:
-    """Scan the tracked tree for committed secrets."""
+    """Scan the tracked tree and the version-controlled history for secrets."""
     install_deps(session)
     session.run("python", "ci/secret_scan.py")
 
 
-@nox.session(reuse_venv=True)
-def dep_audit(session: nox.Session) -> None:
-    """Audit locked dependencies for known vulnerabilities."""
+@nox.session(reuse_venv=True, name="dependency-audit")
+def dependency_audit(session: nox.Session) -> None:
+    """Audit the locked dependency set against the vendored advisory snapshot."""
     install_deps(session)
-    session.run("python", "ci/dependency_audit.py")
+    session.run("python", "ci/check_dependencies.py")
 
 
 @nox.session(reuse_venv=True)
 def fast_checks(session: nox.Session) -> None:
-    """Run every check required by the local verification lane."""
+    """Run the fast lane: exactly the checks the CI `fast-checks` job runs."""
     install_deps(session)
     session.run("ruff", "format", "--check", ".")
     session.run("ruff", "check", ".")
     session.run("uv", "lock", "--check", external=True)
+    session.run("python", "ci/check_spec_artifacts.py")
+    session.run("python", "ci/check_file_coverage.py")
+
+
+@nox.session(reuse_venv=True)
+def slow_checks(session: nox.Session) -> None:
+    """Run the slow lane: exactly the checks the CI `slow-checks` job runs."""
+    install_deps(session)
     session.run(
         "mypy",
         "src",
@@ -172,13 +258,14 @@ def fast_checks(session: nox.Session) -> None:
         "--ignore-missing-imports",
         "--no-error-summary",
     )
+    require_database(session)
     session.run("pytest", "tests", "-q", "-m", "not slow and not integration")
     session.run("python", "ci/secret_scan.py")
-    session.run("python", "ci/dependency_audit.py")
+    session.run("python", "ci/check_dependencies.py")
 
 
 @nox.session(reuse_venv=True)
-def slow_checks(session: nox.Session) -> None:
+def integration(session: nox.Session) -> None:
     """Run the integration suite (requires a running service stack)."""
     install_deps(session)
     session.run("pytest", "tests", "-q", "-m", "integration or slow")

@@ -1,113 +1,133 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: build-phase1
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Branch**: `main` | **Date**: 2026-10-21 | **Spec**: [spec.md](spec.md)
 
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command; its definition describes the execution workflow.
+**Input**: Feature specification from `specs/002-build-phase1/spec.md`
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+Deliver the build phase 1 infrastructure: a repository skeleton, a pinned
+Python toolchain, a reproducible dependency lockfile, a documented check lane
+and the onboarding path a new engineer follows to reach a verified state.
+
+The phase introduces no runtime network endpoint and no database object
+(BR-011). The technical approach is recorded in
+[research.md](research.md), the conceptual entities in
+[data-model.md](data-model.md) and the onboarding contract in
+[contracts/user-scenarios.md](contracts/user-scenarios.md).
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
+**Language/Version**: Python 3.13 (pinned by `.python-version`)
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
+**Primary Dependencies**: `uv` for dependency resolution and lockfile
+management; `nox` as the session runner; `ruff` for formatting and linting;
+`mypy` for type checking; `pytest` for the test suite; `pip-audit` for the
+dependency audit
 
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+**Storage**: None introduced by this phase. Configuration is held in `.env`,
+derived from `.env.example`; no database object is created (BR-011)
 
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+**Testing**: `pytest` driven through the nox `fast_checks` session, with
+governance tests under `tests/governance/`
 
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
+**Target Platform**: Linux server, macOS and Windows developer workstations
 
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: Monorepo of FastAPI services plus a shared library
 
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
+**Performance Goals**: Fast lane ≤ 2 minutes; full required-check set ≤ 5
+minutes on CI; fresh clone to verified state ≤ 30 minutes (SC-001, SC-005)
 
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+**Constraints**:
+- BR-011: no runtime network endpoint and no database object introduced
+- BR-012: the Python FastAPI on PostgreSQL baseline is unchanged
+- Constitution Art. I.1 permits implementation only against an approved
+  specification
+- The required-check set reports PASS (0), FAIL (1), COULD NOT RUN (2) or
+  INTERNAL ERROR (3); both 1 and 2 fail the gate (BR-003)
 
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
-
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Scale/Scope**: Repository skeleton, tooling, lockfile, documentation and
+the check lane. No service implementation.
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+### Art. I — Specification First
+- **Pass**: `spec.md` defines FR-001 through FR-005 and SC-001 through SC-005;
+  research, data model, contracts and quickstart are present
+
+### Art. II — Domain Ownership and Service Boundaries
+- **Pass**: The phase creates the directory skeleton only. No service takes
+  ownership of a domain and no schema is created
+
+### Art. III — Security and Privacy by Design
+- **Pass**: `.env.example` holds placeholders only; `ci/secret_scan.py` fails
+  the gate when a credential is committed
+
+### Art. V — Data Modeling and Database Evolution
+- **Pass**: No migration is introduced by this phase (BR-011)
+
+### Art. VI — API and Integration Contracts
+- **Pass**: No API is introduced by this phase (BR-011)
+
+### Art. VII — Testing and Verifiability
+- **Pass**: SC-001 through SC-005 are measurable and each has a check in the
+  required-check set
+
+### Art. X — Maintainability and Delivery
+- **Pass**: The check lane is reproducible locally and in CI, and the
+  exit-code contract is documented in `noxfile.py` and `ci/run-checks.sh`
+
+**Constitution Check: ALL GATES PASS**
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+specs/002-build-phase1/
+├── plan.md              # This file
+├── spec.md              # Feature specification
+├── research.md          # Phase 0 output
+├── data-model.md        # Phase 1 output
+├── quickstart.md        # Phase 1 output
+├── contracts/
+│   ├── constitution-alignment.md
+│   ├── success-criteria.md
+│   └── user-scenarios.md
+└── tasks.md             # Phase 2 output
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
+pyproject.toml               # Project metadata, dependencies, tool configuration
+uv.lock                      # Pinned dependency graph
+.python-version              # Interpreter pin (3.13)
+Makefile                     # Thin alias layer over nox and docker compose
+noxfile.py                   # Session framework and result reporter
+ci/
+├── setup.sh                 # Idempotent environment bootstrap
+├── check_prerequisites.py   # Toolchain verification
+├── run-checks.sh            # Single entry point for the check lane
+├── secret_scan.py           # Committed-credential detection
+├── dependency_audit.py      # Locked-dependency vulnerability audit
+└── health_check.py          # Runtime health probe
+.env.example                # Documented configuration contract
+docs/                        # Governance and design prose
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+├── contract/                # Cross-service API contracts
+├── governance/              # Constitution and workflow governance tests
+├── integration/             # Cross-component flows
+└── unit/                    # Isolated units
+services/<name>/             # Application source, one directory per service
+libs/telco-common/           # Shared technical library
+deploy/compose/              # Local runtime topology
 ```
-
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
 
 ## Complexity Tracking
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
-
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| None | — | The phase introduces no new service, no runtime network endpoint and no database object, so every constitution gate passes without a justified exception |

@@ -39,3 +39,39 @@ class TestSetupPrerequisites:
     def test_python_version(self):
         """Python 3.13 is the required version."""
         assert sys.version_info >= (3, 13)
+
+    def test_setup_names_missing_prerequisite(self):
+        """The prerequisite check names what is missing and what is required.
+
+        The check runs with an empty `PATH`, so every tool it looks for is
+        absent. The failure it reports must name each missing tool, say what
+        is needed, and exit with the "could not run" code.
+        """
+        result = subprocess.run(
+            [sys.executable, "ci/check_prerequisites.py"],
+            capture_output=True,
+            text=True,
+            env={"PATH": "", "HOME": str(pathlib.Path.home())},
+            check=False,
+        )
+
+        assert result.returncode == 2, (
+            "A missing prerequisite must exit with the 'could not run' code 2, "
+            f"not {result.returncode}."
+        )
+
+        output = result.stdout
+        for prerequisite in (
+            "UV workspace manager",
+            "Docker daemon",
+            "Git version control",
+            "Make build tool",
+            "Python interpreter",
+        ):
+            assert prerequisite in output, (
+                f"The prerequisite check does not name the missing {prerequisite}."
+            )
+
+        assert "Prerequisite check FAILED" in output, (
+            "The prerequisite check does not report its verdict."
+        )

@@ -8,7 +8,7 @@
 | 2 | `cd telco-platform && make setup` | Project structure initialized; `.gitignore`, `pyproject.toml`, `.python-version`, `Makefile`, `uv.lock` created |
 | 3 | `make test` | Fast-checks suite runs; all checks report **PASS** or **COULD NOT RUN** |
 | 4 | `docker compose -f deploy/compose/compose.yaml up -d` | PostgreSQL starts; health check passes within 30 seconds |
-| 5 | `make local-verification-command-runs-all-required-checks` | All required checks (format, lint, lockfile, governance, file-coverage, typecheck, test, secret-scan, dependency-audit) run; exit code 0 if all PASS |
+| 5 | `make test` | All required checks (format, lint, lockfile, typecheck, test, secret-scan, dependency-audit) run; exit code 0 if all PASS |
 | 6 | Verify `.env` exists and contains placeholder values only | `.env` contains `DB_PASSWORD=PLACEHOLDER_NO_REAL_CREDENTIAL` and no real credentials |
 
 ## Prerequisites

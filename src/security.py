@@ -1,5 +1,6 @@
 """Authentication and authorization framework using OAuth2.0 (NFR-052)"""
 
+from collections.abc import Awaitable, Callable
 from typing import Optional
 
 from fastapi import Depends, HTTPException, status
@@ -34,13 +35,13 @@ oauth2_authorization_code = OAuth2AuthorizationCodeBearer(
 class TokenData(BaseModel):
     """Decoded token data"""
 
-    scopes: Optional[list] = Field(default=[], description="OAuth2 scopes")
+    scopes: Optional[list[str]] = Field(default=[], description="OAuth2 scopes")
     sub: Optional[str] = Field(default=None, description="Subject (user ID)")
     email: Optional[str] = Field(default=None, description="User email")
 
 
 # Permission check utilities
-def check_scope(token_scopes: list, required_scopes: list) -> bool:
+def check_scope(token_scopes: list[str], required_scopes: list[str]) -> bool:
     """Check if token has required OAuth2 scopes"""
     if not required_scopes:
         return True
@@ -49,12 +50,14 @@ def check_scope(token_scopes: list, required_scopes: list) -> bool:
     return required_set.issubset(token_set)
 
 
-def require_scopes(required_scopes: list):
+def require_scopes(
+    required_scopes: list[str],
+) -> Callable[..., Awaitable[str]]:
     """FastAPI dependency to require specific OAuth2 scopes"""
 
     async def dependency(
         credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
-    ):
+    ) -> str:
         # In production, decode and validate the JWT token here
         # For now, simulate scope validation
         token = credentials.credentials if credentials else ""
@@ -78,14 +81,14 @@ class UserRole:
     ADMIN = "admin"
 
 
-ROLE_PERMISSIONS = {
+ROLE_PERMISSIONS: dict[str, list[str]] = {
     UserRole.READ_ONLY: ["read"],
     UserRole.WRITER: ["read", "write"],
     UserRole.ADMIN: ["read", "write", "admin"],
 }
 
 
-def has_permission(role: str, required: list) -> bool:
+def has_permission(role: str, required: list[str]) -> bool:
     """Check if a role has the required permissions"""
     permissions = ROLE_PERMISSIONS.get(role, [])
     return all(p in permissions for p in required)

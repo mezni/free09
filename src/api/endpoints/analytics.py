@@ -46,7 +46,7 @@ def list_analytics_events(
     service: Optional[str] = Query(default=None, max_length=100),
     event_type: Optional[str] = Query(default=None, max_length=100),
     limit: int = Query(default=50, ge=1, le=200),
-):
+) -> list[AnalyticsEvent]:
     """List analytics events, optionally filtered by service or event type."""
     statement = select(AnalyticsEvent)
     if service is not None:
@@ -63,7 +63,7 @@ def list_analytics_events(
     return events
 
 
-def get_analytics_event(event_id: str, db: Session = Depends(get_db)):
+def get_analytics_event(event_id: str, db: Session = Depends(get_db)) -> AnalyticsEvent:
     """Get a single analytics event by its identifier."""
     event = db.get(AnalyticsEvent, event_id)
     if event is None:
@@ -79,7 +79,7 @@ def get_analytics_event(event_id: str, db: Session = Depends(get_db)):
 def create_analytics_event(
     payload: AnalyticsEventCreate,
     db: Session = Depends(get_db),
-):
+) -> AnalyticsEvent:
     """Create an analytics event."""
     event = AnalyticsEvent(
         event_type=payload.event_type,

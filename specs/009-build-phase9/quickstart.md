@@ -11,7 +11,7 @@
 ### 1. Verify Prior Phases Complete
 ```bash
 # Ensure all prior phases are operational
-make check
+make verify
 
 # Verify existing infrastructure
 make docker-up
