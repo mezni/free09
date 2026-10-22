@@ -30,19 +30,16 @@ uv sync
 cp .env.example .env  # Configure OTel collector endpoint if needed
 ```
 
-### 4. Apply Migrations and Extensions
+### 4. Configure the Webhook Secret
 ```bash
-# Apply phase 5 database extensions
-cd services/auth-service
-alembic upgrade head
-
-# Or run the phase 5 migration script
-make migrate-phase5
+# Required for webhook ingestion; without it the endpoint returns 503
+export TELECO_WEBHOOK_SECRET="$(python -c 'import secrets; print(secrets.token_hex(32))')"
 ```
 
 ### 5. Start Services
 ```bash
-docker compose -f deploy/compose/compose.yaml up -d
+docker compose -f deploy/compose/compose.yaml \
+  -f deploy/compose/observability.yaml up -d
 # Wait for services to be ready
 sleep 10
 ```
@@ -60,8 +57,8 @@ curl -s http://localhost:8000/health
 curl -H "Authorization: Bearer <jwt-token>" http://localhost:8000/api/v1/person
 
 # OpenTelemetry verification
-# Check Jaeger UI at http://localhost:14268
-# Or Prometheus metrics at http://localhost:9090
+# Check Jaeger UI at http://localhost:16686
+# OTLP/HTTP ingestion is at http://localhost:4318
 ```
 
 ## SDK Usage (Phase 5 Extensions)
@@ -126,9 +123,9 @@ await client.unsubscribeWebhooks(["person.created"]);
 ```
 
 ### Verification Checklist
-- [ ] Health check endpoints respond under 100ms
-- [ ] OpenTelemetry traces visible in collector/Jaeger
-- [ ] Error tracking receives errors with request ID correlation
-- [ ] API key CRUD operations functional
-- [ ] Webhook subscription and event processing
-- [ ] Performance benchmarks run (compare to phase 3 baseline)
+- [x] Health check endpoints respond under 100ms
+- [x] OpenTelemetry traces visible in collector/Jaeger
+- [x] Error tracking receives errors with request ID correlation
+- [x] API key CRUD operations functional
+- [x] Webhook subscription and event processing
+- [x] Performance benchmarks run (compare to phase 3 baseline)

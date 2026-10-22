@@ -265,6 +265,40 @@ def slow_checks(session: nox.Session) -> None:
 
 
 @nox.session(reuse_venv=True)
+def trace(session: nox.Session) -> None:
+    """Run the distributed-tracing, error-tracking and health-probe tests."""
+    install_deps(session)
+    session.run(
+        "pytest",
+        "tests/contract/test_tracing.py",
+        "tests/contract/test_error_tracking.py",
+        "tests/contract/test_health_checks.py",
+        "-q",
+    )
+
+
+@nox.session(reuse_venv=True)
+def key(session: nox.Session) -> None:
+    """Run the API key lifecycle and scope-validation tests (FR-043)."""
+    install_deps(session)
+    session.run("pytest", "tests/contract/test_api_keys.py", "-q")
+
+
+@nox.session(reuse_venv=True)
+def webhook(session: nox.Session) -> None:
+    """Run the webhook validation, idempotency and retry tests (FR-044)."""
+    install_deps(session)
+    session.run("pytest", "tests/contract/test_webhooks.py", "-q")
+
+
+@nox.session(reuse_venv=True)
+def benchmark(session: nox.Session) -> None:
+    """Run the phase-5 performance benchmark against the phase-3 baseline."""
+    install_deps(session)
+    session.run("python", "scripts/benchmark_health.py")
+
+
+@nox.session(reuse_venv=True)
 def integration(session: nox.Session) -> None:
     """Run the integration suite (requires a running service stack)."""
     install_deps(session)

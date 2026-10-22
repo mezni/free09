@@ -18,6 +18,9 @@ dependencies = [
     "pydantic-settings",
     "psycopg[binary]",
     "httpx",
+    "opentelemetry-api>=1.45.0",
+    "opentelemetry-sdk>=1.45.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.0",
 ]
 
 [dependency-groups]
@@ -114,6 +117,12 @@ markers = [
     "database: Tests that require a live PostgreSQL instance",
     "slow: Marks that require significant time or resources",
     "minimal_test_suite_passes_on_empty_implementation: Marker for the always-passing minimal suite",
+    "trace: Distributed tracing tests (FR-040)",
+    "key: API key management tests (FR-043)",
+    "webhook: Webhook validation and delivery tests (FR-044)",
+    "health: Health and readiness probe tests (FR-042)",
+    "error: Error tracking tests (FR-041)",
+    "performance: Performance benchmark tests (FR-046)",
 ]
 testpaths = ["tests"]
 python_files = "test_*.py"

@@ -10,17 +10,21 @@ The Telco Platform exposes two API surfaces:
   [Analytics endpoints](#analytics-endpoints-build-phase8) below: the advanced
   analytics endpoints.
 
-The contract layer is specified but not served by the application in this
-repository; the analytics endpoints are served by `src/main.py`.
+The contract layer is served by `src/main.py`, together with the phase-5
+health probes, API key routes and webhook routes. The analytics endpoints are
+also served by `src/main.py`.
 
 ## Base Information
 - **Base URL**: `http://localhost:8000`
 - **API Version**: `v1`
 - **Specification**: [build-phase3 API contract layer](../specs/004-build-phase3/spec.md)
-- **Authentication**: OAuth2.1 Bearer tokens
+- **Authentication**: OAuth2.1 Bearer tokens; health probes and webhook
+  ingestion use their own mechanisms described below.
 
 ## Authentication
-All API endpoints (except `/healthz`) require valid OAuth2.1 bearer tokens.
+All endpoints under `/api/v1` require valid OAuth2.1 bearer tokens, except
+the health probe (`/api/v1/health`) and webhook ingestion (HMAC signature).
+The root health probes `/healthz`, `/readyz` and `/health` are unauthenticated.
 
 ### Token Format
 ```
@@ -102,20 +106,26 @@ DELETE /api/v1/person/{person_id}
 ```
 POST /api/v1/api-keys
 ```
-**Summary**: Create a new API key  
-**Request Body**: APIKeyCreate (person_id, scopes*)  
-**Security**: bearerAuth (admin scope required)  
+**Summary**: Create a new API key
+
+**Request Body**: APIKeyCreate (`person_id`, `scopes`)
+
+**Security**: bearerAuth (admin scope required)
 **Responses**:
-- `201`: API key created - APIKeyResponse object
-- `400`: Bad request - invalid input
+- `201`: API key created — includes the one-time plaintext `key`
+- `400`: Bad request - invalid input or unknown scope
 - `403`: Forbidden - insufficient scopes
+
+The plaintext key is returned only in this response. Subsequent reads return
+the key prefix and metadata, never the secret.
 
 ### Get API Key
 ```
-GET /api/v1/api-keys/{key_id}
+GET /api/v1/api-keys/{prefix}
 ```
-**Summary**: Retrieve an API key by ID  
-**Security**: bearerAuth (or key's own prefix)  
+**Summary**: Retrieve an API key by prefix
+
+**Security**: bearerAuth (or key's own prefix)
 **Responses**:
 - `200`: API key found - APIKeyResponse object
 - `404`: API key not found
@@ -131,7 +141,7 @@ GET /api/v1/api-keys
 
 ### Update API Key
 ```
-PATCH /api/v1/api-keys/{key_id}
+PATCH /api/v1/api-keys/{prefix}
 ```
 **Summary**: Update an API key (activate/deactivate, change scopes)  
 **Request Body**: partial APIKeyResponse  
@@ -142,13 +152,26 @@ PATCH /api/v1/api-keys/{key_id}
 
 ### Delete API Key
 ```
-DELETE /api/v1/api-keys/{key_id}
+DELETE /api/v1/api-keys/{prefix}
 ```
-**Summary**: Delete/soft-delete an API key  
-**Security**: bearerAuth (or key's own prefix)  
+**Summary**: Revoke an API key
+
+**Security**: bearerAuth (or key's own prefix)
 **Responses**:
-- `204`: API key deleted (no content)
+- `204`: API key revoked (no content)
 - `404`: API key not found
+
+## Health Probes
+
+| Endpoint | Purpose | Response |
+|---|---|---|
+| `GET /healthz` | Liveness | `200` with `status`, `service`, `version` |
+| `GET /readyz` | Readiness | `200` when ready; `503` when dependencies are unavailable |
+| `GET /health` | Readiness alias | Same body and status as `/readyz` |
+| `GET /api/v1/health` | Versioned readiness | Delegates to `/readyz` |
+
+The probes are unauthenticated and are not rate limited. A failing readiness
+probe returns `503 Service Unavailable`.
 
 ## Rate Limiting
 - **Default limit**: 100 requests per 1 second
@@ -157,22 +180,28 @@ DELETE /api/v1/api-keys/{key_id}
 - **Health endpoint**: `/healthz` - no rate limiting, no authentication
 
 ## Error Responses
-All error responses follow a standardized format:
+All error responses follow the canonical envelope:
 
 ```json
 {
-  "detail": "Error description",
-  "code": "ERROR_CODE",
-  "timestamp": "2026-01-01T00:00:00Z"
+  "code": "INTERNAL_SERVER_ERROR",
+  "message": "An unexpected error occurred",
+  "service": "crm-service",
+  "request_id": "3f8c1d6e-...",
+  "error_id": "err-20261022-4b83b511",
+  "timestamp": "2026-10-22T20:05:00Z"
 }
 ```
 
 ### Common Error Codes
 - `VALIDATION_ERROR`: 400 - Input validation failed
+- `INVALID_SIGNATURE`: 401 - Webhook signature verification failed
 - `AUTHENTICATION_ERROR`: 401 - Missing or invalid token
 - `AUTHORIZATION_ERROR`: 403 - Insufficient scopes
 - `NOT_FOUND`: 404 - Resource not found
 - `RATE_LIMIT_EXCEEDED`: 429 - Too many requests
+- `INTERNAL_SERVER_ERROR`: 500 - Unhandled server error
+- `SERVICE_UNAVAILABLE`: 503 - Readiness check failed or webhook secret missing
 
 ## SDKs
 - **Python SDK**: `person_api.PersonApiClient` - type-safe client with async support
@@ -184,9 +213,43 @@ All error responses follow a standardized format:
 - Major version changes require deprecation period
 
 ## Webhooks
-- `person.created`: Fired when a new person is created
-- `person.updated`: Fired when a person is updated
-- `person.deleted`: Fired when a person is deleted
+
+Supported events: `person.created`, `person.updated`, `person.deleted`.
+
+### Subscribe
+`POST /api/v1/webhooks/subscribe`
+
+**Request Body**: `{"event_types": ["person.created"]}`
+
+**Responses**: `200` with the active subscription set; `400` for an unknown
+event type.
+
+### Unsubscribe
+`POST /api/v1/webhooks/unsubscribe`
+
+**Request Body**: `{"event_types": ["person.created"]}`
+
+**Responses**: `200` with the remaining subscription set.
+
+### Ingest an event
+`POST /api/v1/webhooks/event`
+
+**Headers**:
+- `X-Webhook-Signature`: `sha256=<hex HMAC-SHA256 of the raw body>`
+- `Idempotency-Key`: optional client-supplied deduplication key
+
+**Request Body**: `{"event_type": "person.created", ...}`
+
+**Responses**:
+- `202`: Event accepted — `{"event": {...}, "duplicate": false}`
+- `202` with `duplicate: true`: The idempotency key was already processed
+- `400`: Unknown event type
+- `401`: Invalid or missing signature
+- `503`: `TELECO_WEBHOOK_SECRET` is not configured
+
+Delivery is at-least-once with bounded retries. The signature covers the raw
+request body exactly as sent, so clients must sign the serialized bytes rather
+than a re-encoded object.
 
 ## Analytics endpoints (build-phase8)
 
@@ -248,8 +311,26 @@ return `404` until their tasks are complete:
 `GET /api/v1/` returns the service name, version and the documentation path.
 Both are unauthenticated.
 
+## Observability Configuration
+
+| Variable | Purpose | Default |
+|---|---|---|
+| `TELECO_OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP/HTTP collector endpoint | unset (tracing exports are disabled) |
+| `TELECO_WEBHOOK_SECRET` | HMAC secret for webhook ingestion | unset (ingestion returns `503`) |
+
+When the OTLP endpoint is unset, spans are still created and propagated but
+not exported. The optional `deploy/compose/observability.yaml` overlay runs
+Jaeger with OTLP/HTTP ingestion on port `4318` and its UI on port `16686`:
+
+```bash
+docker compose -f deploy/compose/compose.yaml \
+  -f deploy/compose/observability.yaml up -d
+```
+
 ## Version History
-- **v1.1.0** (current): Added the build-phase8 analytics endpoints and the
-  platform endpoints; recorded which build-phase8 endpoints are not yet
-  implemented
+- **v1.2.0** (current): Documented the phase-5 health probes, webhook API,
+  API key prefix behaviour, canonical error envelope and observability
+  configuration; the contract layer is now served by the application
+- **v1.1.0**: Added the build-phase8 analytics endpoints and the platform
+  endpoints; recorded which build-phase8 endpoints are not yet implemented
 - **v1.0.0**: Initial release with person management, auth, and API key features

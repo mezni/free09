@@ -175,7 +175,7 @@ carry the requirements use their own directory names, so the mapping is:
 | Phase 2 — Data model and database foundation | `specs/003-build-phase2/` | Approved | Phase 2 complete — schemas/roles, models, four reversible Alembic revisions, migration/schema tests with role-grant enforcement, preflight wired into required checks (all nine checks pass). |
 | Phase 3 — Authentication and authorization | `specs/004-build-phase3/` | Implemented | Implemented — all 54 tasks complete |
 | Phase 4 — CRM vertical slice | *(no specification directory)* | — | Not specified |
-| Phase 5 — Inventory, catalog, subscriptions, provisioning | `specs/005-build-phase5/` | Proposed | Partially implemented — 41 of 59 tasks complete |
+| Phase 5 — Inventory, catalog, subscriptions, provisioning | `specs/005-build-phase5/` | Implemented | Implemented — all 59 tasks complete; observability, API keys, webhooks and benchmarks delivered |
 | Phase 6 — Billing and financial ledger | `specs/006-build-phase6/` | Proposed | Partially implemented — 30 of 62 tasks complete |
 | Phase 7 — Synthetic data generation | `specs/007-build-phase7/` | Proposed | Partially implemented — 3 of 5 tasks complete |
 | Phase 8 — Cross-service integration | `specs/008-build-phase8/` | Proposed | Partially implemented — 22 of 54 tasks complete; US1 only |

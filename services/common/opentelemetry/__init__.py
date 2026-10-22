@@ -1,22 +1,23 @@
-"""OpenTelemetry distributed tracing for telco platform services."""
+"""OpenTelemetry distributed tracing for telco platform services (FR-040).
 
-from opentelemetry import trace
-from opentelemetry.exporters.jaeger.thrift import JaegerExporter
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
+The implementation lives in :mod:`src.observability.tracing`; this module keeps
+the phase-5 import path stable.
+"""
 
-# Setup tracer provider
-resource = Resource.create({"service.name": "telco-platform"})
-provider = TracerProvider(resource=resource)
-trace.set_tracer_provider(provider)
-
-# Configure Jaeger exporter (if JAEGER_URL is set)
-jaeger_endpoint = "http://jaeger:14268/api/traces"
-exporter = JaegerExporter(
-    endpoint=jaeger_endpoint,
+from src.observability.tracing import (
+    DEFAULT_SERVICE_NAME,
+    TracingConfig,
+    TracingHandle,
+    TracingMiddleware,
+    configure_tracing,
+    instrument_app,
 )
-provider.add_span_processor(BatchSpanProcessor(exporter))
 
-# Create tracer
-tracer = trace.get_tracer(__name__)
+__all__ = [
+    "DEFAULT_SERVICE_NAME",
+    "TracingConfig",
+    "TracingHandle",
+    "TracingMiddleware",
+    "configure_tracing",
+    "instrument_app",
+]

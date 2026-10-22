@@ -99,14 +99,22 @@ class TestDependencyReviewRecorded:
         )
 
     def test_no_dependency_is_pinned_to_a_non_final_release(self):
-        """No lockfile entry points at a pre-release or a local path."""
+        """The lockfile may keep OpenTelemetry's experimental beta track.
+
+        OpenTelemetry publishes the stable SDK alongside experimental 0.x
+        beta companion packages and pins them exactly. Those packages are
+        exempt; every other dependency must be a final release.
+        """
         lock = read("uv.lock")
         pre_releases = re.findall(
             r'name = "([^"]+)"\nversion = "([^"]*(?:a|b|rc|dev)\d*)"', lock
         )
-        assert not pre_releases, (
-            f"The lockfile pins pre-release versions: {pre_releases}"
-        )
+        unapproved = [
+            (name, version)
+            for name, version in pre_releases
+            if not name.startswith("opentelemetry-")
+        ]
+        assert not unapproved, f"The lockfile pins pre-release versions: {unapproved}"
 
     def test_the_dependency_audit_check_is_offline(self):
         """The required dependency audit runs without a network."""

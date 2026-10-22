@@ -9,7 +9,7 @@ build phases. Detailed per-phase rows live in each phase's `spec.md` under its
 | Range | Introduced by | Detailed rows | Phase status |
 |---|---|---|---|
 | TM001–TM103 | build-phase1, build-phase2, build-phase3 and the project-setup phase | Held in the introducing phase specifications; no central row detail exists | Per the introducing phase specification |
-| TM104–TM124 | build-phase5 | [below](#build-phase5--tm104tm124) | Partially implemented |
+| TM104–TM124 | build-phase5 | [below](#build-phase5--tm104tm124) | Implemented |
 | TM125–TM145 | build-phase6 | [below](#build-phase6--tm125tm145) | Not started |
 | TM146–TM155 | build-phase2 | [below](#build-phase2--tm146tm155) | Partial — the data model is delivered; the tests are written with the migration set |
 | TM221–TM235 | build-phase7 | [below](#build-phase7--tm221tm235) | Partially implemented |
@@ -25,34 +25,35 @@ phase specification in the repository claims them.
 
 | Test Mapping | Requirement | User Story | Task | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
-| **TM104** | FR-040 | US1 | T124, T128, T129 | P1 | Stub | Distributed tracing implementation — `services/common/opentelemetry/` exists but the `opentelemetry` distribution is not a declared dependency, so it cannot be imported |
-| **TM105** | FR-040 | US1 | T130–T133 | P1 | Stub | OpenTelemetry coverage — not wired into the service pipelines |
-| **TM106** | FR-040 | US1 | T134 | P1 | Not started | Endpoint traceability |
+| **TM104** | FR-040 | US1 | T124, T128, T129 | P1 | ✓ | Distributed tracing implementation — `src/observability/tracing.py` with the OpenTelemetry SDK and OTLP/HTTP exporter |
+| **TM105** | FR-040 | US1 | T130–T133 | P1 | ✓ | OpenTelemetry coverage — all four services use `create_service_app`, which installs tracing middleware |
+| **TM106** | FR-040 | US1 | T134 | P1 | ✓ | Endpoint traceability — route templates are recorded as span names and W3C context is propagated |
 | **TM107** | FR-041 | US2 | T142 | P1 | ✓ | Error tracking system — `services/common/errors.py` |
 | **TM108** | FR-041 | US2 | T142, T143 | P1 | ✓ | Structured error reporting |
 | **TM109** | FR-041 | US2 | T146 | P1 | ✓ | Request ID correlation — `X-Request-ID` in `src/main.py` |
-| **TM110** | FR-042 | US3 | T149 | P2 | ✓ | Health check endpoints — `/api/v1/health` |
+| **TM110** | FR-042 | US3 | T149 | P2 | ✓ | Health check endpoints — `/healthz`, `/readyz`, `/health` and `/api/v1/health` |
 | **TM111** | FR-042 | US3 | T149 | P2 | ✓ | Liveness probe |
 | **TM112** | FR-042 | US3 | T149 | P2 | ✓ | Readiness probe |
-| **TM113** | FR-043 | US4 | T145 | P2 | Stub | API key CRUD operations — `services/crm-service/api_keys.py` returns `None`/`False` for read, update and delete |
-| **TM114** | FR-043 | US4 | T145 | P2 | Stub | Scope-based access control |
-| **TM115** | FR-043 | US4 | T145 | P2 | Stub | API key lifecycle |
-| **TM116** | FR-044 | US5 | T144 | P2 | Stub | Webhook validation — `services/auth-service/webhooks/` is a handler registry without signature validation |
-| **TM117** | FR-044 | US5 | T144 | P2 | Stub | At-least-once delivery |
-| **TM118** | FR-044 | US5 | T144 | P2 | Stub | Idempotency keys |
+| **TM113** | FR-043 | US4 | T145 | P2 | ✓ | API key CRUD operations — `src/services/api_keys.py` with one-time secret display and hashed storage |
+| **TM114** | FR-043 | US4 | T145 | P2 | ✓ | Scope-based access control — read/write/admin scopes validated on create, update and authentication |
+| **TM115** | FR-043 | US4 | T145 | P2 | ✓ | API key lifecycle — create, list, inspect, activate/deactivate and revoke |
+| **TM116** | FR-044 | US5 | T144 | P2 | ✓ | Webhook validation — HMAC-SHA256 signatures over the raw request body |
+| **TM117** | FR-044 | US5 | T144 | P2 | ✓ | At-least-once delivery — bounded retries with per-attempt delivery records |
+| **TM118** | FR-044 | US5 | T144 | P2 | ✓ | Idempotency keys — duplicate deliveries return the original event without reprocessing |
 | **TM119** | FR-045 | US6 | T150 | P3 | ✓ | API reference documentation — `docs/API_REFERENCE.md` |
 | **TM120** | FR-045 | US6 | T150 | P3 | ✓ | Versioned reference |
 | **TM121** | FR-045 | US6 | T150 | P3 | ✓ | 100% endpoint coverage — the reference documents the build-phase3 contract layer and every build-phase8 endpoint that exists; the endpoints that are specified but not yet implemented are listed as planned |
-| **TM122** | FR-046 | US1 | *none* | P2 | Not started | Performance benchmarking — no implementing task in `tasks.md` |
-| **TM123** | FR-046 | US1 | *none* | P2 | Not started | 20% improvement baseline |
-| **TM124** | FR-046 | US1 | *none* | P2 | Not started | Key performance metrics |
+| **TM122** | FR-046 | US1 | T147 | P2 | ✓ | Performance benchmarking — `src/observability/benchmark.py` and `scripts/benchmark_health.py` |
+| **TM123** | FR-046 | US1 | T147 | P2 | ✓ | 20% improvement baseline — compared against the phase-3 health and OpenAPI p95 budgets |
+| **TM124** | FR-046 | US1 | T147 | P2 | ✓ | Key performance metrics — p50, p95, throughput and error rate |
 
-### User Story 1 (US1) — Distributed tracing — Partial
+### User Story 1 (US1) — Distributed tracing — Complete
 - **Test Mappings**: TM104–TM106 (3 test mappings)
 - **Coverage**: FR-040 (OpenTelemetry distributed tracing)
-- **Implementation**: the tracing package exists but cannot be imported, and no
-  service pipeline is wired to it
-- **Acceptance**: SC-01 not met
+- **Implementation**: the tracing package configures resource attributes,
+  sampling, an OTLP/HTTP exporter and W3C propagation; all four service
+  pipelines install the tracing middleware
+- **Acceptance**: SC-01 verified by `tests/contract/test_tracing.py`
 
 ### User Story 2 (US2) — Error tracking — Complete
 - **Test Mappings**: TM107–TM109 (3 test mappings)
@@ -67,19 +68,22 @@ phase specification in the repository claims them.
 - **Implementation**: health check endpoint with liveness and readiness
 - **Acceptance**: SC-03 verified
 
-### User Story 4 (US4) — API key management — Stub
+### User Story 4 (US4) — API key management — Complete
 - **Test Mappings**: TM113–TM115 (3 test mappings)
 - **Coverage**: FR-043 (API key management with CRUD and scope-based access)
-- **Implementation**: the API key module exists but read, update and delete
-  return no value and no error
-- **Acceptance**: SC-04 not met
+- **Implementation**: `APIKeyStore` provides create, list, read, update and
+  revoke, with hashed secrets, one-time secret display and scope validation
+- **Acceptance**: SC-04 verified by `tests/contract/test_api_keys.py` and
+  `tests/contract/test_phase5_api.py`
 
-### User Story 5 (US5) — Webhook pipeline — Stub
+### User Story 5 (US5) — Webhook pipeline — Complete
 - **Test Mappings**: TM116–TM118 (3 test mappings)
 - **Coverage**: FR-044 (Webhook validation and event processing)
-- **Implementation**: the webhook handler registry exists without signature
-  validation, at-least-once delivery or idempotency keys
-- **Acceptance**: SC-05 not met
+- **Implementation**: `WebhookProcessor` validates HMAC-SHA256 signatures,
+  retries handlers with bounded attempts, records every delivery and dedupes
+  idempotency keys
+- **Acceptance**: SC-05 verified by `tests/contract/test_webhooks.py` and
+  `tests/contract/test_phase5_api.py`
 
 ### User Story 6 (US6) — Documentation — Complete
 - **Test Mappings**: TM119–TM121 (3 test mappings)
@@ -89,11 +93,13 @@ phase specification in the repository claims them.
   specified but not yet implemented
 - **Acceptance**: SC-06 verified
 
-### Performance benchmarking — Not started
+### Performance benchmarking — Complete
 - **Test Mappings**: TM122–TM124 (3 test mappings)
 - **Coverage**: FR-046 (Performance benchmarking and scaling validation)
-- **Implementation**: none; `tasks.md` has no implementing task for FR-046
-- **Acceptance**: SC-07 not met
+- **Implementation**: the benchmark harness measures health and OpenAPI p50,
+  p95, throughput and error rate, and compares them with the phase-3 baseline
+- **Acceptance**: SC-07 verified by
+  `tests/contract/test_performance_benchmark.py` and `scripts/benchmark_health.py`
 
 ## build-phase6 — TM125–TM145
 

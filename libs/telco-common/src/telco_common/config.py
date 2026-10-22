@@ -99,6 +99,9 @@ def get_settings() -> dict[str, str]:
         "db_name": _validate_env_var("TELECO_DB_NAME", required=False) or "telco_si",
         "db_user": _validate_env_var("TELECO_DB_USER", required=False) or "telco_app",
         "db_password": _validate_env_var("TELECO_DB_PASSWORD", required=False),
+        "webhook_secret": _validate_env_var(
+            "TELECO_WEBHOOK_SECRET", required=False, secret=True
+        ),
         "db_sslmode": _validate_env_var("TELECO_DB_SSLMODE", required=False)
         or "prefer",
     }

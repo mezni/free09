@@ -1,6 +1,6 @@
 {
   "advisories": {},
-  "generated_at": "2026-10-21T21:14:11Z",
+  "generated_at": "2026-10-22T20:24:38Z",
   "not_audited": [
     "colorama",
     "packaging",
@@ -81,6 +81,9 @@
     "filelock": {
       "version": "4.2.4"
     },
+    "googleapis-common-protos": {
+      "version": "1.75.5"
+    },
     "h11": {
       "version": "0.16.0"
     },
@@ -150,6 +153,27 @@
     "opentelemetry-api": {
       "version": "1.45.1"
     },
+    "opentelemetry-exporter-http-transport": {
+      "version": "0.66b1"
+    },
+    "opentelemetry-exporter-otlp-common": {
+      "version": "0.66b1"
+    },
+    "opentelemetry-exporter-otlp-proto-common": {
+      "version": "1.45.1"
+    },
+    "opentelemetry-exporter-otlp-proto-http": {
+      "version": "1.45.1"
+    },
+    "opentelemetry-proto": {
+      "version": "1.45.1"
+    },
+    "opentelemetry-sdk": {
+      "version": "1.45.1"
+    },
+    "opentelemetry-semantic-conventions": {
+      "version": "0.66b1"
+    },
     "packageurl-python": {
       "version": "0.17.6"
     },
@@ -182,6 +206,9 @@
     },
     "pre-commit": {
       "version": "4.7.0"
+    },
+    "protobuf": {
+      "version": "7.36.2"
     },
     "psycopg": {
       "version": "3.3.6"

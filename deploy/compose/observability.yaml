@@ -1,0 +1,18 @@
+# Optional observability overlay for local tracing.
+#
+# The base compose stack remains the database-only stack required by the
+# project-setup phase. Start the overlay with the base file:
+#   docker compose -f deploy/compose/compose.yaml \
+#     -f deploy/compose/observability.yaml up -d
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.62.0
+    container_name: jaeger
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "127.0.0.1:16686:16686"
+      - "127.0.0.1:4318:4318"
+    networks:
+      telco-net:
+        ipv4_address: 172.20.0.7

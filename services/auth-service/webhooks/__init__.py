@@ -1,36 +1,40 @@
-"""Webhook validation and processing for telco platform."""
+"""Webhook validation and processing for the auth service (FR-044).
 
-from typing import Any, Callable, Dict
+The implementation lives in :mod:`src.services.webhooks`; this module keeps the
+phase-5 import path stable.
+"""
 
+from src.services.webhooks import (
+    KNOWN_EVENTS,
+    InvalidSignatureError,
+    UnknownEventError,
+    WebhookDelivery,
+    WebhookEvent,
+    WebhookEventNotFoundError,
+    WebhookProcessor,
+    WebhookSecretError,
+    signature_for,
+    verify_signature,
+    webhooks,
+)
 
-class WebhookRegistry:
-    """Registry for webhook event handlers."""
-
-    def __init__(self) -> None:
-        self._handlers: Dict[str, Callable[[Dict[str, Any]], None]] = {}
-
-    def register(self, event: str) -> Callable:
-        """Decorator to register a webhook handler for an event."""
-
-        def decorator(func: Callable[[Dict[str, Any]], None]) -> Callable:
-            self._handlers[event] = func
-            return func
-
-        return decorator
-
-    def dispatch(self, event: str, payload: Dict[str, Any]) -> None:
-        """Dispatch a webhook event to the registered handler."""
-        if event in self._handlers:
-            self._handlers[event](payload)
-        else:
-            raise ValueError(f"No handler registered for event: {event}")
-
-
-# Global registry instance
-registry = WebhookRegistry()
-
-
-# Pre-registered webhook events
 WEBHOOK_PERSON_CREATED = "person.created"
 WEBHOOK_PERSON_UPDATED = "person.updated"
 WEBHOOK_PERSON_DELETED = "person.deleted"
+
+__all__ = [
+    "KNOWN_EVENTS",
+    "WEBHOOK_PERSON_CREATED",
+    "WEBHOOK_PERSON_DELETED",
+    "WEBHOOK_PERSON_UPDATED",
+    "InvalidSignatureError",
+    "UnknownEventError",
+    "WebhookDelivery",
+    "WebhookEvent",
+    "WebhookEventNotFoundError",
+    "WebhookProcessor",
+    "WebhookSecretError",
+    "signature_for",
+    "verify_signature",
+    "webhooks",
+]

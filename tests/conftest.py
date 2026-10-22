@@ -34,6 +34,18 @@ def pytest_configure(config):
         "minimal_test_suite_passes_on_empty_implementation: "
         "Marker for the always-passing minimal suite",
     )
+    config.addinivalue_line("markers", "trace: Distributed tracing tests (FR-040)")
+    config.addinivalue_line("markers", "key: API key management tests (FR-043)")
+    config.addinivalue_line(
+        "markers", "webhook: Webhook validation and delivery tests (FR-044)"
+    )
+    config.addinivalue_line(
+        "markers", "health: Health and readiness probe tests (FR-042)"
+    )
+    config.addinivalue_line("markers", "error: Error tracking tests (FR-041)")
+    config.addinivalue_line(
+        "markers", "performance: Performance benchmark tests (FR-046)"
+    )
 
 
 def pytest_collection_modifyitems(config, items):

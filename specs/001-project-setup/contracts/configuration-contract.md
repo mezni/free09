@@ -128,7 +128,8 @@ records the variable names and the topology, and creates no roles or schemas.
 | `TELECO_JWT_ISSUER` | Reserved | No | string | `telco-si` | Expected token issuer. |
 | `TELECO_JWT_AUDIENCE` | Reserved | No | string | `telco-si` | Expected token audience. |
 | `TELECO_JWT_TTL_SECONDS` | Reserved | No | int | `900` | Access-token lifetime. |
-| `TELECO_OTEL_EXPORTER_OTLP_ENDPOINT` | Reserved | No | string | *(none)* | OpenTelemetry export endpoint, for the observability requirements of Article VIII. |
+| `TELECO_OTEL_EXPORTER_OTLP_ENDPOINT` | Optional | No | string | *(none)* | OTLP/HTTP collector endpoint used by the phase-5 tracing middleware; when unset, spans are propagated but not exported. |
+| `TELECO_WEBHOOK_SECRET` | Reserved | **Yes** | string | *(none)* | Shared secret used to validate inbound webhook HMAC signatures (FR-044). |
 
 ### Explicitly not declared
 

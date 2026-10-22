@@ -25,6 +25,8 @@ services:
     container_name: auth-service
     environment:
       AUTH_DATABASE_URL: postgres://telco_auth:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      TELECO_OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+      TELECO_WEBHOOK_SECRET: PLACEHOLDER_NO_REAL_CREDENTIAL
       SERVICE_NAME: auth-service
       SERVICE_ROLE: least-privilege
     networks:
@@ -39,6 +41,8 @@ services:
     container_name: crm-service
     environment:
       CRM_DATABASE_URL: postgres://telco_crm:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      TELECO_OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+      TELECO_WEBHOOK_SECRET: PLACEHOLDER_NO_REAL_CREDENTIAL
       SERVICE_NAME: crm-service
       SERVICE_ROLE: least-privilege
     networks:
@@ -53,6 +57,8 @@ services:
     container_name: billing-service
     environment:
       BILLING_DATABASE_URL: postgres://telco_billing:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      TELECO_OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+      TELECO_WEBHOOK_SECRET: PLACEHOLDER_NO_REAL_CREDENTIAL
       SERVICE_NAME: billing-service
       SERVICE_ROLE: least-privilege
     networks:
@@ -67,6 +73,8 @@ services:
     container_name: inventory-service
     environment:
       INVENTORY_DATABASE_URL: postgres://telco_inventory:PLACEHOLDER_NO_REAL_CREDENTIAL@postgres:5432/telco_db
+      TELECO_OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+      TELECO_WEBHOOK_SECRET: PLACEHOLDER_NO_REAL_CREDENTIAL
       SERVICE_NAME: inventory-service
       SERVICE_ROLE: least-privilege
     networks:
