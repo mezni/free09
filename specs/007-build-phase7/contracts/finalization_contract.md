@@ -42,6 +42,7 @@
 - **Phase 8**: pending – no acceptance evidence; tracked in `specs/008-build-phase8/`.
 - **Phase 9**: pending – build‑plan extension; no acceptance evidence yet.  See `specs/009-build-phase9/`.
 - **Phase 10**: pending – build‑plan extension beyond phase 9; no acceptance evidence yet.  See `specs/010-build-phase10/`.
+- **Phase 11**: pending – build‑plan extension beyond phase 10; no acceptance evidence yet.  See `specs/011-build-phase11/`.
 - **Documentation Scope**: All artifacts across build-phases 1–6
 - **Documentation Status**: Complete and distributed
 - **Documentation Date**: 2026-10-21

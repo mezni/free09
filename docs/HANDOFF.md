@@ -5,6 +5,7 @@
 - **Phase 7**: **Implemented** – finalisation complete (spec statuses, constitution reconciliation, traceability matrix TM001‑TM238, hand‑off doc).
 - **Phase 8**: **Proposed** – future‑features horizon; no acceptance evidence yet. Work is tracked in `specs/008-build-phase8/`.
 - **Phases 9‑11**: **Proposed** – not started.  
+- **Phase 11**: **Proposed** – build‑plan extension beyond phase 10; no acceptance evidence yet.  See `specs/011-build-phase11/`.  
 - **Phase 10**: **Proposed** – build‑plan extension beyond phase 9; no acceptance evidence yet.  See `specs/010-build-phase10/`.  
 - **Phase 9**: **Proposed** – build‑plan extension; no acceptance evidence yet.  See `specs/009-build-phase9/`.
 
