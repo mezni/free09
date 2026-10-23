@@ -1,117 +1,39 @@
 # build-phase9: Quickstart
 
 ## Prerequisites
-- All build phases complete (build-phase1 through build-phase8)
-- Docker and Docker Compose installed
-- Access to existing build infrastructure
-- `.python-version` or equivalent for build tooling
+- All prior phases complete (build-phase1 through build-phase8)
+- Access to the repository
+- `uv sync`
 
-## Setup
+## 1. Verify the repository state
 
-### 1. Verify Prior Phases Complete
 ```bash
-# Ensure all prior phases are operational
 make verify
-
-# Verify existing infrastructure
-make docker-up
 ```
 
-### 2. Install Dependencies
+`make verify` runs the required fast and slow checks. Phase‑9 contract tests are not yet part of the required set, so they can be run optionally:
+
 ```bash
-# Install build phase 9 dependencies
-uv sync
+uv run pytest tests/contract/test_phase9_*.py -q 2>/dev/null || echo "No phase‑9 contract tests yet."
 ```
 
-### 3. Configure Build Pipeline Stages
+## 2. Review the build‑plan extension
+
 ```bash
-# Configure pipeline stages in existing build system
-# Ensure phase gate validation is configured
-
-# Ensure phase documentation framework is configured
-# Ensure external build system integration is configured
-
-# Ensure compliance report generation is configured
-
-# Ensure version metadata framework is configured
+# List the user stories and functional requirements
+cat specs/009-build-phase9/spec.md | head -70
 ```
 
-### 3. Install Dependencies
-```bash
-uv sync --frozen
-```
+## 3. Optional: add a placeholder implementation
 
-### 4. Run Build Pipeline Stages
-```bash
-# Test pipeline stages
-# List available stages
-curl -s http://localhost:8000/api/v1/build-stages
+If you wish to begin work on a user story, create a feature branch and add the minimal scaffolding (empty FastAPI route, a new service directory, etc.). The phase stays **Proposed** until acceptance evidence exists; the quick‑start only documents the path to that evidence.
 
-# Create a new stage
-curl -s -X POST http://localhost:8000/api/v1/build-stages \
-  -d '{"stage_name": "scan", "stage_type": "security"}'
+## 4. Hand‑off and finalisation
 
-# Get stage status
-curl -s http://localhost:8000/api/v1/build-stages/{stage_id}
-```
+When the work is finished, follow the same finalisation procedure used for phases 1‑7:
 
-### 5. Phase Gate Validation
-```bash
-# Test phase gate validation
-# List available gates
-curl -s http://localhost:8000/api/v1/build-gates
+1. Set the spec status to **Implemented** after `make verify` passes.
+2. Update the traceability matrix (`docs/traceability-matrix.md`) with the new TM 280‑TM 297 rows.
+3. Record the finalisation in `docs/HANDOFF.md`.
+4. Tag the release and push to `origin/main`.
 
-# Create a new gate
-curl -s -X POST http://localhost:8000/api/v1/build-gates \
-  -d '{"gate_name": "quality-gate", "gate_criteria": {"max_duration": 30}, "gate_timeout": 30}'
-
-# Validate a stage against gates
-curl -s http://localhost:8000/api/v1/build-gates/{gate_id}/validate/{stage_id}
-```
-
-### 6. External Build System Integration
-```bash
-# Test external build system integration
-# List available systems
-curl -s http://localhost:8000/api/v1/external-build-systems
-
-# Create a new system integration
-curl -s -X POST http://localhost:8000/api/v1/external-build-systems \
-  -d '{"system_name": "jenkins", "api_endpoint": "https://jenkins.example.com", "auth_method": "OAuth2.0"}'
-
-# Get system status
-curl -s http://localhost:8000/api/v1/external-build-systems/{integration_id}
-```
-
-### 7. Compliance Reporting
-```bash
-# Test compliance reporting
-# Generate a compliance report
-curl -s -X POST http://localhost:8000/api/v1/compliance-reports \
-  -d '{"report_type": "build-compliance", "period_start": "2024-01-01", "period_end": "2024-12-31"}'
-
-# Get compliance report
-curl -s http://localhost:8000/api/v1/compliance-reports/{report_id}
-```
-
-### 8. Version Metadata Tracking
-```bash
-# Test version metadata tracking
-# Create a version
-curl -s -X POST http://localhost:8000/api/v1/build-versions \
-  -d '{"version_string": "9.0.0", "base_version": null, "stage_id": "stage_id", "is_release": true}'
-
-# Get version details
-curl -s http://localhost:8000/api/v1/build-versions/{version_id}
-
-# Attempt to modify metadata (should be blocked for released versions)
-curl -s -X PATCH http://localhost:8000/api/v1/build-versions/{version_id} \
-  -d '{"metadata": {"attempted": "modification"}}'
-```
-
-### 9. Verification
-```bash
-# Final verification
-# Run all verification checks
-# Ensure all build-phase9 features are operational
-```

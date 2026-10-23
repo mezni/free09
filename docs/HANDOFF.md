@@ -4,7 +4,8 @@
 - **All build‑phases 1‑6**: **Implemented** – acceptance evidence exists, `make verify` passes.
 - **Phase 7**: **Implemented** – finalisation complete (spec statuses, constitution reconciliation, traceability matrix TM001‑TM238, hand‑off doc).
 - **Phase 8**: **Proposed** – future‑features horizon; no acceptance evidence yet. Work is tracked in `specs/008-build-phase8/`.
-- **Phases 9‑11**: **Proposed** – not started.
+- **Phases 9‑11**: **Proposed** – not started.  
+- **Phase 9**: **Proposed** – build‑plan extension; no acceptance evidence yet.  See `specs/009-build-phase9/`.
 
 ## Completed Artefacts
 - All 6 specification files (`specs/00*/spec.md`) with their **Implemented** status (where evidence exists).

@@ -40,6 +40,7 @@
 
 ### Hand-off Documentation Finalization
 - **Phase 8**: pending – no acceptance evidence; tracked in `specs/008-build-phase8/`.
+- **Phase 9**: pending – build‑plan extension; no acceptance evidence yet.  See `specs/009-build-phase9/`.
 - **Documentation Scope**: All artifacts across build-phases 1–6
 - **Documentation Status**: Complete and distributed
 - **Documentation Date**: 2026-10-21
