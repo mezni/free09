@@ -39,6 +39,7 @@
 - **Verification Details**: All check sets passing, environment reproducible from clean state
 
 ### Hand-off Documentation Finalization
+- **Phase 8**: pending – no acceptance evidence; tracked in `specs/008-build-phase8/`.
 - **Documentation Scope**: All artifacts across build-phases 1–6
 - **Documentation Status**: Complete and distributed
 - **Documentation Date**: 2026-10-21

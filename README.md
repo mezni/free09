@@ -43,7 +43,7 @@ and issue reporting guidelines.
 | [docs/quality/definition-of-done.md](docs/quality/definition-of-done.md) | Completion criteria per work item |
 | [docs/risks/open-questions.md](docs/risks/open-questions.md) | Open questions with owners and due phases |
 | [docs/API_REFERENCE.md](docs/API_REFERENCE.md) | API contract layer reference |
-| [docs/runbooks/](docs/runbooks/) | Incident response runbooks for common failures |
+| [docs/runbooks/](docs/runbooks/) | Incident response runbooks for common failures |\n| [docs/HANDOFF.md](docs/HANDOFF.md) | SPEC‑001 hand‑off documentation and status overview |
 | [docs/adr/](docs/adr/) | Architecture decision records |
 | [specs/](specs/) | Per-feature specification artefacts |
 
