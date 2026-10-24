@@ -1,1 +1,0 @@
-"""Telco platform middleware package."""

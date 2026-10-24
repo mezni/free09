@@ -1,9 +1,0 @@
-[project]
-name = "telco-common"
-version = "0.1.0"
-description = "Shared technical library for telco services"
-
-[tool.mypy]
-strict = true
-python_version = "3.13"
-plugins = ["pydantic.mypy.plugin"]
