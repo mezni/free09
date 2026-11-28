@@ -248,14 +248,14 @@ context's Application Layer.
 ### 7.1 Business requirement
 
 A receptionist must be able to register a new patient. The system must require a
-patient identifier, a first name, and a last name; validate the date of birth;
-prevent duplicate patient identifiers; save the patient; and return the
-registered patient.
+unique registration identity (`identity_number`), a first name, and a last name;
+validate the date of birth; prevent duplicate registration identities; save the
+patient; and return the registered patient.
 
 This follows the requirements in
 [`../requirements/use-cases.md`](../requirements/use-cases.md) and the rules in
-[`../domain/domain-rules.md`](../domain/domain-rules.md). Duplicate
-*identifiers* (BR-PAT-001) are distinct from possible duplicate *people*
+[`../domain/domain-rules.md`](../domain/domain-rules.md). Duplicate registration
+identities (BR-PAT-001) are distinct from possible duplicate *people*
 (BR-PAT-004), which require review.
 
 ### 7.2 Responsibility split
@@ -265,8 +265,8 @@ This follows the requirements in
 | Receive `POST /patients` | Presentation | FastAPI router |
 | Authorize and parse input | Presentation | Router and request schema |
 | Build `RegisterPatientCommand` | Presentation | Router |
-| Check for an existing identifier | Application | `RegisterPatient` through `PatientRepository` |
-| Enforce identifier, name, and date-of-birth rules | Domain | `Patient`, `PatientName`, `DateOfBirth` |
+| Check for an existing registration identity | Application | `RegisterPatient` through `PatientRepository` |
+| Enforce registration identity, name, and date-of-birth rules | Domain | `Patient`, `PatientName`, `DateOfBirth` |
 | Create the registered patient | Domain | `Patient.register(...)` |
 | Persist the aggregate | Application then Infrastructure | Use case calls the port; repository implements it |
 | Serialize the result | Presentation | Router and response DTO |
@@ -284,7 +284,7 @@ sequenceDiagram
 
     Receptionist->>Router: POST /patients
     Router->>UseCase: RegisterPatientCommand
-    UseCase->>Repo: exists(patient_id)
+    UseCase->>Repo: exists_by_identity(identity_number)
     Repo->>DB: query
     DB-->>Repo: no duplicate
     UseCase->>Patient: register(...)
@@ -295,9 +295,9 @@ sequenceDiagram
     Router-->>Receptionist: 201 Created
 ```
 
-If the identifier already exists, the use case rejects the command before
-creation: no `Patient` is saved and no success response is returned. Invalid
-domain data fails inside `Patient.register(...)`.
+If the registration identity already exists, the use case rejects the command
+before creation: no `Patient` is saved and no success response is returned.
+Invalid domain data fails inside `Patient.register(...)`.
 
 ## 8. Proposed module structure
 

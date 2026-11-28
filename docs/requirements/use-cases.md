@@ -65,7 +65,7 @@ Receptionist selects Register Patient.
 4. Check for possible duplicates.
 5. Confirm the information.
 6. Create patient record.
-7. Generate unique patient identifier.
+7. Generate `Patient ID` and capture unique registration identity (`identity_number`).
 8. Record audit event.
 9. Display patient record.
 
@@ -77,12 +77,12 @@ Receptionist selects Register Patient.
 
 ### Postconditions
 - Patient record exists.
-- Patient has a unique identifier.
+- Patient has a unique `Patient ID` and registration identity.
 - Creation event is auditable.
 
 ## 5. Business Rules
 
-- BR-PAT-001: Every patient has a unique system identifier.
+- BR-PAT-001: Every patient has a unique system identifier and registration identity.
 - BR-PAT-002: Patient date of birth must be valid.
 - BR-PAT-003: Possible duplicates require review.
 - BR-PAT-004: Patient creation requires authorization.

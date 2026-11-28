@@ -35,6 +35,7 @@ within the clinic domain.
 | [glossary.md](glossary.md) | Business terminology, core concepts, and distinctions between similar terms |
 | [ubiquitous-language.md](ubiquitous-language.md) | Business statements, domain interpretations, and naming conventions for future code |
 | [domain-model.md](domain-model.md) | Bounded contexts, aggregates, relationships, and lifecycles |
+| [domain-modeling.md](domain-modeling.md) | Entities, value objects, aggregates, invariants, and the four primary aggregates |
 | [entities.md](entities.md) | Concepts with identity and the aggregate roots that own them |
 | [value-objects.md](value-objects.md) | Concepts defined by their values |
 | [domain-rules.md](domain-rules.md) | Business invariants and where they are enforced |
@@ -46,6 +47,7 @@ within the clinic domain.
 | [application-services.md](application-services.md) | Use-case orchestration and its boundaries |
 | [domain-events.md](domain-events.md) | Business facts recorded by the domain and delivered to interested handlers |
 | [appointment-booking-workflow.md](appointment-booking-workflow.md) | The complete `BookAppointment` use case across all layers |
+| [domain-services-events-repositories.md](domain-services-events-repositories.md) | Domain services, events, handlers, repositories, Unit of Work, and Outbox decisions |
 
 ## 4. Scope
 

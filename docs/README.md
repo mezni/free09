@@ -20,6 +20,8 @@ yet.
 | [layered-architecture.md](architecture/layered-architecture.md) | Presentation, Application, Domain, Infrastructure; dependency direction; repository port |
 | [solid-principles.md](architecture/solid-principles.md) | Five SOLID principles, bad and refactored examples, Patient Management design |
 | [design-patterns.md](architecture/design-patterns.md) | Pattern categories, Python implementations, DDD/SOLID links, and adoption decisions |
+| [application-layer-use-cases.md](architecture/application-layer-use-cases.md) | Use cases, commands, DTOs, DI, transaction boundaries, and event coordination |
+| [infrastructure-and-persistence.md](architecture/infrastructure-and-persistence.md) | PostgreSQL, SQLAlchemy, ORM models, mappers, repositories, Unit of Work, transactions, and Alembic |
 
 Start here for context ownership and boundaries. The other architecture
 documents build on those decisions.
@@ -32,6 +34,8 @@ documents build on those decisions.
 | [glossary.md](domain/glossary.md) | Business terminology and distinctions between similar terms |
 | [ubiquitous-language.md](domain/ubiquitous-language.md) | Business statements, domain interpretations, and naming conventions |
 | [domain-model.md](domain/domain-model.md) | Bounded contexts, aggregates, relationships, and lifecycles |
+| [domain-modeling.md](domain/domain-modeling.md) | Entities, value objects, aggregates, invariants, and the four primary aggregates |
+| [domain-services-events-repositories.md](domain/domain-services-events-repositories.md) | Domain services, events, handlers, repositories, Unit of Work, and Outbox decisions |
 | [entities.md](domain/entities.md) | Concepts with identity and the aggregate roots that own them |
 | [value-objects.md](domain/value-objects.md) | Concepts defined by their values |
 | [domain-rules.md](domain/domain-rules.md) | Business invariants and where they are enforced |

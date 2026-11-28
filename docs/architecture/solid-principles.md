@@ -412,6 +412,7 @@ from uuid import UUID
 @dataclass(frozen=True)
 class RegisterPatientCommand:
     patient_id: UUID
+    identity_number: str
     first_name: str
     last_name: str
     date_of_birth: date
@@ -432,24 +433,29 @@ class RegisterPatient:
         self.notifications = notifications
 
     def execute(self, command: RegisterPatientCommand) -> "Patient":
-        if self.repository.exists(command.patient_id):
-            raise DuplicatePatientId(command.patient_id)
+        if self.repository.exists_by_identity(command.identity_number):
+            raise DuplicatePatientIdentity(command.identity_number)
         patient = Patient.register(
             patient_id=command.patient_id,
-            first_name=command.first_name,
-            last_name=command.last_name,
-            date_of_birth=command.date_of_birth,
+            identity_number=command.identity_number,
+            name=PatientName(
+                first_name=command.first_name,
+                last_name=command.last_name,
+            ),
+            date_of_birth=DateOfBirth(command.date_of_birth),
+            email=command.email,
         )
         self.repository.save(patient)
         self.notifications.send(command.email, "Patient registered")
         return patient
 ```
 
-The use case coordinates: check the identifier, call domain behavior, save
-through a port, and request a notification. The uniqueness rule and name/date
-validation stay in the Domain Layer. `DuplicatePatientId` is an illustrative
-domain exception; its exact vocabulary is fixed with the domain implementation.
-Notification delivery is an Infrastructure detail behind `NotificationSender`.
+The use case coordinates: check the registration identity, call domain behavior,
+save through a port, and request a notification. The uniqueness rule and
+name/date validation stay in the Domain Layer. `DuplicatePatientIdentity` is an
+illustrative application exception; its exact vocabulary is fixed with the
+domain implementation. Notification delivery is an Infrastructure detail behind
+`NotificationSender`.
 
 ### 10.5 Exercise 3 — extension
 

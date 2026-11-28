@@ -27,7 +27,7 @@ business concept belongs in the domain.
 
 | ID | Rule | Enforced by |
 |---|---|---|
-| BR-PAT-001 | Every patient has a unique system-generated `Patient ID` | `Patient` creation policy; infrastructure uniqueness as backup |
+| BR-PAT-001 | Every patient has a system-generated `Patient ID` and a unique registration identity (`identity_number`) | `Patient` creation policy; infrastructure uniqueness as backup |
 | BR-PAT-002 | Patient date of birth must be valid and not in the future | `Patient` |
 | BR-PAT-003 | Patient contact information must be valid | `Contact Information` value object |
 | BR-PAT-004 | Possible duplicate patients require review before registration is finalized | Application service with a domain duplicate-check policy |

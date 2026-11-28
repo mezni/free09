@@ -166,10 +166,16 @@ from uuid import UUID
 @dataclass(frozen=True)
 class RegisterPatientCommand:
     patient_id: UUID
+    identity_number: str
     first_name: str
     last_name: str
     date_of_birth: date
     email: str
+    street: str | None = None
+    city: str | None = None
+    province: str | None = None
+    postal_code: str | None = None
+    country: str | None = None
 
 
 @dataclass(frozen=True)
@@ -185,7 +191,7 @@ Input validation and business validation are different:
 |---|---|
 | Is `first_name` present? | Is the patient eligible for registration? |
 | Is the date a valid date? | Is the date of birth allowed by clinic rules? |
-| Is the email syntactically valid? | Is the patient identifier already registered? |
+| Is the email syntactically valid? | Is the registration identity already registered? |
 | Are field types correct? | Is the operation permitted for this user? |
 
 Input validation may happen in the Presentation Layer and again at the
@@ -193,9 +199,9 @@ application boundary. Business validation stays in the Domain Layer:
 `PatientName`, `DateOfBirth`, `TimeSlot`, and aggregate roots must reject invalid
 data even if the request schema already checked it.
 
-Use explicit application exceptions such as `DuplicatePatientId` and
-`PatientNotFound`, not bare `ValueError`. Presentation translates those
-exceptions into API responses.
+Use explicit application exceptions such as `DuplicatePatientIdentity`,
+`DuplicatePatientId`, and `PatientNotFound`, not bare `ValueError`. Presentation
+translates those exceptions into API responses.
 
 ## 6. Dependency Injection
 
@@ -238,33 +244,41 @@ infrastructure. Use cases import protocols, not concrete PostgreSQL classes.
 
 ## 7. RegisterPatient Use Case
 
-The requirement is to register a patient with a unique patient identifier, a
-valid name, and a validated date of birth. Duplicate *identifiers* are rejected;
-possible duplicate *people* are a separate review rule recorded in
-[`../requirements/use-cases.md`](../requirements/use-cases.md).
+The requirement is to register a patient with a unique registration identity, a
+valid name, and a validated date of birth. Duplicate registration identities
+are rejected; possible duplicate *people* remain a separate review rule recorded
+in [`../requirements/use-cases.md`](../requirements/use-cases.md).
 
-The current command follows the existing contract in
-[solid-principles.md](solid-principles.md):
+The command includes the registration identity required by
+[infrastructure-and-persistence.md](infrastructure-and-persistence.md):
 
 ```python
 @dataclass(frozen=True)
 class RegisterPatientCommand:
     patient_id: UUID
+    identity_number: str
     first_name: str
     last_name: str
     date_of_birth: date
     email: str
+    street: str | None = None
+    city: str | None = None
+    province: str | None = None
+    postal_code: str | None = None
+    country: str | None = None
 ```
 
-An `identity_number` field and `exists_by_identity(...)` check are deferred until
-duplicate-person requirements are confirmed. The accepted duplicate rule is
-`PatientRepository.exists(patient_id)`.
+`patient_id` is the aggregate identity. `identity_number` is the clinic's
+registration identity and is unique. `PatientRepository.exists_by_identity(...)`
+checks the registration rule; database uniqueness is the final concurrent guard.
 
 Ports used by the use case:
 
 ```python
 class PatientRepository(Protocol):
     def exists(self, patient_id: UUID) -> bool: ...
+
+    def exists_by_identity(self, identity_number: str) -> bool: ...
 
     def save(self, patient: "Patient") -> None: ...
 
@@ -296,14 +310,29 @@ class RegisterPatient:
         self.event_dispatcher = event_dispatcher
 
     def execute(self, command: RegisterPatientCommand) -> "Patient":
-        if self.repository.exists(command.patient_id):
-            raise DuplicatePatientId(command.patient_id)
+        if self.repository.exists_by_identity(command.identity_number):
+            raise DuplicatePatientIdentity(command.identity_number)
+
+        address = None
+        if command.street is not None:
+            address = Address(
+                street=command.street,
+                city=command.city,
+                province=command.province,
+                postal_code=command.postal_code,
+                country=command.country,
+            )
 
         patient = Patient.register(
             patient_id=command.patient_id,
-            first_name=command.first_name,
-            last_name=command.last_name,
-            date_of_birth=command.date_of_birth,
+            identity_number=command.identity_number,
+            name=PatientName(
+                first_name=command.first_name,
+                last_name=command.last_name,
+            ),
+            date_of_birth=DateOfBirth(command.date_of_birth),
+            email=command.email,
+            address=address,
         )
 
         try:
@@ -322,7 +351,7 @@ class RegisterPatient:
 | Step | Owner |
 |---|---|
 | Receive and validate request shape | Presentation |
-| Check duplicate identifier | Application via `PatientRepository` |
+| Check duplicate registration identity | Application via `PatientRepository` |
 | Validate name and birth date | Domain value objects |
 | Create the aggregate | `Patient.register(...)` |
 | Save and commit | Application via repository and Unit of Work |

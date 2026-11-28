@@ -230,7 +230,7 @@ rule prevents a valid aggregate from becoming invalid.
 
 | Aggregate | Invariant | Enforced by |
 |---|---|---|
-| `Patient` | Unique patient identifier | `Patient.register(...)` |
+| `Patient` | Unique registration identity (`identity_number`) | `Patient.register(...)`; database uniqueness as backup |
 | `Patient` | Valid name and date of birth | `PatientName`, `DateOfBirth` |
 | `Patient` | Required registration details present | `Patient.register(...)` |
 | `Patient` | Patient is not silently deleted | `Patient.deactivate()` |
@@ -271,7 +271,8 @@ Management. A patient remains the same entity when contact details change.
 | Element | Classification |
 |---|---|
 | `Patient` | Aggregate root |
-| `Patient ID` | Identity value object |
+| `Patient ID` | Aggregate identity |
+| `identity_number` | Unique registration identity |
 | `PatientName`, `DateOfBirth` | Value objects |
 | `ContactInformation`, `Address` | Value objects |
 | `PatientContact` | Local entity candidate; reconciliation needed |
@@ -284,22 +285,65 @@ class Patient:
     @classmethod
     def register(
         cls,
-        patient_id: str,
+        patient_id: UUID,
+        identity_number: str,
         name: PatientName,
         date_of_birth: DateOfBirth,
+        email: str,
+        address: Address | None = None,
     ) -> "Patient":
-        return cls(patient_id, name, date_of_birth)
+        if not identity_number.strip():
+            raise ValueError("registration identity is required")
+        return cls(
+            patient_id=patient_id,
+            identity_number=identity_number,
+            name=name,
+            date_of_birth=date_of_birth,
+            email=email,
+            address=address,
+        )
+
+    @classmethod
+    def rehydrate(
+        cls,
+        patient_id: UUID,
+        identity_number: str,
+        first_name: str,
+        last_name: str,
+        date_of_birth: date,
+        email: str,
+        street: str | None,
+        city: str | None,
+        province: str | None,
+        postal_code: str | None,
+        country: str | None,
+        active: bool,
+    ) -> "Patient":
+        address = None
+        if street is not None:
+            address = Address(street, city, province, postal_code, country)
+        return cls(
+            patient_id=patient_id,
+            identity_number=identity_number,
+            name=PatientName(first_name, last_name),
+            date_of_birth=DateOfBirth(date_of_birth),
+            email=email,
+            address=address,
+            active=active,
+        )
 
     def update_contact_information(self, contact: object) -> None:
         self.contact_information = contact
 
     def deactivate(self) -> None:
+        if not self.active:
+            raise ValueError("patient is already inactive")
         self.active = False
 ```
 
 | Behavior | Rule |
 |---|---|
-| `register(...)` | Identity and required registration data must be valid |
+| `register(...)` | Identity, registration identity, and required registration data must be valid |
 | `update_contact_information(...)` | New values must pass value-object validation |
 | `deactivate()` | Historical references remain valid |
 | `update_demographics(...)` | Authorized change only; no silent deletion |

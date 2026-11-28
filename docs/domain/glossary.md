@@ -14,7 +14,8 @@ A person registered with the clinic to receive healthcare services.
 
 | Term | Definition |
 |---|---|
-| Patient ID | Unique patient identifier |
+| Patient ID | Unique aggregate identifier |
+| Registration Identity (`identity_number`) | Unique clinic registration identity owned by `Patient` |
 | Patient Record | Information maintained about a patient |
 | Medical History | Patient's historical health information |
 | Contact Information | Patient's phone, email, and address |

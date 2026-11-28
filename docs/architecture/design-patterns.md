@@ -459,7 +459,7 @@ published contracts in [context-map.md](context-map.md).
 |---|---|---|
 | Validate patient information | `Patient` | Entity / aggregate root |
 | Create the aggregate | `PatientFactory` | Factory |
-| Check the identifier | `RegisterPatient` via `PatientRepository` | Use case and Repository |
+| Check the registration identity | `RegisterPatient` via `PatientRepository` | Use case and Repository |
 | Save the patient | `SqlAlchemyPatientRepository` | Repository implementation |
 | Manage the transaction | `UnitOfWork` | Unit of Work |
 | Publish the fact | `PatientRegistered` | Domain event |
@@ -477,7 +477,7 @@ sequenceDiagram
     participant Handler as NotificationHandler
 
     Receptionist->>UC: RegisterPatientCommand
-    UC->>Repo: exists(patient_id)
+    UC->>Repo: exists_by_identity(identity_number)
     UC->>Factory: create(command)
     Factory-->>UC: Patient
     UC->>UoW: begin

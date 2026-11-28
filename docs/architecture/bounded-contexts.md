@@ -92,6 +92,7 @@ invoices, payments, or insurance claim state.
 | Type | Concept | Notes |
 |---|---|---|
 | Aggregate root | `Patient` | The authoritative registration record |
+| Attribute | `identity_number` | Unique registration identity owned by `Patient` |
 | Entity | `PatientContact` | Contact details with their own continuity inside the aggregate |
 | Value object | `PatientName` | First and last name |
 | Value object | `DateOfBirth` | Validated date of birth |
@@ -100,7 +101,7 @@ invoices, payments, or insurance claim state.
 
 **Business rules:**
 
-- every patient has a unique patient identifier;
+- every patient has a unique registration identity (`identity_number`);
 - a patient has a valid date of birth;
 - required registration information is present;
 - only authorized users can update patient information.
