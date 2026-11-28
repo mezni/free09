@@ -22,6 +22,7 @@ yet.
 | [design-patterns.md](architecture/design-patterns.md) | Pattern categories, Python implementations, DDD/SOLID links, and adoption decisions |
 | [application-layer-use-cases.md](architecture/application-layer-use-cases.md) | Use cases, commands, DTOs, DI, transaction boundaries, and event coordination |
 | [infrastructure-and-persistence.md](architecture/infrastructure-and-persistence.md) | PostgreSQL, SQLAlchemy, ORM models, mappers, repositories, Unit of Work, transactions, and Alembic |
+| [presentation-layer-rest-api.md](architecture/presentation-layer-rest-api.md) | FastAPI routes, Pydantic schemas, dependency injection, HTTP errors, OpenAPI, and API tests |
 
 Start here for context ownership and boundaries. The other architecture
 documents build on those decisions.
@@ -62,7 +63,13 @@ changing the model.
 | [non-functional-requirements.md](requirements/non-functional-requirements.md) | Quality attributes and technical constraints |
 | [use-cases.md](requirements/use-cases.md) | Use cases, flows, and business rules |
 
-## 5. Suggested reading order
+## 5. Testing
+
+| Document | Contents |
+|---|---|
+| [testing-strategy.md](testing/testing-strategy.md) | Test pyramid, fixtures, test database, transaction isolation, coverage, and architectural boundaries |
+
+## 6. Suggested reading order
 
 1. [product overview](requirements/product-overview.md) and
    [use cases](requirements/use-cases.md) — what the clinic needs.
@@ -74,6 +81,9 @@ changing the model.
    [context map](architecture/context-map.md) — the boundaries and integration.
 5. [layered architecture](architecture/layered-architecture.md) and
    [SOLID principles](architecture/solid-principles.md) — the internal design.
+6. [infrastructure and persistence](architecture/infrastructure-and-persistence.md),
+   [REST API design](architecture/presentation-layer-rest-api.md), and
+   [testing strategy](testing/testing-strategy.md) — how layers are wired and verified.
 
 [architecture-decisions.md](architecture/architecture-decisions.md) explains why
 the architectural choices were made and when they should be revisited.
